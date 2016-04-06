@@ -13,7 +13,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 if(DEBUG)
     message("Building with debug information")
-    add_definition(-DDEBUG)
+    add_definitions(-DDEBUG)
     set(CMAKE_BUILD_TYPE Debug)
 else()
     message("Building release")
