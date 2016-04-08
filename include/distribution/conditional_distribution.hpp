@@ -13,24 +13,29 @@ namespace PROJECT_NAME{
 namespace distribution{
 
     template <typename DIST_TYPE, typename PARAM_FUNC>
-    class ParametricConditionalDistribution {
+    class ParametericConditionalDistribution {
         // note: it is not thraed-safe
         public:
         static_assert(boost::function_types::function_arity<PARAM_FUNC>::value == 1,
                       "parameter function should accept only one argument");
-         
+        using URDIST = typename std::remove_reference<DIST_TYPE>::type; 
         using CV_SEQ = typename boost::function_types::parameter_types<PARAM_FUNC>::type;
         using CV_TYPE = typename boost::mpl::at_c<CV_SEQ,0>::type;
-        using RV_TYPE = typename boost::function_types::result_type<decltype(&DIST_TYPE::Random)>::type;
+        using RV_TYPE = typename URDIST::RV_TYPE;
         using PARAM_TYPE = typename boost::function_types::result_type<PARAM_FUNC>::type;
 
         // check if appropiate Parameterize method exists
         static_assert(
-        std::is_same<decltype(std::declval<DIST_TYPE>().Parameterize(std::declval<PARAM_TYPE>()))
-        ,typename std::add_lvalue_reference<DIST_TYPE>::type>::value, "Parametrize doesn't return void");
+        std::is_same<decltype(std::declval<URDIST>().Parameterize(std::declval<PARAM_TYPE>()))
+        ,typename std::add_lvalue_reference<URDIST>::type>::value, "Parametrize doesn't return void");
 
         using PARTICLE_TYPE = Particle<RV_TYPE>;
+
+
         public:
+
+        ParametericConditionalDistribution(DIST_TYPE d, PARAM_FUNC f) : dist(d), param_func(f) {};
+
         RV_TYPE Random(CV_TYPE cv)
         {return dist.Parameterize(param_func(cv)).Random();}
 
@@ -54,6 +59,7 @@ namespace distribution{
         void ParticleSample_N(std::vector<PARTICLE_TYPE> & pars, size_t N, CV_TYPE cv)
         {
             pars.clear();
+            pars.resize(N);
             std::generate_n(pars, N, [cv](){return ParticleSample(cv);});           
         }
 
@@ -72,14 +78,13 @@ namespace distribution{
         DIST_TYPE dist;
         PARAM_FUNC param_func;
     };
+
+    template<typename T1, typename T2>
+    ParametericConditionalDistribution<T1,T2>
+    makeParametericConditionalDistribution(T1&& t1, T2&& t2)
+    {
+        return ParametericConditionalDistribution<T1,T2>(std::forward<T1>(t1), std::forward<T2>(t2));
+    }
 } // namespace distribution
 } // namespace PROJECT_NAME
-
-using fff = double(*)(int);
-struct ddd {char Random(); ddd & Parameterize(double);};
-using a = PROJECT_NAME::distribution::ParametricConditionalDistribution<ddd,fff>;
-static_assert(std::is_same<a::CV_TYPE, int>::value, "");
-static_assert(std::is_same<a::RV_TYPE, char>::value, "");
-static_assert(std::is_same<a::PARAM_TYPE, double>::value, "");
-
 
