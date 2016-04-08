@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "distribution/conditional_gaussian.hpp"
+#include "distribution/conditional_distribution.hpp"
 
 using namespace PROJECT_NAME;
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <type_traits>
+#include <boost/function_types/result_type.hpp>
 #include <mlpack/core.hpp>
 #include "external/callable/callable.hpp"
 
@@ -11,7 +12,7 @@ namespace distribution{
     class ConditionalGaussian {
         using MARGINAL_TYPE = Gaussian;
         using CV_TYPE = typename callable_traits<MEAN_FUNC>::template argument_type<0>;
-        using RV_TYPE = typename std::result_of<decltype(&Gaussian::Random)(Gaussian)>::type;
+        using RV_TYPE = typename boost::function_types::result_type<decltype(&Gaussian::Random)>::type;
         
         public:
         ConditionalGaussian(MEAN_FUNC &&mf, COV_FUNC &&cf):
@@ -34,5 +35,5 @@ namespace distribution{
    template<typename F1, typename F2>
    ConditionalGaussian<F1,F2> makeConditionalGaussian(F1 &&f1, F2 &&f2)
    { return ConditionalGaussian<F1,F2>(std::forward<F1>(f1), std::forward<F2>(f2)); }
-} // namespace ditribution
+} // namespace distribution
 } // namespace PROJECT_NAME
