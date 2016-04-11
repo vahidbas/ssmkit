@@ -1,10 +1,10 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-#include "model/linear_gaussian.hpp"
-#include "distribution/gaussian.hpp"
-#include "distribution/conditional_distribution.hpp"
-#include "simulation/markov.hpp"
+#include "ssmpack/model/linear_gaussian.hpp"
+#include "ssmpack/distribution/gaussian.hpp"
+#include "ssmpack/distribution/conditional_distribution.hpp"
+#include "ssmpack/process/markov.hpp"
 
 using namespace PROJECT_NAME;
 

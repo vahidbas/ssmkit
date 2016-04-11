@@ -1,7 +1,7 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-#include "distribution/particle.hpp"
+#include "ssmpack/distribution/particle.hpp"
 
 using namespace PROJECT_NAME;
 

@@ -1,7 +1,7 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-#include "filter/kalman.hpp"
+#include "ssmpack/filter/kalman.hpp"
 
 using namespace PROJECT_NAME;
 

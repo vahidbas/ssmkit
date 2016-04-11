@@ -1,7 +1,7 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-#include "distribution/gaussian.hpp"
+#include "ssmpack/distribution/gaussian.hpp"
 
 using namespace PROJECT_NAME;
 

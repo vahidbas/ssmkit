@@ -5,7 +5,7 @@
 #include <vector>
 #include <mlpack/core.hpp>
 
-#include "distribution/particle.hpp"
+#include "ssmpack/distribution/particle.hpp"
 
 namespace PROJECT_NAME {
 namespace distribution {

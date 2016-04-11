@@ -7,7 +7,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "distribution/particle.hpp"
+#include "ssmpack/distribution/particle.hpp"
 
 namespace PROJECT_NAME{
 namespace distribution{
