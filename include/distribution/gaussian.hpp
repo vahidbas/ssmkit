@@ -9,16 +9,16 @@
 
 namespace PROJECT_NAME {
 namespace distribution {
-
+   template<size_t D>
    class  Gaussian{
 
        public:
-       using PARTICLE_TYPE = Particle<arma::vec>;
-       using RV_TYPE = arma::vec;
-       using PARAM_TYPE = std::tuple<arma::vec,arma::mat>;
+       using RV_TYPE = arma::vec::fixed<D>;
+       using PARTICLE_TYPE = Particle<RV_TYPE>;
+       using PARAM_TYPE = std::tuple<arma::vec::fixed<D>,arma::mat::fixed<D,D>>;
 
-       Gaussian(){}
-       Gaussian(const size_t dimention): dist(dimention) {}
+       Gaussian(): dist(D) {};
+//       Gaussian(const size_t dimention): dist(dimention) {}
        Gaussian(const arma::vec &mean, const arma::mat &covariance): dist(mean,covariance) {}
 
        arma::vec Random() {return dist.Random();}

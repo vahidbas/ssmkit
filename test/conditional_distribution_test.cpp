@@ -1,6 +1,7 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
+#include "model/linear_gaussian.hpp"
 #include "distribution/gaussian.hpp"
 #include "distribution/conditional_distribution.hpp"
 
@@ -8,18 +9,12 @@ using namespace PROJECT_NAME;
 
 BOOST_AUTO_TEST_SUITE(conditional_distribution_test);
 
-std::tuple<arma::vec, arma::mat> pfunc(double x)
-{
-   std::tuple<arma::vec, arma::mat> p;
-   std::get<0>(p) = {x, x};
-   std::get<1>(p) = {{1, 0},{0, 1}};
-   return p;
-}
 BOOST_AUTO_TEST_CASE(one_step_test)
 {
-    distribution::Gaussian g(2);
-    auto cpdf = makeParametericConditionalDistribution(g,pfunc);
-    std::cout << cpdf.Random(100) << std::endl;
+    model::LinearGaussian<2> f { {{1, 0}, {0, 1}}, {{1, 0},{0, 1}} };
+    distribution::Gaussian<2> g;
+    auto cpdf = makeParametericConditionalDistribution(g,f);
+    std::cout << cpdf.Random({100, 0}) << std::endl;
 }
 
 BOOST_AUTO_TEST_SUITE_END();

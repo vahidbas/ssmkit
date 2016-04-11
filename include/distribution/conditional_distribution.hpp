@@ -16,19 +16,12 @@ namespace distribution{
     class ParametericConditionalDistribution {
         // note: it is not thraed-safe
         public:
-        static_assert(boost::function_types::function_arity<PARAM_FUNC>::value == 1,
-                      "parameter function should accept only one argument");
-        using URDIST = typename std::remove_reference<DIST_TYPE>::type; 
-        using CV_SEQ = typename boost::function_types::parameter_types<PARAM_FUNC>::type;
-        using CV_TYPE = typename boost::mpl::at_c<CV_SEQ,0>::type;
+        using URDIST = typename std::remove_reference<DIST_TYPE>::type;
+        using URFUNC = typename std::remove_reference<PARAM_FUNC>::type;
+
+        using CV_TYPE = typename URFUNC::CV_TYPE;
         using RV_TYPE = typename URDIST::RV_TYPE;
-        using PARAM_TYPE = typename boost::function_types::result_type<PARAM_FUNC>::type;
-
-        // check if appropiate Parameterize method exists
-        static_assert(
-        std::is_same<decltype(std::declval<URDIST>().Parameterize(std::declval<PARAM_TYPE>()))
-        ,typename std::add_lvalue_reference<URDIST>::type>::value, "Parametrize doesn't return void");
-
+        using PARAM_TYPE = typename URFUNC::PARAM_TYPE;
         using PARTICLE_TYPE = Particle<RV_TYPE>;
 
 
