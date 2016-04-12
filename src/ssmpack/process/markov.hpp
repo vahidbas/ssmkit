@@ -61,7 +61,7 @@ class Markov {
    * (init_pdf)
    */
   template <typename INIT_PDF>
-  STATE_TYPE Initialize(INIT_PDF init_pdf) {
+  STATE_TYPE Initialize(INIT_PDF &init_pdf) {
     auto init_par = init_pdf.ParticleSample();
     state_ = init_par.point;
     log_likelihood_ = std::log(init_par.weight);
@@ -83,7 +83,7 @@ class Markov {
    * return the likelihood of sequence. Sampling moves the process
    */
   template <typename INIT_PDF>
-  double Random(std::vector<STATE_TYPE> &samples, const INIT_PDF &init_pdf,
+  double Random(std::vector<STATE_TYPE> &samples, INIT_PDF &init_pdf,
                 size_t n) {
     static_assert(
         std::is_same<typename INIT_PDF::RV_TYPE, STATE_TYPE>::value,
