@@ -1,9 +1,15 @@
-#include <mlpack/core.hpp>
+/**
+ * @file kalmen.hpp
+ * @author Vahid Bastani
+ *
+ */
+#ifndef SSMPACK_FILTER_KALMEN_HPP
+#define SSMPACK_FILTER_KALMEN_HPP
 
-namespace PROJECT_NAME {
+namespace ssmpack {
 namespace filter {
-    using mlpack::distribution::GaussianDistribution;  
- //   template<typename... >
+
+   template<typename TProcess>
     class Kalman {
         public:
         Kalman(
@@ -75,3 +81,6 @@ filter(arma::vec observation)
     filter_s.Mean() =  predict_s.Mean() + kalman_gain * inovation;
     filter_s.Covariance( predict_s.Covariance() - kalman_gain * obs_m * predict_s.Covariance());
 }
+
+
+#endif //SSMPACK_FILTER_KALMEN_HPP

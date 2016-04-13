@@ -13,8 +13,8 @@ BOOST_AUTO_TEST_CASE(one_step_test)
 {
     model::LinearGaussian<2,2> f { {{1, 0}, {0, 1}}, {{1, 0},{0, 1}} };
     distribution::Gaussian<2> g;
-    auto cpdf = makeParametericConditionalDistribution(g,f);
-    std::cout << cpdf.Random({100, 0}) << std::endl;
+    auto cpdf = distribution::makeParametericConditional(g,f);
+    std::cout << cpdf.random({100, 0}) << std::endl;
 }
 
 BOOST_AUTO_TEST_SUITE_END();

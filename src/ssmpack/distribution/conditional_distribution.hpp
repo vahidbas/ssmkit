@@ -1,86 +1,99 @@
-#pragma once
-#include <type_traits>
+/**
+ * @file parametric_conditional.hpp
+ * @author Vahid Bastani
+ *
+ * Generic class for parametric conditional density/distribution function.
+ */
+#ifndef SSMPACK_DISTRIBUTION_PARAMETRIC_CONDITIONAL_HPP
+#define SSMPACK_DISTRIBUTION_PARAMETRIC_CONDITIONAL_HPP
+
+#include "ssmpack/distribution/particle.hpp"
+
 #include <boost/function_types/result_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/function_types/function_arity.hpp>
 
 #include <vector>
+#include <type_traits>
 #include <algorithm>
 
-#include "ssmpack/distribution/particle.hpp"
-
-namespace PROJECT_NAME {
+namespace ssmpack {
 namespace distribution {
 
-template <typename DIST_TYPE, typename PARAM_FUNC>
-class ParametericConditionalDistribution {
+template <typename TPDF, typename TParamMap>
+class ParametericConditional {
   // note: it is not thraed-safe
-public:
-  using URDIST = typename std::remove_reference<DIST_TYPE>::type;
-  using URFUNC = typename std::remove_reference<PARAM_FUNC>::type;
+ private:
+  using TPDF_ = typename std::remove_reference<TPDF>::type;
+  using TParamMap_ = typename std::remove_reference<TParamMap>::type;
 
-  using CV_TYPE = typename URFUNC::CV_TYPE;
-  using RV_TYPE = typename URDIST::RV_TYPE;
-  using PARAM_TYPE = typename URFUNC::PARAM_TYPE;
-  using PARTICLE_TYPE = Particle<RV_TYPE>;
+ public:
+  //! Type of the condition variable.
+  using TConditionVAR = typename TParamMap_::TConditionVAR;
+  //! Type of the random variable.
+  using TRandomVAR = typename TPDF_::TRandomVAR;
+  //! Type of the distribution parameter.
+  using TParameter = typename TParamMap_::TParameter;
+  //! Type of the particle pair.
+  using TParticle = Particle<TRandomVAR>;
 
-public:
-  ParametericConditionalDistribution(DIST_TYPE d, PARAM_FUNC f)
-      : dist(d), param_func(f){};
+ private:
+  TPDF_ pdf_;
+  TParamMap_ param_map_;
 
-  RV_TYPE Random(CV_TYPE cv) {
-    return dist.Parameterize(param_func(cv)).Random();
+ public:
+  ParametericConditional(TPDF d, TParamMap f)
+      : pdf_(d), param_map_(f){};
+
+  TRandomVAR random(TConditionVAR cv) {
+    return pdf_.parameterize(param_map_(cv)).random();
   }
 
-  const DIST_TYPE &getDistribution(CV_TYPE cv) {
-    return dist.Parameterize(param_func(cv));
+  const TPDF &getDistribution(TConditionVAR cv) {
+    return pdf_.parameterize(param_map_(cv));
   }
 
-  double Likelihood(RV_TYPE rv, CV_TYPE cv) {
-    return dist.Parameterize(param_func(cv)).Likelihood(rv);
+  double likelihood(TRandomVAR rv, TConditionVAR cv) {
+    return pdf_.parameterize(param_map_(cv)).likelihood(rv);
   }
 
   // sample one particle from conditioned distribution
-  PARTICLE_TYPE ParticleSample(CV_TYPE cv) {
-    Particle<RV_TYPE> p;
-    dist.Parameterize(param_func(cv));
-    p.point = dist.Random();
-    p.weight = dist.Likelihood(p.point);
+  TParticle particle(TConditionVAR cv) {
+    Particle<TRandomVAR> p;
+    pdf_.parameterize(param_map_(cv));
+    p.point = pdf_.random();
+    p.weight = pdf_.likelihood(p.point);
     return p;
   }
 
   // sample N particle from conditioned distribution
-  void ParticleSample_N(std::vector<PARTICLE_TYPE> &pars, size_t N,
-                        CV_TYPE cv) {
+  void particle(std::vector<TParticle> &pars, size_t N, TConditionVAR cv) {
     pars.clear();
     pars.resize(N);
-    std::generate_n(pars, N, [cv]() { return ParticleSample(cv); });
+    std::generate_n(pars, N, [cv]() { return particle(cv); });
   }
 
-  template <typename CV_DIST>
-  double ApproxiamteMarginalLikelihood_MC(RV_TYPE rv, size_t N,
-                                          CV_DIST cv_dist) {
-    std::vector<typename CV_DIST::PARTICLE_TYPE> pars;
-    cv_dist.ParticleSample_N(pars, N);
+  template <typename TConditionPDF>
+  double approxiamteMarginalLikelihood_MC(TRandomVAR rv, size_t N,
+                                          TConditionPDF cv_dist) {
+    std::vector<typename TConditionPDF::TParticle> pars;
+    cv_dist.particle(pars, N);
     normalize_particles(pars);
     double lik = 0;
     std::for_each(pars.begin(), pars.end(),
-                  [&lik](typename CV_DIST::PARTICLE_TYPE &par) {
-                    lik += par.weight * Likelihood(par.point);
+                  [&lik](typename TConditionPDF::TParticle &par) {
+                    lik += par.weight * likelihood(par.point);
                   });
   }
-
-private:
-  DIST_TYPE dist;
-  PARAM_FUNC param_func;
 };
 
-template <typename T1, typename T2>
-ParametericConditionalDistribution<T1, T2>
-makeParametericConditionalDistribution(T1 &&t1, T2 &&t2) {
-  return ParametericConditionalDistribution<T1, T2>(std::forward<T1>(t1),
-                                                    std::forward<T2>(t2));
+template <typename TPDF, typename TParamMap>
+ParametericConditional<TPDF, TParamMap>
+makeParametericConditional(TPDF &&pdf, TParamMap &&map) {
+  return ParametericConditional<TPDF, TParamMap>(std::forward<TPDF>(pdf),
+                                                 std::forward<TParamMap>(map));
 }
 } // namespace distribution
-} // namespace PROJECT_NAME
+} // namespace ssmpack
 
+#endif // SSMPACK_DISTRIBUTION_PARAMETRIC_CONDITIONAL_HPP

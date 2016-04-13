@@ -15,18 +15,18 @@ BOOST_AUTO_TEST_CASE(test1) {
   model::LinearGaussian<2, 2> f{{{1, 1}, {0, 1}}, {{0.0001, 0}, {0, 0.0001}}};
   model::LinearGaussian<1, 2> h{{1, 0}, {0.0001}};
   auto dynamic_cpdf =
-      makeParametericConditionalDistribution(distribution::Gaussian<2>(), f);
+      distribution::makeParametericConditional(distribution::Gaussian<2>(), f);
   auto measurement_cpdf =
-      makeParametericConditionalDistribution(distribution::Gaussian<1>(), h);
+      distribution::makeParametericConditional(distribution::Gaussian<1>(), h);
 
   auto markov_p = process::makeMarkov(dynamic_cpdf);
 
   auto measurement_p = process::makeMeasurement(markov_p, measurement_cpdf);
 
-  std::cout << "a \n " << measurement_p.Initialize(distribution::Gaussian<2>()) <<
+  std::cout << "a \n " << measurement_p.initialize(distribution::Gaussian<2>()) <<
   std::endl;
 
-auto twin =  measurement_p.Random();
+auto twin =  measurement_p.random();
 
 }
 

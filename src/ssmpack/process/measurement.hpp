@@ -4,8 +4,8 @@
  *
  * Generic class for measurement from stochastic process
  */
-#ifndef SSMPACK_PROCESS_MEASUREMENT_HPP__
-#define SSMPACK_PROCESS_MEASUREMENT_HPP__
+#ifndef SSMPACK_PROCESS_MEASUREMENT_HPP
+#define SSMPACK_PROCESS_MEASUREMENT_HPP
 
 #include <type_traits>
 #include <tuple>
@@ -17,29 +17,32 @@ namespace process {
  * A measurement process
  *
  */
-template <typename LATENT_PROC, typename CPDF>
+template <typename TLatentPRC, typename TMeasurementCPDF>
 class Measurement {
  private:
-  using UR_PROC = typename std::remove_reference<LATENT_PROC>::type;
-  using UR_CPDF = typename std::remove_reference<CPDF>::type;
+  using TLatentPRC_ = typename std::remove_reference<TLatentPRC>::type;
+  using TMeasurementCPDF_ = typename std::remove_reference<TMeasurementCPDF>::type;
 
  public:
-  using MV_TYPE = typename UR_CPDF::RV_TYPE;
-  using LV_TYPE = typename UR_PROC::STATE_TYPE;
-  using MV_LV_TYPE = std::tuple<MV_TYPE,LV_TYPE>;
+ //! Type of the measurement variable.
+  using TMeasurementVAR = typename TMeasurementCPDF_::TRandomVAR;
+  //! Type of the letent state variable.
+  using TLatentVAR = typename TLatentPRC_::TStateVAR;
+  //! Type of joint measurment-latent state variable.
+  using TJointVAR = std::tuple<TMeasurementVAR,TLatentVAR>;
 
   private:
   //! Conditional probability density function (measurement model)
-  UR_CPDF cpdf_;
+  TMeasurementCPDF_ cpdf_;
   //! Latent stochastic process
-  UR_PROC process_;
+  TLatentPRC_ process_;
 
  public:
   /**
    * Creates a measurement process given measurement model as  conditional
    * probability density function and the latent state process model.
    */
-  Measurement(const UR_PROC &process, const UR_CPDF &measurement_cpdf)
+  Measurement(const TLatentPRC_ &process, const TMeasurementCPDF_ &measurement_cpdf)
       : process_(process), cpdf_(measurement_cpdf) {}
 
   /**
@@ -47,30 +50,34 @@ class Measurement {
    * function.
    */
   template<typename INIT_PDF>
-  LV_TYPE Initialize(INIT_PDF &&init_pdf)
+  TLatentVAR initialize(INIT_PDF &&init_pdf)
   {
-    return process_.Initialize<INIT_PDF>(init_pdf);
+    return process_.initialize<INIT_PDF>(init_pdf);
   }
 
   /**
    * Sample one measurement and move the process forward one step.
    */
-   MV_LV_TYPE Random() {
-     auto state = process_.Random();
-     auto measurement = cpdf_.Random(state);
+   TJointVAR random() {
+     auto state = process_.random();
+     auto measurement = cpdf_.random(state);
      return std::make_tuple(measurement,state);
    }
 };
 
-//! A simple constructor for measurement process
-template <typename LATENT_PROC, typename CPDF>
-Measurement<LATENT_PROC, CPDF> makeMeasurement(LATENT_PROC &&process,
-                                               CPDF &&measurement_cpdf) {
-  return Measurement<LATENT_PROC, CPDF>(std::forward<LATENT_PROC>(process),
-                                        std::forward<CPDF>(measurement_cpdf));
+/**
+ * A simple constructor for measurement process. For easy deduction of he types
+ * of latent random process (TLatentPRC) and measurement model cpdf
+ * (TMeasurementCPDF).
+ */
+template <typename TLatentPRC, typename TMeasurementCPDF>
+Measurement<TLatentPRC, TMeasurementCPDF> makeMeasurement(TLatentPRC &&process,
+                                               TMeasurementCPDF &&measurement_cpdf) {
+  return Measurement<TLatentPRC, TMeasurementCPDF>(std::forward<TLatentPRC>(process),
+                                        std::forward<TMeasurementCPDF>(measurement_cpdf));
 }
 
 } // namespace process
 } // namespace ssmpack
 
-#endif // SSMPACK_PROCESS_MEASUREMENT_HPP__
+#endif //SSMPACK_PROCESS_MEASUREMENT_HPP
