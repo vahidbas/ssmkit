@@ -13,18 +13,21 @@ BOOST_AUTO_TEST_SUITE(markov_test);
 BOOST_AUTO_TEST_CASE(test1) {
   model::LinearGaussian<2,2> f{{{1, 1}, {0, 1}}, {{0.0001, 0}, {0, 0.0001}}};
   distribution::Gaussian<2> g;
-  auto cpdf = distribution::makeParametericConditional(g, f);
+  distribution::Conditional<decltype(g), decltype(f)> cpdf(g,f);
 
-  auto markov_p = process::makeMarkov(cpdf);
+  process::Markov<decltype(cpdf)> markov(cpdf);
 
-  std::vector<typename decltype(markov_p)::TStateVAR> v;
-  arma::arma_rng::set_seed_random();
-  std::cout << markov_p.random(v, g, 10) << std::endl;
+auto r = markov.random();
 
-  std::for_each(v.begin(), v.end(),
-                [](typename decltype(markov_p)::TStateVAR &p) {
-                  std::cout << p << std::endl;
-                });
+double l = markov.likelihood(r);
+//  std::vector<typename decltype(markov_p)::TStateVAR> v;
+//  arma::arma_rng::set_seed_random();
+//  std::cout << markov_p.random(v, g, 10) << std::endl;
+//
+//  std::for_each(v.begin(), v.end(),
+//                [](typename decltype(markov_p)::TStateVAR &p) {
+//                  std::cout << p << std::endl;
+//                });
 }
 
 BOOST_AUTO_TEST_SUITE_END();

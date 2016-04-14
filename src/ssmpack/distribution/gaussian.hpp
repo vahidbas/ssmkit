@@ -22,7 +22,7 @@ class Gaussian {
   Gaussian(const arma::vec &mean, const arma::mat &covariance)
       : dist(mean, covariance) {}
 
-  arma::vec random() { return dist.Random(); }
+  arma::vec::fixed<D> random() { return dist.Random(); }
   double likelihood(const arma::vec &observation) {
     return dist.Probability(observation);
   }

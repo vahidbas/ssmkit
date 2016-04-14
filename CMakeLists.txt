@@ -19,6 +19,14 @@ else()
   message("Building release")
   set(CMAKE_BUILD_TYPE Release)
 endif()
+#clang
+  option(USE_CLANG "build application with clang" OFF)
+if(USE_CLANG)
+  SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
+  set(CMAKE_CXX_FLAGS "-Wall -stdlib=libstdc++")
+  message(STATUS "Clang compiler will be used")
+endif(USE_CLANG)
+
 
   find_package(Armadillo REQUIRED)
   find_package(Mlpack REQUIRED)
