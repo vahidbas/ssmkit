@@ -35,6 +35,14 @@ namespace process {
   struct AreProcesses<> {
     static constexpr bool value = true;
   };
+//=====================================================
+template<typename T>
+struct ModelTraits{};
+template<typename R, typename C, typename... Args>
+struct ModelTraits<R (C::*) (Args...)>
+{
+  static constexpr size_t arity = sizeof... (Args);
+};
 
   //==========================================
   template<typename T>
@@ -55,7 +63,12 @@ namespace process {
     using TParamMap = U;
     using TRandomVAR = decltype(std::declval<TPDF>().random());
     using type = Markov<distribution::Conditional<T, U>>;
+    static constexpr size_t  control_vars =
+    ModelTraits<decltype(&TParamMap::operator())>::arity-1;
+
   };
+
+
 }
 }
 

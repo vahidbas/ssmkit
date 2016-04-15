@@ -5,12 +5,12 @@ add_definitions(-DPROJECT_NAME=${PROJECT_NAME})
 
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-# Compilation options
-  option(DEBUG "Compile with debugging information")
 
 # Include modules in the CMake directory.
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
+# Compilation options
+  option(DEBUG "Compile with debugging information")
 if(DEBUG)
   message("Building with debug information")
   add_definitions(-DDEBUG)
@@ -19,13 +19,14 @@ else()
   message("Building release")
   set(CMAKE_BUILD_TYPE Release)
 endif()
+
 #clang
-  option(USE_CLANG "build application with clang" OFF)
-if(USE_CLANG)
+  option(CLANG "build application with clang")
+if(CLANG)
   SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
-  set(CMAKE_CXX_FLAGS "-Wall -stdlib=libstdc++")
+  set(CMAKE_CXX_FLAGS "-Wall -stdlib=libc++ -std=c++11")
   message(STATUS "Clang compiler will be used")
-endif(USE_CLANG)
+endif(CLANG)
 
 
   find_package(Armadillo REQUIRED)

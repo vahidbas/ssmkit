@@ -21,8 +21,11 @@ auto r = markov.random();
 
 double l = markov.likelihood(r);
 
-process::Hierachy<decltype(markov), decltype(markov)> tt;
+process::Hierachy<decltype(markov), decltype(markov)> tt(markov, markov);
 
+ std::cout << process::ProcessTraits<decltype(markov)>::control_vars;
+
+ tt.random();
 //  std::vector<typename decltype(markov_p)::TStateVAR> v;
 //  arma::arma_rng::set_seed_random();
 //  std::cout << markov_p.random(v, g, 10) << std::endl;
