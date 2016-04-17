@@ -8,7 +8,7 @@ namespace model {
 
 template <size_t VN, size_t VM>
 struct LinearGaussian {
-  using TParameter = std::tuple<arma::vec::fixed<VN>, arma::mat::fixed<VN, VM>>;
+  using TParameter = std::tuple<arma::vec::fixed<VN>, arma::mat::fixed<VN, VN>>;
   using TConditionVAR = arma::vec::fixed<VM>;
 
 // should not be overloaded, should not be template

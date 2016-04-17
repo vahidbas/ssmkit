@@ -3,7 +3,6 @@ project(ssmpack CXX)
 
 add_definitions(-DPROJECT_NAME=${PROJECT_NAME})
 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 
 # Include modules in the CMake directory.
@@ -24,10 +23,11 @@ endif()
   option(CLANG "build application with clang")
 if(CLANG)
   SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
-  set(CMAKE_CXX_FLAGS "-Wall -stdlib=libc++ -std=c++11")
+  set(CMAKE_CXX_FLAGS "-Wall -stdlib=libstdc++ -std=c++14")
   message(STATUS "Clang compiler will be used")
 endif(CLANG)
 
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0")
 
   find_package(Armadillo REQUIRED)
   find_package(Mlpack REQUIRED)

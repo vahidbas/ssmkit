@@ -7,7 +7,7 @@
 #ifndef SSMPACK_PROCESS_MEMORYLESS_HPP
 #define SSMPACK_PROCESS_MEMORYLESS_HPP
 
-#include "ssmack/distribution/conditional_distribution.hpp"
+#include "ssmpack/distribution/conditional_distribution.hpp"
 
 #include <type_traits>
 #include <vector>
@@ -26,13 +26,17 @@ class Memoryless {};
 template <typename TPDF, typename TParamMap>
 class Memoryless<distribution::Conditional<TPDF, TParamMap>> {
 
+public:
+Memoryless(distribution::Conditional<TPDF, TParamMap> cpdf) : cpdf_(cpdf) {}
+
   template<typename... Args>
   auto random(Args... args) -> decltype(std::declval<TPDF>().random())
   {
-    state_ = cpdf.random(args...)
-    return state_;
+    return cpdf_.random(args...);
   }
-}
+  private:
+distribution::Conditional<TPDF, TParamMap> cpdf_;
+};
 
 } // namespace process
 } // namespace ssmpack
