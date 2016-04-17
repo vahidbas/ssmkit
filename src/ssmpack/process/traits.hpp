@@ -63,8 +63,8 @@ struct ModelTraits<R (C::*) (Args...)>
     using TParamMap = U;
     using TRandomVAR = decltype(std::declval<TPDF>().random());
     using type = Markov<distribution::Conditional<T, U>>;
-    static constexpr size_t  control_vars =
-    ModelTraits<decltype(&TParamMap::operator())>::arity-1;
+    using TArity =std::integral_constan<size_t,
+    ModelTraits<decltype(&TParamMap::operator())>::arity-1>;
 
   };
 
