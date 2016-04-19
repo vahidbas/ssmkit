@@ -7,12 +7,13 @@
 #ifndef SSMPACK_PROCESS_MARKOV_HPP
 #define SSMPACK_PROCESS_MARKOV_HPP
 
-#include "ssmpack/distribution/conditional_distribution.hpp"
+#include "ssmpack/distribution/conditional.hpp"
+#include "ssmpack/process/base_process.hpp"
 
-#include <type_traits>
-#include <vector>
 #include <algorithm>
 #include <cmath>
+#include <type_traits>
+#include <vector>
 
 namespace ssmpack {
 namespace process {
@@ -24,19 +25,23 @@ template <typename TTransitionCPDF>
 class Markov {};
 
 template <typename TPDF, typename TParamMap>
-class Markov<distribution::Conditional<TPDF, TParamMap>> {
+class Markov<distribution::Conditional<TPDF, TParamMap>>
+    : public BaseProcess<Markov<distribution::Conditional<TPDF, TParamMap>>> {
  public:
-  Markov(distribution::Conditional<TPDF, TParamMap> cpdf) : cpdf_(cpdf) {}
+  Markov(distribution::Conditional<TPDF, TParamMap> cpdf)
+      : cpdf_(std::move(cpdf)) {}
   template <typename... Args>
-  auto random(Args... args) -> decltype(std::declval<TPDF>().random()) {
+  auto random(const Args &... args) -> decltype(std::declval<TPDF>().random()) {
     state_ = cpdf_.random(state_, args...);
-    return state_;
+    return state_; // why not returning reference?
   }
 
   template <typename... Args>
-  double likelihood(decltype(std::declval<TPDF>().random()) rv, Args... args) {
+  double likelihood(const decltype(std::declval<TPDF>().random()) &rv,
+                    const Args &... args) {
     return cpdf_.likelihood(rv, state_, args...);
   }
+
  private:
   distribution::Conditional<TPDF, TParamMap> cpdf_;
   decltype(std::declval<TPDF>().random()) state_;

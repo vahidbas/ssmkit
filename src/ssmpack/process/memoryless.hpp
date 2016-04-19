@@ -7,12 +7,13 @@
 #ifndef SSMPACK_PROCESS_MEMORYLESS_HPP
 #define SSMPACK_PROCESS_MEMORYLESS_HPP
 
-#include "ssmpack/distribution/conditional_distribution.hpp"
+#include "ssmpack/distribution/conditional.hpp"
+#include "ssmpack/process/base_process.hpp"
 
-#include <type_traits>
-#include <vector>
 #include <algorithm>
 #include <cmath>
+#include <type_traits>
+#include <vector>
 
 namespace ssmpack {
 namespace process {
@@ -24,18 +25,26 @@ template <typename TStateCPDF>
 class Memoryless {};
 
 template <typename TPDF, typename TParamMap>
-class Memoryless<distribution::Conditional<TPDF, TParamMap>> {
+class Memoryless<distribution::Conditional<TPDF, TParamMap>>
+    : public BaseProcess<
+          Memoryless<distribution::Conditional<TPDF, TParamMap>>> {
+ private:
+  distribution::Conditional<TPDF, TParamMap> cpdf_;
 
-public:
-Memoryless(distribution::Conditional<TPDF, TParamMap> cpdf) : cpdf_(cpdf) {}
+ public:
+  Memoryless(distribution::Conditional<TPDF, TParamMap> cpdf)
+      : cpdf_(std::move(cpdf)) {}
 
-  template<typename... Args>
-  auto random(Args... args) -> decltype(std::declval<TPDF>().random())
-  {
+  template <typename... Args>
+  auto random(const Args &... args) -> decltype(std::declval<TPDF>().random()) {
     return cpdf_.random(args...);
   }
-  private:
-distribution::Conditional<TPDF, TParamMap> cpdf_;
+
+  template <typename... Args>
+  double likelihood(const decltype(std::declval<TPDF>().random()) &rv,
+                    const Args &... args) {
+    return cpdf_.likelihood(rv, args...);
+  }
 };
 
 } // namespace process

@@ -7,10 +7,10 @@
 #ifndef SSMPACK_DISTRIBUTION_PARAMETRIC_CONDITIONAL_HPP
 #define SSMPACK_DISTRIBUTION_PARAMETRIC_CONDITIONAL_HPP
 
-#include <vector>
-#include <type_traits>
 #include <algorithm>
+#include <type_traits>
 #include <utility>
+#include <vector>
 
 namespace ssmpack {
 namespace distribution {
@@ -18,15 +18,18 @@ namespace distribution {
 template <typename TPDF, typename TParamMap>
 class Conditional {
  public:
-  Conditional(TPDF pdf, TParamMap map) : pdf_(pdf), map_(map) {}
+  Conditional(TPDF pdf, TParamMap map)
+      : pdf_(std::move(pdf)), map_(std::move(map)) {}
+
   template <typename... Args>
-  auto random(Args... args) -> decltype(std::declval<TPDF>().random()) {
+  auto random(const Args &... args) -> decltype(std::declval<TPDF>().random()) {
     pdf_.parameterize(map_(args...));
     return pdf_.random();
   }
 
   template <typename... Args>
-  double likelihood(decltype(std::declval<TPDF>().random()) rv, Args... args) {
+  double likelihood(const decltype(std::declval<TPDF>().random()) &rv,
+                    const Args &... args) {
     pdf_.parameterize(map_(args...));
     return pdf_.likelihood(rv);
   }

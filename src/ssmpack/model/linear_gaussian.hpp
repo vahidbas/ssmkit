@@ -12,7 +12,7 @@ struct LinearGaussian {
   using TConditionVAR = arma::vec::fixed<VM>;
 
 // should not be overloaded, should not be template
-  TParameter operator()(TConditionVAR &x) {
+  TParameter operator()(const TConditionVAR &x) {
     return std::make_tuple(dynamic * x, covariance);
   }
 

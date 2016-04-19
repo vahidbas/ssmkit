@@ -8,7 +8,6 @@
 #define SSMPACK_PROCESS_TRAITS_HPP
 
 #include "ssmpack/process/markov.hpp"
-#include "ssmpack/distribution/conditional_distribution.hpp"
 
 #include <type_traits>
 
