@@ -62,7 +62,7 @@ class Hierarchical : public BaseProcess<Hierarchical<Args...>> {
 
  public:
   template <typename... TVARs>
-  TRandomVARs random(const TVARs... &args) {
+  TRandomVARs random(const TVARs &... args) {
     // what if args are more than what actually required?
 
     /* we make a variable and pass its reference to the GetRandom class member

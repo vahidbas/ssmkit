@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(test1) {
   distribution::Conditional<decltype(nu), decltype(f)> dyn(nu, f);
   distribution::Conditional<decltype(omega), decltype(h)> obs(omega, h);
 
-  process::Markov<decltype(dyn)> markov(dyn);
+  process::Markov<decltype(dyn), decltype(nu)> markov(dyn, nu);
   process::Memoryless<decltype(obs)> memless(obs);
 
   auto r = markov.random();

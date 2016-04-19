@@ -17,8 +17,8 @@ namespace process {
   template<typename T>
   struct IsProcess : std::false_type{};
 
-  template<typename A>
-  struct IsProcess<Markov<A>> : std::true_type{};
+  template<typename A, typename B>
+  struct IsProcess<Markov<A,B>> : std::true_type{};
 
   template<typename A>
   struct IsProcess<Memoryless<A>> : std::true_type{};
@@ -56,14 +56,14 @@ struct ModelTraits<R (C::*) (Args...)>
     using type = T;
   };
 
-  template<typename T, typename U>
-  struct ProcessTraits<Markov<distribution::Conditional<T, U>>>
+  template<typename T, typename U, typename V>
+  struct ProcessTraits<Markov<distribution::Conditional<T, U>, V>>
   {
     static constexpr bool valid = true;
     using TPDF = T;
     using TParamMap = U;
     using TRandomVAR = decltype(std::declval<TPDF>().random());
-    using type = Markov<distribution::Conditional<T, U>>;
+    using type = Markov<distribution::Conditional<T, U>, V>;
     using TArity =std::integral_constant<size_t,
     ModelTraits<decltype(&TParamMap::operator())>::arity-1>;
 
@@ -76,7 +76,7 @@ struct ModelTraits<R (C::*) (Args...)>
     using TPDF = T;
     using TParamMap = U;
     using TRandomVAR = decltype(std::declval<TPDF>().random());
-    using type = Markov<distribution::Conditional<T, U>>;
+    using type = Memoryless<distribution::Conditional<T, U>>;
     using TArity =std::integral_constant<size_t,
     ModelTraits<decltype(&TParamMap::operator())>::arity>;
 

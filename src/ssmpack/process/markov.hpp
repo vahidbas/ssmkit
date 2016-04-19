@@ -21,15 +21,24 @@ namespace process {
 /**
  * A first-order Markov process
  */
-template <typename TTransitionCPDF>
+template <typename TTransitionCPDF, typename TInitialPDF>
 class Markov {};
 
-template <typename TPDF, typename TParamMap>
-class Markov<distribution::Conditional<TPDF, TParamMap>>
-    : public BaseProcess<Markov<distribution::Conditional<TPDF, TParamMap>>> {
+template <typename TPDF, typename TParamMap, typename TInitialPDF>
+class Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>
+    : public BaseProcess<Markov<distribution::Conditional<TPDF, TParamMap>,
+    TInitialPDF>> {
  public:
-  Markov(distribution::Conditional<TPDF, TParamMap> cpdf)
-      : cpdf_(std::move(cpdf)) {}
+  Markov(distribution::Conditional<TPDF, TParamMap> cpdf, TInitialPDF init_pdf)
+      : cpdf_(std::move(cpdf)), init_pdf_(std::move(init_pdf)) {}
+
+  template <typename... Args>
+  auto initialize(const Args &... args)
+      -> decltype(std::declval<TPDF>().random()) {
+    state_ = init_pdf_.random(args...);
+    return state_;
+  }
+
   template <typename... Args>
   auto random(const Args &... args) -> decltype(std::declval<TPDF>().random()) {
     state_ = cpdf_.random(state_, args...);
@@ -44,6 +53,7 @@ class Markov<distribution::Conditional<TPDF, TParamMap>>
 
  private:
   distribution::Conditional<TPDF, TParamMap> cpdf_;
+  TInitialPDF init_pdf_;
   decltype(std::declval<TPDF>().random()) state_;
 };
 
