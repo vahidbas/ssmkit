@@ -40,6 +40,7 @@ include_directories(${PROJECT_INCLUDE_DIR})
   message(STATUS "Project header files: ${PROJECT_HEADER_FILES}")
 # add_subdirectory(src)
 add_subdirectory(test)
+add_subdirectory(example)
 
 # Generate the documentation.
   find_package(Doxygen)
