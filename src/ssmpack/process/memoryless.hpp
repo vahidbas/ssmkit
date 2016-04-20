@@ -35,6 +35,14 @@ class Memoryless<distribution::Conditional<TPDF, TParamMap>>
   Memoryless(distribution::Conditional<TPDF, TParamMap> cpdf)
       : cpdf_(std::move(cpdf)) {}
 
+  auto initialize() -> decltype(std::declval<TPDF>().random()) {
+    /* memoryless doesn't have sensible initialization so initialize simply
+     * returns the default value of the random variable type.
+     */
+    decltype(std::declval<TPDF>().random()) rv;
+    return rv;
+  }
+
   template <typename... Args>
   auto random(const Args &... args) -> decltype(std::declval<TPDF>().random()) {
     return cpdf_.random(args...);

@@ -32,10 +32,8 @@ class Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>
   Markov(distribution::Conditional<TPDF, TParamMap> cpdf, TInitialPDF init_pdf)
       : cpdf_(std::move(cpdf)), init_pdf_(std::move(init_pdf)) {}
 
-  template <typename... Args>
-  auto initialize(const Args &... args)
-      -> decltype(std::declval<TPDF>().random()) {
-    state_ = init_pdf_.random(args...);
+  auto initialize() -> decltype(std::declval<TPDF>().random()) {
+    state_ = init_pdf_.random();
     return state_;
   }
 

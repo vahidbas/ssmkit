@@ -37,7 +37,9 @@ BOOST_AUTO_TEST_CASE(test1) {
   std::cout << process::ProcessTraits<decltype(markov)>::TArity::value
             << std::endl;
 
+  tt.initialize();
   auto r3 = tt.random(1, 'c');
+  auto ll = tt.likelihood(r3);
 
   std::cout << std::get<0>(r3) << std::get<1>(r3) << std::endl;
 
