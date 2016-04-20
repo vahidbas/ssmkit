@@ -39,6 +39,12 @@ class Conditional {
   TParamMap map_;
 };
 
+template <class TPDF, class TParamMap>
+Conditional<TPDF, TParamMap> makeConditional(TPDF pdf, TParamMap map) {
+  return Conditional<TPDF, TParamMap>(std::move(pdf),
+                                      std::move(map));
+}
+
 } // namespace distribution
 } // namespace ssmpack
 

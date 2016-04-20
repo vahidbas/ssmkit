@@ -2,7 +2,7 @@
  * @file memoryless.hpp
  * @author Vahid Bastani
  *
- * Generic class for first-order Markovian stochastic process.
+ * Generic class for first-order Memorylessian stochastic process.
  */
 #ifndef SSMPACK_PROCESS_MEMORYLESS_HPP
 #define SSMPACK_PROCESS_MEMORYLESS_HPP
@@ -19,7 +19,7 @@ namespace ssmpack {
 namespace process {
 
 /**
- * A first-order Markov process
+ * A first-order Memoryless process
  */
 template <typename TStateCPDF>
 class Memoryless {};
@@ -54,6 +54,13 @@ class Memoryless<distribution::Conditional<TPDF, TParamMap>>
     return cpdf_.likelihood(rv, args...);
   }
 };
+
+template <typename TPDF, typename TParamMap>
+Memoryless<distribution::Conditional<TPDF, TParamMap>>
+makeMemoryless(distribution::Conditional<TPDF, TParamMap> cpdf) {
+  return Memoryless<distribution::Conditional<TPDF, TParamMap>>(
+      cpdf);
+}
 
 } // namespace process
 } // namespace ssmpack

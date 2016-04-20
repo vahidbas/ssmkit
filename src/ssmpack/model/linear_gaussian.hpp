@@ -13,12 +13,19 @@ struct LinearGaussian {
 
 // should not be overloaded, should not be template
   TParameter operator()(const TConditionVAR &x) {
-    return std::make_tuple(dynamic * x, covariance);
+    return std::make_tuple(transfer * x, covariance);
   }
 
-  arma::mat::fixed<VN, VM> dynamic;
+  arma::mat::fixed<VN, VM> transfer;
   arma::mat::fixed<VN, VN> covariance;
 };
+
+template <size_t VN, size_t VM>
+LinearGaussian<VN,VM> makeLinearGaussian(arma::mat::fixed<VN,VM> transfer,
+arma::mat::fixed<VN,VN> covariance)
+{
+  return {transfer, covariance};
+}
 
 } // namespace model
 } // namespace ssmpack

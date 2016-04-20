@@ -55,6 +55,14 @@ class Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>
   decltype(std::declval<TPDF>().random()) state_;
 };
 
+template <typename TPDF, typename TParamMap, typename TInitialPDF>
+Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>
+makeMarkov(distribution::Conditional<TPDF, TParamMap> cpdf,
+           TInitialPDF init_pdf) {
+  return Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>(
+      cpdf, init_pdf);
+}
+
 } // namespace process
 } // namespace ssmpack
 

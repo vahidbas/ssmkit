@@ -161,5 +161,12 @@ class Hierarchical : public BaseProcess<Hierarchical<Args...>> {
  private:
   std::tuple<Args...> processes_;
 };
+
+template<class... TArgs>
+Hierarchical<TArgs...> makeHierarchical(TArgs... args)
+{
+  return Hierarchical<TArgs...>(args...);
+}
+
 } // namespace process
 } // namespace ssmpack
