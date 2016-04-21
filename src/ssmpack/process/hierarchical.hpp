@@ -115,12 +115,19 @@ struct GetLikelihood<D, NA, D, TArities> {
 template <class... Args>
 class Hierarchical : public BaseProcess<Hierarchical<Args...>> {
   static_assert(AreProcesses<Args...>::value, "");
+
+ private:
   using TPDFs = std::tuple<typename ProcessTraits<Args>::TPDF...>;
   using TParamMaps = std::tuple<typename ProcessTraits<Args>::TParamMap...>;
-  using TRandomVARs = std::tuple<typename ProcessTraits<Args>::TRandomVAR...>;
   using TArities = std::tuple<typename ProcessTraits<Args>::TArity...>;
 
   static constexpr size_t depth = sizeof...(Args)-1;
+
+ public:
+  using TRandomVARs = std::tuple<typename ProcessTraits<Args>::TRandomVAR...>;
+
+ private:
+  std::tuple<Args...> processes_;
 
  public:
   Hierarchical(Args... processes) : processes_{std::move(processes)...} {}
@@ -155,16 +162,11 @@ class Hierarchical : public BaseProcess<Hierarchical<Args...>> {
         tao::seq::make_index_range<0, arity>(), lik, rvs, processes_,
         std::make_tuple(args...));
     return lik;
-
   }
-
- private:
-  std::tuple<Args...> processes_;
 };
 
-template<class... TArgs>
-Hierarchical<TArgs...> makeHierarchical(TArgs... args)
-{
+template <class... TArgs>
+Hierarchical<TArgs...> makeHierarchical(TArgs... args) {
   return Hierarchical<TArgs...>(args...);
 }
 

@@ -6,7 +6,7 @@
 namespace ssmpack {
 namespace model {
 
-template <size_t VN, size_t VM>
+template <arma::uword VN, arma::uword VM>
 struct LinearGaussian {
   using TParameter = std::tuple<arma::vec::fixed<VN>, arma::mat::fixed<VN, VN>>;
   using TConditionVAR = arma::vec::fixed<VM>;
@@ -20,7 +20,7 @@ struct LinearGaussian {
   arma::mat::fixed<VN, VN> covariance;
 };
 
-template <size_t VN, size_t VM>
+template <arma::uword VN, arma::uword VM>
 LinearGaussian<VN,VM> makeLinearGaussian(arma::mat::fixed<VN,VM> transfer,
 arma::mat::fixed<VN,VN> covariance)
 {
