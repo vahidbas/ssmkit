@@ -43,7 +43,7 @@ int main ()
 
   std::vector<typename decltype(joint_process)::TRandomVARs> v;
 
-  arma::arma_rng::set_seed_random();
+  random::setRandomSeed();
   joint_process.initialize();
   joint_process.random_n(v, 100);
 
