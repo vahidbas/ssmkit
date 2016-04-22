@@ -3,14 +3,13 @@ project(ssmpack CXX)
 
 add_definitions(-DPROJECT_NAME=${PROJECT_NAME})
 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-# Compilation options
-  option(DEBUG "Compile with debugging information")
 
 # Include modules in the CMake directory.
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
+# Compilation options
+  option(DEBUG "Compile with debugging information")
 if(DEBUG)
   message("Building with debug information")
   add_definitions(-DDEBUG)
@@ -19,6 +18,16 @@ else()
   message("Building release")
   set(CMAKE_BUILD_TYPE Release)
 endif()
+
+#clang
+  option(CLANG "build application with clang")
+if(CLANG)
+  SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
+  set(CMAKE_CXX_FLAGS "-Wall -stdlib=libstdc++ -std=c++14")
+  message(STATUS "Clang compiler will be used")
+endif(CLANG)
+
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0")
 
   find_package(Armadillo REQUIRED)
   find_package(Mlpack REQUIRED)
@@ -31,6 +40,7 @@ include_directories(${PROJECT_INCLUDE_DIR})
   message(STATUS "Project header files: ${PROJECT_HEADER_FILES}")
 # add_subdirectory(src)
 add_subdirectory(test)
+add_subdirectory(example)
 
 # Generate the documentation.
   find_package(Doxygen)
