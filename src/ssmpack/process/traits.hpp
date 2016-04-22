@@ -40,7 +40,8 @@ struct AreProcesses<> {
 template <typename T>
 struct ModelTraits {};
 template <typename R, typename C, typename... Args>
-struct ModelTraits<R (C::*)(Args...)> {
+struct ModelTraits<R (C::*)(Args...) const> {  
+  // ok this is for constatnt, what about other cv and reference combinations ?
   static constexpr size_t arity = sizeof...(Args);
 };
 

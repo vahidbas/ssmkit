@@ -163,6 +163,13 @@ class Hierarchical : public BaseProcess<Hierarchical<Args...>> {
         std::make_tuple(args...));
     return lik;
   }
+
+ /**
+ * get a reference to the process at level I
+ */
+  template<size_t II>
+  const typename std::tuple_element<II, std::tuple<Args...>>::type &
+  getProcess() {return std::get<II>(processes_); }
 };
 
 template <class... TArgs>

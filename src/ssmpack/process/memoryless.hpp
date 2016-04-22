@@ -53,6 +53,9 @@ class Memoryless<distribution::Conditional<TPDF, TParamMap>>
                     const Args &... args) {
     return cpdf_.likelihood(rv, args...);
   }
+
+  const distribution::Conditional<TPDF, TParamMap> & 
+  getCPDF() const {return cpdf_;}
 };
 
 template <typename TPDF, typename TParamMap>

@@ -34,6 +34,8 @@ class Conditional {
     return pdf_.likelihood(rv);
   }
 
+  const TPDF & getPDF() const {return pdf_;}
+  const TParamMap & getParamMap() const {return map_;}
  private:
   TPDF pdf_;
   TParamMap map_;

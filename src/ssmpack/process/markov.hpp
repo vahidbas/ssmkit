@@ -49,6 +49,12 @@ class Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>
     return cpdf_.likelihood(rv, state_, args...);
   }
 
+ 
+ const distribution::Conditional<TPDF, TParamMap> & getCPDF() const {return
+ cpdf_;}
+
+ const TInitialPDF & getInitialPDF() const {return init_pdf_;}
+
  private:
   distribution::Conditional<TPDF, TParamMap> cpdf_;
   TInitialPDF init_pdf_;

@@ -29,7 +29,7 @@ class Gaussian {
 
  public:
   Gaussian() : Gaussian(arma::zeros(D), arma::eye(D,D)) {}
-  //       Gaussian(const size_t dimention): dist(dimention) {}
+  
   Gaussian(arma::vec::fixed<D> mean, arma::mat::fixed<D, D> covariance)
       : mean_(std::move(mean)), covariance_(std::move(covariance)) {
     calcDistConstants();
@@ -55,6 +55,9 @@ class Gaussian {
     calcDistConstants();
     return (*this);
   }
+
+  const arma::vec::fixed<D> getMean() const {return mean_;}
+  const arma::mat::fixed<D, D> getCovariance() const {return covariance_;}
 
  private:
   void calcDistConstants() {

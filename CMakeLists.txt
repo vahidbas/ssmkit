@@ -31,7 +31,10 @@ endif(CLANG)
 
   find_package(Armadillo REQUIRED)
   find_package(Mlpack REQUIRED)
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
+# target directory
+#set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
 # go to subdirectories
   add_subdirectory(src)
 include_directories(${PROJECT_INCLUDE_DIR})
