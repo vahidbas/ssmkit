@@ -42,6 +42,17 @@ int main ()
       process::makeHierarchical(state_process, measurement_process);
 
   auto kalman = filter::makeKalman(joint_process);
-  kalman.initialize();
-  kalman.predict();
+
+  std::vector<typename decltype(joint_process)::TRandomVARs> v;
+
+  random::setRandomSeed();
+  joint_process.initialize();
+  joint_process.random_n(v, 100);
+
+  std::vector<typename std::tuple_element<1,decltype(v)::value_type>::type> m(100);
+  int count=0;
+  std::generate_n(m.begin(), 100,
+                  [&count, &v]() { return std::get<1>(v[count++]); });
+  auto o = kalman.filter(m);
+
 }
