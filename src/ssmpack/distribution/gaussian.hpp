@@ -67,7 +67,7 @@ class Gaussian {
     double den_pi = 1 / std::pow(2 * pi, D / 2);
     part_ = den_pi * (1 / std::sqrt(det_cov));
 
-    chol_dec_ = arma::chol(covariance_);
+    chol_dec_ = arma::chol(covariance_, "lower");
   }
 };
 

@@ -33,7 +33,7 @@ class Generator {
 
 };
 
-void setRandomSeed()
+inline void setRandomSeed()
 {
   Generator::get().setRandomSeed();
 }
