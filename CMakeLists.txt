@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.5)
 project(ssmpack CXX)
 
 add_definitions(-DPROJECT_NAME=${PROJECT_NAME})
-
+add_definitions(-DSOURCE_DIR=${CMAKE_SOURCE_DIR})
 
 
 # Include modules in the CMake directory.

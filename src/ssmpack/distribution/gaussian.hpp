@@ -50,13 +50,21 @@ class Gaussian {
   }
 
   Gaussian &parameterize(const TParameterVAR &parameters) {
-    mean_ = std::get<0>(parameters);
-    covariance_ = std::get<1>(parameters);
-    calcDistConstants();
-    return (*this);
+    return parameterize(std::get<0>(parameters),std::get<1>(parameters));
   }
 
-  const arma::vec::fixed<D> getMean() const {return mean_;}
+  Gaussian &parameterize(const arma::vec::fixed<D> &mean,
+                         const arma::mat::fixed<D, D> &covariance)
+  {
+    mean_ = mean;
+    covariance_ = covariance;
+    calcDistConstants();
+    return(*this);
+  }
+
+      const arma::vec::fixed<D> getMean() const {
+    return mean_;
+  }
   const arma::mat::fixed<D, D> getCovariance() const {return covariance_;}
 
  private:
@@ -64,7 +72,7 @@ class Gaussian {
     inv_cov_ = arma::inv(covariance_);
 
     double det_cov = arma::det(covariance_);
-    double den_pi = 1 / std::pow(2 * pi, D / 2);
+    double den_pi = 1 / std::sqrt(std::pow(2 * pi, D));
     part_ = den_pi * (1 / std::sqrt(det_cov));
 
     chol_dec_ = arma::chol(covariance_, "lower");
