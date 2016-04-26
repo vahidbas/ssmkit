@@ -1,8 +1,5 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
-#include <vector>
-#include <algorithm>
-#include <numeric>
 
 #include "ssmpack/distribution/gaussian.hpp"
 
@@ -19,9 +16,6 @@ BOOST_AUTO_TEST_CASE(mc_test_random_default_pdf)
 {
   constexpr int dimension = 8;
   distribution::Gaussian<dimension> pdf;
-
-
-  std::vector<arma::vec> rvs(mc_n);
 
   random::setRandomSeed();
 
@@ -43,9 +37,6 @@ BOOST_AUTO_TEST_CASE(mc_test_random_arbitary_pdf)
   arma::mat chol {{10, 1},{0, 2}};
   arma::mat covariance = chol.t()*chol;
   distribution::Gaussian<2> pdf(mean,covariance);
-
-
-  std::vector<arma::vec> rvs(mc_n);
 
   random::setRandomSeed();
 
