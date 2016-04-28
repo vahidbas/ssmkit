@@ -39,6 +39,7 @@ class Categorical {
     param_ = param;
     calcCDF();
     calcMax();
+    return *this;
   }
 
   private:
