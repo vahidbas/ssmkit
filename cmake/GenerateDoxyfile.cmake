@@ -12,7 +12,12 @@ string(REPLACE
     "${CMAKE_CURRENT_SOURCE_DIR}/src/ssmpack"
     DOXYFILE_AUXVAR "${DOXYFILE_CONTENTS}"
     )
-
+#message(status ${PROJECT_BINARY_DIR})
+#string(REPLACE
+#    "./build/"
+#    "${CMAKE_BINARY_DIR}"
+#    DOXYFILE_AUXVAR "${DOXYFILE_AUXVAR}"
+#    )
 #string(REPLACE
 #    "./doc/guide"
 #    "${CMAKE_CURRENT_SOURCE_DIR}/doc/guide"

@@ -18,12 +18,17 @@
 namespace ssmpack {
 namespace process {
 
-/**
- * A first-order Markov process
- */
+/// @cond
+// base tampltate
 template <typename TTransitionCPDF, typename TInitialPDF>
 class Markov {};
+/// @endcond
 
+
+/** A first-order Markov process.
+ * implementation of markov process defined with initial PDF
+ * \f{equation}{p(x_0)\f} and state transition pdf \f{equation}{p(x_t|x_{t-1})\f}
+ */
 template <typename TPDF, typename TParamMap, typename TInitialPDF>
 class Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>
     : public BaseProcess<Markov<distribution::Conditional<TPDF, TParamMap>,
@@ -37,6 +42,10 @@ class Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>
     return state_;
   }
 
+  /**
+   * Sample one random variable from the distribution \f{equation}{x=1\f}
+   * \image html markov.png
+   */
   template <typename... Args>
   auto random(const Args &... args) -> decltype(std::declval<TPDF>().random()) {
     state_ = cpdf_.random(state_, args...);
