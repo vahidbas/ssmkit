@@ -39,8 +39,9 @@ endif(CLANG)
   add_subdirectory(src)
 include_directories(${PROJECT_INCLUDE_DIR})
 
-  message(STATUS "Project include directory: ${PROJECT_INCLUDE_DIR}")
-  message(STATUS "Project header files: ${PROJECT_HEADER_FILES}")
+#  message(STATUS "Project include directory: ${PROJECT_INCLUDE_DIR}")
+#  message(STATUS "Project header files: ${PROJECT_HEADER_FILES}")
+
 # add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(example)
@@ -59,17 +60,9 @@ if (DOXYGEN_FOUND)
       "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile"
       COMMENT "Creating Doxyfile to generate Doxygen documentation"
       )
-# Generate images
-  file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/doc/image")
-  add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/doc/image/markov.png
-      PRE_BUILD
-      COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/doc/image/markov.tex
-      ${CMAKE_BINARY_DIR}/doc/image/markov.tex && pdflatex -shell-escape markov.tex
-      WORKING_DIRECTORY
-      "${CMAKE_BINARY_DIR}/doc/image/"
-      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/doc/image/markov.tex 
-      COMMENT "Generating Images ...."
-      )
+
+# other staffs related to documantation (e.g. diagrams)
+  add_subdirectory(doc)
 
 # Generate documentation.
   add_custom_target(doc
@@ -80,8 +73,10 @@ if (DOXYGEN_FOUND)
       COMMENT "Generating API documentation with Doxygen"
       )
 
+  add_dependencies(doc tikz_images)
+
   install(DIRECTORY ${CMAKE_BINARY_DIR}/doc/html
-      DESTINATION share/doc/mlpack
+      DESTINATION share/doc/ssmpack
       COMPONENT doc
       OPTIONAL
       )
