@@ -26,8 +26,10 @@ class Markov {};
 
 
 /** A first-order Markov process.
- * implementation of markov process defined with initial PDF
- * \f{equation}{p(x_0)\f} and state transition pdf \f{equation}{p(x_t|x_{t-1})\f}
+ * Implementation of markov process defined with initial PDF
+ * \f$p(\mathbf{x}_0)\f$ and state transition PDF
+ * \f$p(\mathbf{x}_k|\mathbf{x}_{k-1})\f$
+ * \image html markov.png "Dynamic Bayesian Network model of Markov process"
  */
 template <typename TPDF, typename TParamMap, typename TInitialPDF>
 class Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>
@@ -44,7 +46,7 @@ class Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>
 
   /**
    * Sample one random variable from the distribution \f{equation}{x=1\f}
-   * \image html markov.png
+   * 
    */
   template <typename... Args>
   auto random(const Args &... args) -> decltype(std::declval<TPDF>().random()) {

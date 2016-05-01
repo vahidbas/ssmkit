@@ -1,8 +1,35 @@
-\documentclass[convert={density=300,size=1080x800,outext=.png}]{standalone}
+\documentclass[convert={density=150,outext=.png}]{standalone}
 \usepackage{tikz}
+\usepackage{amsmath}
 
 \begin{document}
+\tikzstyle{state}=[circle,
+  thick,
+  minimum
+  size=1.2cm,
+  draw=blue!80,
+  fill=blue!20]
+%\tikzstyle{state}[circle, thick]
 \begin{tikzpicture}
-\draw [step=0.5] (-1.4,-1.4) grid (1.4,1.4);
+\matrix[row sep=0.3cm, column sep=0.3cm] {
+  &
+  \node (s0) [state] {$\mathbf{x}_{0}$}; &
+  &
+  \node (dots1) {$\cdots$}; &
+  &
+  \node (skm1) [state] {$\mathbf{x}_{k-1}$}; &  
+  &
+  \node (sk) [state] {$\mathbf{x}_{k}$}; &  
+  &
+  \node (dots2) {$\cdots$}; &
+  \\
+};
+
+\draw [->] (skm1) edge[thick] (sk) 
+           (s0) edge[thick] (dots1)
+           (sk) edge[thick] (dots2)
+           (dots1) edge[thick] (skm1)
+           ;
+
 \end{tikzpicture}
 \end{document}
