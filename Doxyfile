@@ -142,7 +142,7 @@ BINARY_TOC             = NO
 TOC_EXPAND             = NO
 DISABLE_INDEX          = NO
 ENUM_VALUES_PER_LINE   = 1
-GENERATE_TREEVIEW      = NO
+GENERATE_TREEVIEW      = YES
 TREEVIEW_WIDTH         = 250
 USE_MATHJAX            = YES
 #---------------------------------------------------------------------------
