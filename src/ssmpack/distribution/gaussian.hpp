@@ -17,9 +17,9 @@ namespace ssmpack {
 namespace distribution {
 
 /** A D-dimensional multivariate Gaussian distribution.
- * \f{equation}{ \mathcal{N}(\mathbf{x}| \mu, \Sigma) = 
+ * \f[ \mathcal{N}(\mathbf{x}| \mu, \Sigma) = 
  * \frac{1}{(2\pi)^{D/2}\sqrt{|\Sigma|}}
- * \exp(-\frac{1}{2}\mathbf{x}^T\Sigma^{-1}\mathbf{x})\f}
+ * \exp(-\frac{1}{2}\mathbf{x}^T\Sigma^{-1}\mathbf{x})\f]
  */
 template <size_t D>
 class Gaussian {
@@ -41,12 +41,12 @@ class Gaussian {
   arma::mat::fixed<D, D> inv_cov_;
   //! partitioning function \f$\frac{1}{(2\pi)^{D/2}\sqrt{|\Sigma|}}\f$.
   double part_;
-  //! Cholesky decomposition of covariance matrix \f$L^TL=\Sigma\f$.
+  //! Cholesky decomposition of covariance matrix, i.e. \f$L\f$ such that  \f$LL^T=\Sigma\f$.
   arma::mat::fixed<D, D> chol_dec_;
 
  private:
   /**
-   * calculates useful constant values for avoiding recalculation for every 
+   * Calculates useful constant values for avoiding recalculation for every 
    * call to likelihood().
    */
   void calcDistConstants() {
@@ -79,16 +79,21 @@ class Gaussian {
   }
 
   /** Returns a random variable from the distribution.
+   * \f[ \mathbf{x} \sim \mathcal{N}(\mu, \Sigma) \f]
+   * @return The random vector \f$\mathbf{x}\f$
    */
   arma::vec::fixed<D> random() {
-    arma::vec::fixed<D> rnd; // emmm any better way?
+    arma::vec::fixed<D> rnd; // how much overload the vector construction has?
     rnd.imbue(
         [&]() { return normal_(random::Generator::get().getGenerator()); });
     return mean_ + chol_dec_ * rnd;
   }
 
   /** Returns the likelihood of a given random variable.
-   * @param rv The random variable for which likelihood is calculated.
+   * \f[p(\mathbf{x}) = \frac{1}{(2\pi)^{D/2}\sqrt{|\Sigma|}}
+   * \exp(-\frac{1}{2}\mathbf{x}^T\Sigma^{-1}\mathbf{x})\f]
+   * @param rv The random variable \f$\mathbf{x}\f$ for which likelihood is calculated.
+   * @return \f$p(\mathbf{x})\f$.
    */
   double likelihood(const arma::vec &rv) const {
     const auto diff = rv - mean_;
@@ -124,7 +129,7 @@ class Gaussian {
   const arma::mat::fixed<D, D>& getCovariance() const { return covariance_; }
 };
 
-} // ssmpack
-} // distribution
+} // namespace distribution
+} // namespace ssmpack
 
 #endif // SSMPACK_DISTRIBUTION_GAUSSIAN_HPP
