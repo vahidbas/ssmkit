@@ -16,7 +16,7 @@
 namespace ssmpack {
 namespace distribution {
 
-/** A D-dimentioanl multivariate Gaussian distribution.
+/** A D-dimensional multivariate Gaussian distribution.
  * \f{equation}{ \mathcal{N}(\mathbf{x}| \mu, \Sigma) = 
  * \frac{1}{(2\pi)^{D/2}\sqrt{|\Sigma|}}
  * \exp(-\frac{1}{2}\mathbf{x}^T\Sigma^{-1}\mathbf{x})\f}
@@ -51,11 +51,11 @@ class Gaussian {
    */
   void calcDistConstants() {
     inv_cov_ = arma::inv(covariance_);
-    // claculation partition function
+    // calculate partition function
     double det_cov = arma::det(covariance_);
     double den_pi = 1 / std::sqrt(std::pow(2 * pi, D));
     part_ = den_pi * (1 / std::sqrt(det_cov));
-    // cholesky decomposition
+    // Cholesky decomposition
     chol_dec_ = arma::chol(covariance_, "lower");
   }
 
@@ -80,7 +80,7 @@ class Gaussian {
 
   /** Returns a random variable from the distribution.
    */
-  arma::vec::fixed<D> random() const {
+  arma::vec::fixed<D> random() {
     arma::vec::fixed<D> rnd; // emmm any better way?
     rnd.imbue(
         [&]() { return normal_(random::Generator::get().getGenerator()); });

@@ -4,7 +4,7 @@
 #include <armadillo>
 
 namespace ssmpack {
-namespace model {
+namespace map {
 
 template <arma::uword VN, arma::uword VM>
 struct LinearGaussian {
@@ -27,7 +27,7 @@ arma::mat::fixed<VN,VN> covariance)
   return {transfer, covariance};
 }
 
-} // namespace model
+} // namespace map
 } // namespace ssmpack
 
 #endif //SSMPACK_MODEL_LINEAR_GAUSSIAN_HPP

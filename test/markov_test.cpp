@@ -1,7 +1,7 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-#include "ssmpack/model/linear_gaussian.hpp"
+#include "ssmpack/map/linear_gaussian.hpp"
 #include "ssmpack/distribution/gaussian.hpp"
 #include "ssmpack/distribution/conditional.hpp"
 #include "ssmpack/process/markov.hpp"
@@ -16,10 +16,10 @@ BOOST_AUTO_TEST_SUITE(markov_test);
 BOOST_AUTO_TEST_CASE(test1) {
   arma::arma_rng::set_seed_random();
 
-  model::LinearGaussian<2, 2> f{{{1, 1}, {0, 1}}, {{0.0001, 0}, {0, 0.01}}};
+  map::LinearGaussian<2, 2> f{{{1, 1}, {0, 1}}, {{0.0001, 0}, {0, 0.01}}};
   distribution::Gaussian<2> nu;
 
-  model::LinearGaussian<1, 2> h{{1, 0}, {0.0001}};
+  map::LinearGaussian<1, 2> h{{1, 0}, {0.0001}};
   distribution::Gaussian<1> omega;
 
   distribution::Conditional<decltype(nu), decltype(f)> dyn(nu, f);

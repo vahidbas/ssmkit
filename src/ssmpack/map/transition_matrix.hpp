@@ -4,7 +4,7 @@
 #include <armadillo>
 
 namespace ssmpack {
-namespace model {
+namespace map {
 
 template <arma::uword VN>
 struct TransitionMatrix {
@@ -24,7 +24,7 @@ TransitionMatrix<VN> makeTransitionMatrix(arma::mat::fixed<VN, VN> matrix) {
   return {matrix};
 }
 
-} // namespace model
+} // namespace map
 } // namespace ssmpack
 
 #endif // SSMPACK_MODEL_TRANSITION_MATRIX_HPP

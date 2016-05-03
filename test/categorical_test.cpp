@@ -15,7 +15,7 @@ constexpr int mc_n = 500000;
 BOOST_AUTO_TEST_CASE(mc_test_random_default_pdf)
 {
   distribution::Categorical<> pdf;
-  arma::ivec samples(mc_n);
+  arma::Col<int> samples(mc_n);
   random::setRandomSeed();
   samples.for_each([&pdf](int &val){val = pdf.random();});
   BOOST_CHECK(!arma::any(samples));

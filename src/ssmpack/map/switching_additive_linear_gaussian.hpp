@@ -4,7 +4,7 @@
 #include <armadillo>
 
 namespace ssmpack {
-namespace model {
+namespace map {
 
 template <arma::uword VN, arma::uword VM, arma::uword VK>
 struct SwitchingAdditiveLinearGaussian {
@@ -28,7 +28,7 @@ arma::mat::fixed<VN, VN> covariance, arma::mat::fixed<VM, VK> biases) {
   return {biases, transfer, covariance};
 }
 
-} // namespace model
+} // namespace map
 } // namespace ssmpack
 
 #endif // SSMPACK_MODEL_SWITCHING_ADDITIVE_LINEAR_GAUSSIAN_HPP

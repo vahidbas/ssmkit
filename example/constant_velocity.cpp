@@ -1,5 +1,5 @@
 
-#include "ssmpack/model/linear_gaussian.hpp"
+#include "ssmpack/map/linear_gaussian.hpp"
 #include "ssmpack/distribution/gaussian.hpp"
 #include "ssmpack/distribution/conditional.hpp"
 #include "ssmpack/process/markov.hpp"
@@ -23,9 +23,9 @@ int main ()
   arma::mat::fixed<2, 4> measurement_matrix{{1, 0, 0, 0}, {0, 1, 0, 0}};
   arma::mat::fixed<2, 2> measurement_noise{{0.1, 0}, {0, 0.1}};
 
-  auto dynamic_model = model::makeLinearGaussian(dynamic_matrix, dynamic_noise);
+  auto dynamic_model = map::makeLinearGaussian(dynamic_matrix, dynamic_noise);
   auto measurement_model =
-      model::makeLinearGaussian(measurement_matrix, measurement_noise);
+      map::makeLinearGaussian(measurement_matrix, measurement_noise);
 
   auto dynamic_cpdf =
       distribution::makeConditional(distribution::Gaussian<4>(), dynamic_model);
