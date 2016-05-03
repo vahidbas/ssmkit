@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.5)
+cmake_minimum_required(VERSION 3.2.0)
 project(ssmpack CXX)
 
 add_definitions(-DPROJECT_NAME=${PROJECT_NAME})
@@ -68,7 +68,6 @@ if (DOXYGEN_FOUND)
   add_custom_target(doc
       COMMAND "${DOXYGEN_EXECUTABLE}" "${CMAKE_BINARY_DIR}/Doxyfile"
       DEPENDS "${CMAKE_BINARY_DIR}/Doxyfile"
-      "${CMAKE_BINARY_DIR}/doc/image/markov.png"
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
       COMMENT "Generating API documentation with Doxygen"
       )

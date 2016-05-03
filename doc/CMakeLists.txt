@@ -32,6 +32,7 @@ if (LATEX_FOUND AND ImageMagick_FOUND)
     COMMENT "Generating tikz diagrams"
     )
 else ()
+  message(STATUS "Latex ${LATEX_FOUND} and/or Imagemagick ${ImageMagick_FOUND} not found, no way to generate images")
 # TODO: put a place holder instead of images..
 endif ()
 
