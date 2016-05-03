@@ -83,7 +83,8 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = ./src/ssmpack
+INPUT                  = ./src/ssmpack \
+                         ./doc/global
 FILE_PATTERNS          = *.hpp \
                          *.cpp \
                          *.txt

@@ -13,17 +13,12 @@ string(REPLACE
     DOXYFILE_AUXVAR "${DOXYFILE_CONTENTS}"
     )
 #message(status ${PROJECT_BINARY_DIR})
-#string(REPLACE
-#    "./build/"
-#    "${CMAKE_BINARY_DIR}"
-#    DOXYFILE_AUXVAR "${DOXYFILE_AUXVAR}"
-#    )
-#string(REPLACE
-#    "./doc/guide"
-#    "${CMAKE_CURRENT_SOURCE_DIR}/doc/guide"
-#    DOXYFILE_CONTENTS "${DOXYFILE_AUXVAR}"
-#    )
-#
+string(REPLACE
+    "./doc/global"
+    "${CMAKE_CURRENT_SOURCE_DIR}/doc/global"
+    DOXYFILE_AUXVAR "${DOXYFILE_AUXVAR}"
+    )
+
 #string(REPLACE
 #    "./doc/tutorials"
 #    "${CMAKE_CURRENT_SOURCE_DIR}/doc/tutorials"
