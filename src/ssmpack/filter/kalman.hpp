@@ -3,8 +3,8 @@
  * @author Vahid Bastani
  *
  */
-#ifndef SSMPACK_FILTER_KALMEN_HPP
-#define SSMPACK_FILTER_KALMEN_HPP
+#ifndef SSMPACK_FILTER_KALMAN_HPP
+#define SSMPACK_FILTER_KALMAN_HPP
 
 #include "ssmpack/distribution/gaussian.hpp"
 #include "ssmpack/distribution/conditional.hpp"
@@ -17,27 +17,25 @@
 namespace ssmpack {
 namespace filter {
 
+using process::Hierarchical;
+using process::Markov;
+using process::Memoryless;
+using distribution::Conditional;
+using distribution::Gaussian;
+
 template <class TProcess>
 class Kalman;
 
 template <class T1, class T2, size_t D1, size_t D2>
-class Kalman<process::Hierarchical<
-    process::Markov<distribution::Conditional<distribution::Gaussian<D1>, T1>,
-                    distribution::Gaussian<D1>>,
-    process::Memoryless<
-        distribution::Conditional<distribution::Gaussian<D2>, T2>>>>
-    : public RecursiveBayesianBase<Kalman<process::Hierarchical<
-          process::Markov<
-              distribution::Conditional<distribution::Gaussian<D1>, T1>,
-              distribution::Gaussian<D1>>,
-          process::Memoryless<
-              distribution::Conditional<distribution::Gaussian<D2>, T2>>>>> {
-public:
-  using TProcess = process::Hierarchical<
-      process::Markov<distribution::Conditional<distribution::Gaussian<D1>, T1>,
-                      distribution::Gaussian<D1>>,
-      process::Memoryless<
-          distribution::Conditional<distribution::Gaussian<D2>, T2>>>;
+class Kalman<Hierarchical<Markov<Conditional<Gaussian<D1>, T1>, Gaussian<D1>>,
+                          Memoryless<Conditional<Gaussian<D2>, T2>>>>
+    : public RecursiveBayesianBase<Kalman<
+          Hierarchical<Markov<Conditional<Gaussian<D1>, T1>, Gaussian<D1>>,
+                       Memoryless<Conditional<Gaussian<D2>, T2>>>>> {
+ public:
+  using TProcess =
+      Hierarchical<Markov<Conditional<Gaussian<D1>, T1>, Gaussian<D1>>,
+                   Memoryless<Conditional<Gaussian<D2>, T2>>>;
 
   using TCompeleteState =
       std::tuple<arma::vec::fixed<D1>, arma::mat::fixed<D1, D1>>;
@@ -111,4 +109,4 @@ Kalman<TProcess> makeKalman(TProcess process) {
 } // namespace filter
 } // namespace ssmpack
 
-#endif // SSMPACK_FILTER_KALMEN_HPP
+#endif // SSMPACK_FILTER_KALMAN_HPP
