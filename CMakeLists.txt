@@ -35,14 +35,9 @@ endif(CLANG)
 # target directory
 #set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
+include_directories(${CMAKE_SOURCE_DIR}/src)
 # go to subdirectories
-  add_subdirectory(src)
-include_directories(${PROJECT_INCLUDE_DIR})
-
-#  message(STATUS "Project include directory: ${PROJECT_INCLUDE_DIR}")
-#  message(STATUS "Project header files: ${PROJECT_HEADER_FILES}")
-
-# add_subdirectory(src)
+add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(example)
 
