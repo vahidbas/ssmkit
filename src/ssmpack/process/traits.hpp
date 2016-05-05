@@ -2,12 +2,13 @@
  * @file traits.hpp
  * @author Vahid Bastani
  *
- * Generic class for first-order Markovian stochastic process.
+ * MP tools for process classes.
  */
 #ifndef SSMPACK_PROCESS_TRAITS_HPP
 #define SSMPACK_PROCESS_TRAITS_HPP
 
 #include "ssmpack/process/markov.hpp"
+#include "ssmpack/process/memoryless.hpp"
 
 #include <type_traits>
 

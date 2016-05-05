@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <utility>
 #include <vector>
+#include <tuple>
 
 namespace ssmpack {
 namespace process {
@@ -168,7 +169,7 @@ class Hierarchical : public BaseProcess<Hierarchical<Args...>> {
  * get a reference to the process at level I
  */
   template<size_t II>
-  const typename std::tuple_element<II, std::tuple<Args...>>::type &
+  typename std::tuple_element<II, std::tuple<Args...>>::type &
   getProcess() {return std::get<II>(processes_); }
 };
 

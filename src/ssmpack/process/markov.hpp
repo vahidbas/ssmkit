@@ -61,10 +61,10 @@ class Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>
   }
 
  
- const distribution::Conditional<TPDF, TParamMap> & getCPDF() const {return
+ distribution::Conditional<TPDF, TParamMap> & getCPDF(){return
  cpdf_;}
 
- const TInitialPDF & getInitialPDF() const {return init_pdf_;}
+ TInitialPDF & getInitialPDF() {return init_pdf_;}
 
  private:
   distribution::Conditional<TPDF, TParamMap> cpdf_;
