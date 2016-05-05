@@ -27,7 +27,7 @@ class RecursiveBayesianBase {
     auto pm = measurements.cbegin();
 
     if (controls.size() == 0) {
-      std::generate_n(state_seq.begin() + 1, state_seq.size()-1,
+      std::generate_n(state_seq.begin() + 1, state_seq.size() - 1,
                       [this, &pm]() { return step(*(pm++)); });
     } else {
       // else what?

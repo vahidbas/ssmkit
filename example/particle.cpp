@@ -43,20 +43,24 @@ int main () {
   auto joint_process =
       process::makeHierarchical(state_process, measurement_process);
 
-  auto pfilter = filter::makeParticle(joint_process, dummy_resampler(), 10);
+  auto pfilter = filter::makeParticle(joint_process, dummy_resampler(), 50);
 
   random::setRandomSeed();
 
   pfilter.initialize();
 
-  std::cout << pfilter.getWeights();
+  //std::cout << pfilter.getWeights();
   std::vector<typename decltype(joint_process)::TRandomVARs> v;
   joint_process.initialize();
-  joint_process.random_n(v, 100);
-  std::vector<typename std::tuple_element<1,decltype(v)::value_type>::type> m(100);
+  int n = 20;
+  joint_process.random_n(v, n);
+  std::vector<typename std::tuple_element<1, decltype(v)::value_type>::type> m(
+      n);
   int count=0;
-  std::generate_n(m.begin(), 100,
+  std::generate_n(m.begin(), m.size(),
                   [&count, &v]() { return std::get<1>(v[count++]); });
+  std::for_each(m.begin(), m.end(), [](auto &e){std::cout << e << "------" <<
+  std::endl;});
   auto o = pfilter.filter(m);
   return 0;
 }
