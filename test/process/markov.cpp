@@ -34,23 +34,22 @@ BOOST_AUTO_TEST_CASE(test1) {
 
   process::Hierarchical<decltype(markov), decltype(memless)> tt(markov, memless);
 
-  std::cout << process::ProcessTraits<decltype(markov)>::TArity::value
-            << std::endl;
+  //std::cout << process::ProcessTraits<decltype(markov)>::TArity::value
+  //          << std::endl;
 
   tt.initialize();
   auto r3 = tt.random(1, 'c');
   auto ll = tt.likelihood(r3);
 
-  std::cout << std::get<0>(r3) << std::get<1>(r3) << std::endl;
+  //std::cout << std::get<0>(r3) << std::get<1>(r3) << std::endl;
 
     std::vector<decltype(markov.random())> v;
   
     markov.random_n(v, 10);
-  
-    std::for_each(v.begin(), v.end(),
-                  [](decltype(markov.random()) &p) {
-                    std::cout << p << std::endl;
-                  });
+
+   // std::for_each(v.begin(), v.end(), [](decltype(markov.random()) &p) {
+   //   std::cout << p << std::endl;
+   // });
 }
 
 BOOST_AUTO_TEST_SUITE_END();

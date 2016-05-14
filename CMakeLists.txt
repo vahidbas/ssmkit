@@ -8,6 +8,7 @@ add_definitions(-DSOURCE_DIR=${CMAKE_SOURCE_DIR})
 # Include modules in the CMake directory.
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0")
 # Compilation options
   option(DEBUG "Compile with debugging information")
 if(DEBUG)
@@ -23,11 +24,10 @@ endif()
   option(CLANG "build application with clang")
 if(CLANG)
   SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
-  set(CMAKE_CXX_FLAGS "-Wall -stdlib=libstdc++ -std=c++14")
+  set(CMAKE_CXX_FLAGS "-Wall -stdlib=libstdc++ -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0")
   message(STATUS "Clang compiler will be used")
 endif(CLANG)
 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0")
 
   find_package(Armadillo REQUIRED)
   find_package(Mlpack REQUIRED)
