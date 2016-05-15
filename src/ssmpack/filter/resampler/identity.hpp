@@ -13,7 +13,7 @@ namespace resampler {
 
 /** Returns same particles and weights
  */
-struct identity {
+struct Identity {
   template<class Particles, class Weights>
   void operator()(Particles &pars, Weights &w) {}
 };

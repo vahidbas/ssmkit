@@ -1,5 +1,6 @@
 #include "ssmpack/filter/particle.hpp"
-#include "ssmpack/filter/resampler/identity.hpp"
+#include "ssmpack/filter/resampler/systematic.hpp"
+#include "ssmpack/filter/resampler/criterion/ess.hpp"
 #include "ssmpack/map/linear_gaussian.hpp"
 #include "ssmpack/distribution/gaussian.hpp"
 #include "ssmpack/distribution/conditional.hpp"
@@ -38,8 +39,10 @@ int main() {
   auto joint_process =
       process::makeHierarchical(state_process, measurement_process);
 
-  auto pfilter =
-      filter::makeParticle(joint_process, filter::resampler::identity(), 50);
+  auto pfilter = filter::makeParticle(
+      joint_process,
+      filter::resampler::makeSystematic(filter::resampler::criterion::ESS(40)),
+      50);
 
   random::setRandomSeed();
 
