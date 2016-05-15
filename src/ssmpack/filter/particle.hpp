@@ -63,7 +63,7 @@ class Particle<
   arma::mat state_par_;
   //! Previous time state particles \f$
   // \{\mathbf{x}^{(i)}_{t-1}\}_{i=0}^{N-1}\f$.
-  //arma::mat state_par_old_;
+  // arma::mat state_par_old_;
   //! The process model
   Process process_;
   //! Number of particles \f$N\f$.
@@ -77,11 +77,11 @@ class Particle<
  public:
   Particle(Process process, Resampler resampler, unsigned long particles_num)
       : process_{process}, resampler_{resampler}, num_{particles_num} {
-        // initialized w_ and state_par_
-        w_.resize(num_);
-        //take one sample to find out dimension
-        auto tmp = process_.template getProcess<0>().getInitialPDF().random();
-        state_par_.resize(tmp.size(), num_);
+    // initialized w_ and state_par_
+    w_.resize(num_);
+    // take one sample to find out dimension
+    auto tmp = process_.template getProcess<0>().getInitialPDF().random();
+    state_par_.resize(tmp.size(), num_);
   }
 
   template <class... Args>
@@ -96,8 +96,8 @@ class Particle<
                          const TArgs &... args) {
     unsigned long cnt = 0;
     w_.for_each([this, &cnt, &measurement, &args...](double &e) {
-      e *= process_.template
-      getProcess<1>().getCPDF().likelihood(measurement, state_par_.col(cnt++), args...);
+      e *= process_.template getProcess<1>().getCPDF().likelihood(
+          measurement, state_par_.col(cnt++), args...);
     });
 
     normalizeWeights();
@@ -123,8 +123,8 @@ class Particle<
     return std::make_tuple(state_par_, w_);
   }
 
-  const arma::vec & getWeights(void) const {return w_;}
-  const arma::mat & getStatesParticles(void) const {return state_par_;}
+  const arma::vec &getWeights(void) const { return w_; }
+  const arma::mat &getStatesParticles(void) const { return state_par_; }
 };
 
 template <class Process, class Resampler>

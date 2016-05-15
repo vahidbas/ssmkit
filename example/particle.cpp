@@ -1,4 +1,5 @@
 #include "ssmpack/filter/particle.hpp"
+#include "ssmpack/filter/resampler/identity.hpp"
 #include "ssmpack/map/linear_gaussian.hpp"
 #include "ssmpack/distribution/gaussian.hpp"
 #include "ssmpack/distribution/conditional.hpp"
@@ -10,12 +11,7 @@
 
 using namespace ssmpack;
 
-struct dummy_resampler {
-  template <class A, class B>
-  void operator()(A &a, B &b) {}
-};
-
-int main () {
+int main() {
   double delta = 0.1; // sample time
   arma::mat::fixed<4, 4> dynamic_matrix{
       {1, 0, delta, 0}, {0, 1, 0, delta}, {0, 0, 1, 0}, {0, 0, 0, 1}};
@@ -37,30 +33,30 @@ int main () {
 
   auto state_process =
       process::makeMarkov(dynamic_cpdf, distribution::Gaussian<4>());
-  auto measurement_process =
-      process::makeMemoryless(measurement_cpdf);
+  auto measurement_process = process::makeMemoryless(measurement_cpdf);
 
   auto joint_process =
       process::makeHierarchical(state_process, measurement_process);
 
-  auto pfilter = filter::makeParticle(joint_process, dummy_resampler(), 50);
+  auto pfilter =
+      filter::makeParticle(joint_process, filter::resampler::identity(), 50);
 
   random::setRandomSeed();
 
   pfilter.initialize();
 
-  //std::cout << pfilter.getWeights();
+  // std::cout << pfilter.getWeights();
   std::vector<typename decltype(joint_process)::TRandomVARs> v;
   joint_process.initialize();
   int n = 20;
   joint_process.random_n(v, n);
   std::vector<typename std::tuple_element<1, decltype(v)::value_type>::type> m(
       n);
-  int count=0;
+  int count = 0;
   std::generate_n(m.begin(), m.size(),
                   [&count, &v]() { return std::get<1>(v[count++]); });
-  std::for_each(m.begin(), m.end(), [](auto &e){std::cout << e << "------" <<
-  std::endl;});
+  std::for_each(m.begin(), m.end(),
+                [](auto &e) { std::cout << e << "------" << std::endl; });
   auto o = pfilter.filter(m);
   return 0;
 }
