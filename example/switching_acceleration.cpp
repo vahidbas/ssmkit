@@ -16,33 +16,33 @@ int main() {
   double delta = 1; // sample time
 
   // switching process
-  arma::mat::fixed<3, 3> transition_matrix{
+  arma::mat transition_matrix{
       {0.8, 0.1, 0.1}, {0.1, 0.8, 0.1}, {0.1, 0.1, 0.8}};
-  auto switching_model = map::makeTransitionMatrix(transition_matrix);
+  auto switching_model = map::TransitionMatrix(transition_matrix);
   auto switching_cpdf = distribution::makeConditional(
       distribution::Categorical<>(), switching_model);
   auto switching_process = process::makeMarkov(
       switching_cpdf, distribution::Categorical<>({0.4, 0.3, 0.3}));
 
   // dynamic process
-  arma::mat::fixed<2, 2> dynamic_matrix{{1, delta}, {0, 1}};
-  arma::mat::fixed<2, 2> dynamic_noise{{0.1, 0}, {0, 0.1}};
-  arma::mat::fixed<2, 3> accelerations{
+  arma::mat dynamic_matrix{{1, delta}, {0, 1}};
+  arma::mat dynamic_noise{{0.1, 0}, {0, 0.1}};
+  arma::mat accelerations{
       {0, delta * delta / 2, -delta * delta / 2}, {0, delta, -delta}};
-  auto state_model = map::makeSwitchingAdditiveLinearGaussian(
+  auto state_model = map::SwitchingAdditiveLinearGaussian(
       dynamic_matrix, dynamic_noise, accelerations);
   auto state_cpdf =
-      distribution::makeConditional(distribution::Gaussian<2>(), state_model);
+      distribution::makeConditional(distribution::Gaussian(2), state_model);
   auto state_process =
-      process::makeMarkov(state_cpdf, distribution::Gaussian<2>());
+      process::makeMarkov(state_cpdf, distribution::Gaussian(2));
 
   // measurement process
-  arma::mat::fixed<1, 2> measurement_matrix{1, 0};
-  arma::mat::fixed<1, 1> measurement_noise{0.1};
+  arma::mat measurement_matrix{1, 0};
+  arma::mat measurement_noise{0.1};
   auto measurement_model =
-      map::makeLinearGaussian(measurement_matrix, measurement_noise);
+      map::LinearGaussian(measurement_matrix, measurement_noise);
   auto measurement_cpdf = distribution::makeConditional(
-      distribution::Gaussian<1>(), measurement_model);
+      distribution::Gaussian(1), measurement_model);
   auto measurement_process = process::makeMemoryless(measurement_cpdf);
 
   // joint process

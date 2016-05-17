@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(operator_parenthesis) {
   BOOST_CHECK(arma::all(w_r == w));
   BOOST_CHECK(arma::all(arma::all(pars_r == pars)));
 
-  // make first i wigths non-zero, any particle with zero weight
+  // make first i weights non-zero, any particle with zero weight
   // should not appear in the output
   for (int i = 1; i < N-1; ++i) {
     w_r.zeros();

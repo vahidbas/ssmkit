@@ -124,7 +124,7 @@ class Particle<
   }
 
   const arma::vec &getWeights(void) const { return w_; }
-  const arma::mat &getStatesParticles(void) const { return state_par_; }
+  const arma::mat &getStateParticles(void) const { return state_par_; }
 };
 
 template <class Process, class Resampler>

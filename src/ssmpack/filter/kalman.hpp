@@ -26,29 +26,29 @@ using distribution::Gaussian;
 template <class TProcess>
 class Kalman;
 
-template <class T1, class T2, size_t D1, size_t D2>
-class Kalman<Hierarchical<Markov<Conditional<Gaussian<D1>, T1>, Gaussian<D1>>,
-                          Memoryless<Conditional<Gaussian<D2>, T2>>>>
+template <class T1, class T2>
+class Kalman<Hierarchical<Markov<Conditional<Gaussian, T1>, Gaussian>,
+                          Memoryless<Conditional<Gaussian, T2>>>>
     : public RecursiveBayesianBase<Kalman<
-          Hierarchical<Markov<Conditional<Gaussian<D1>, T1>, Gaussian<D1>>,
-                       Memoryless<Conditional<Gaussian<D2>, T2>>>>> {
+          Hierarchical<Markov<Conditional<Gaussian, T1>, Gaussian>,
+                       Memoryless<Conditional<Gaussian, T2>>>>> {
  public:
   using TProcess =
-      Hierarchical<Markov<Conditional<Gaussian<D1>, T1>, Gaussian<D1>>,
-                   Memoryless<Conditional<Gaussian<D2>, T2>>>;
+      Hierarchical<Markov<Conditional<Gaussian, T1>, Gaussian>,
+                   Memoryless<Conditional<Gaussian, T2>>>;
 
   using TCompeleteState =
-      std::tuple<arma::vec::fixed<D1>, arma::mat::fixed<D1, D1>>;
+      std::tuple<arma::vec, arma::mat>;
 private:
   TProcess process_;
-  const arma::mat::fixed<D1, D1> &dyn_mat_;
-  const arma::mat::fixed<D2, D1> &mes_mat_;
-  const arma::mat::fixed<D1, D1> &dyn_cov_;
-  const arma::mat::fixed<D2, D2> &mes_cov_;
-  arma::vec::fixed<D1> state_vec_;
-  arma::mat::fixed<D1, D1> state_cov_;
-  arma::vec::fixed<D1> p_state_vec_;
-  arma::mat::fixed<D1, D1> p_state_cov_;
+  const arma::mat &dyn_mat_;
+  const arma::mat &mes_mat_;
+  const arma::mat &dyn_cov_;
+  const arma::mat &mes_cov_;
+  arma::vec state_vec_;
+  arma::mat state_cov_;
+  arma::vec p_state_vec_;
+  arma::mat p_state_cov_;
 
  public:
   Kalman(const TProcess &process)
@@ -77,7 +77,7 @@ private:
   }
 
   template <class... TArgs>
-  TCompeleteState correct(const arma::vec::fixed<D2> &measurement,
+  TCompeleteState correct(const arma::vec &measurement,
                           const TArgs &... args) {
     arma::vec inovation =
         measurement -
