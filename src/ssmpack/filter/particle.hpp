@@ -66,10 +66,10 @@ class Particle<
   // arma::mat state_par_old_;
   //! The process model
   Process process_;
-  //! Number of particles \f$N\f$.
-  unsigned long num_;
   //! Resampling algorithm
   Resampler resampler_;
+  //! Number of particles \f$N\f$.
+  unsigned long num_;
 
  private:
   void normalizeWeights(void) { w_ = w_ / arma::sum(w_); }
