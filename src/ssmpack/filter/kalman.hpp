@@ -23,32 +23,27 @@ using process::Memoryless;
 using distribution::Conditional;
 using distribution::Gaussian;
 
-template <class TProcess>
-class Kalman;
+template <class STA_MAP, class OBS_MAP, size_t STA_D, size_t OBS_D>
+class Kalman
+    : public RecursiveBayesianBase<Kalman<STA_MAP, OBS_MAP, STA_D, OBS_D>> {
 
-template <class T1, class T2, size_t D1, size_t D2>
-class Kalman<Hierarchical<Markov<Conditional<Gaussian<D1>, T1>, Gaussian<D1>>,
-                          Memoryless<Conditional<Gaussian<D2>, T2>>>>
-    : public RecursiveBayesianBase<Kalman<
-          Hierarchical<Markov<Conditional<Gaussian<D1>, T1>, Gaussian<D1>>,
-                       Memoryless<Conditional<Gaussian<D2>, T2>>>>> {
  public:
   using TProcess =
-      Hierarchical<Markov<Conditional<Gaussian<D1>, T1>, Gaussian<D1>>,
-                   Memoryless<Conditional<Gaussian<D2>, T2>>>;
+      Hierarchical<Markov<Conditional<Gaussian<STA_D>, STA_MAP>, Gaussian<STA_D>>,
+                   Memoryless<Conditional<Gaussian<OBS_D>, OBS_MAP>>>;
 
   using TCompeleteState =
-      std::tuple<arma::vec::fixed<D1>, arma::mat::fixed<D1, D1>>;
-private:
+      std::tuple<arma::vec::fixed<STA_D>, arma::mat::fixed<STA_D, STA_D>>;
+ private:
   TProcess process_;
-  const arma::mat::fixed<D1, D1> &dyn_mat_;
-  const arma::mat::fixed<D2, D1> &mes_mat_;
-  const arma::mat::fixed<D1, D1> &dyn_cov_;
-  const arma::mat::fixed<D2, D2> &mes_cov_;
-  arma::vec::fixed<D1> state_vec_;
-  arma::mat::fixed<D1, D1> state_cov_;
-  arma::vec::fixed<D1> p_state_vec_;
-  arma::mat::fixed<D1, D1> p_state_cov_;
+  const arma::mat::fixed<STA_D, STA_D> &dyn_mat_;
+  const arma::mat::fixed<OBS_D, STA_D> &mes_mat_;
+  const arma::mat::fixed<STA_D, STA_D> &dyn_cov_;
+  const arma::mat::fixed<OBS_D, OBS_D> &mes_cov_;
+  arma::vec::fixed<STA_D> state_vec_;
+  arma::mat::fixed<STA_D, STA_D> state_cov_;
+  arma::vec::fixed<STA_D> p_state_vec_;
+  arma::mat::fixed<STA_D, STA_D> p_state_cov_;
 
  public:
   Kalman(const TProcess &process)
@@ -65,7 +60,6 @@ private:
                      .getCPDF()
                      .getParamMap()
                      .covariance) {}
-
   template <class... TArgs>
   void predict(const TArgs &... args) {
     // use the map function to pass controls, avoiding control definition
@@ -77,7 +71,7 @@ private:
   }
 
   template <class... TArgs>
-  TCompeleteState correct(const arma::vec::fixed<D2> &measurement,
+  TCompeleteState correct(const arma::vec::fixed<OBS_D> &measurement,
                           const TArgs &... args) {
     arma::vec inovation =
         measurement -
@@ -101,9 +95,11 @@ private:
   }
 };
 
-template <class TProcess>
-Kalman<TProcess> makeKalman(TProcess process) {
-  return Kalman<TProcess>(process);
+template <class STA_MAP, class OBS_MAP, size_t STA_D, size_t OBS_D>
+Kalman<STA_MAP, OBS_MAP, STA_D, OBS_D> makeKalman(
+    Hierarchical<Markov<Conditional<Gaussian<STA_D>, STA_MAP>, Gaussian<STA_D>>,
+                 Memoryless<Conditional<Gaussian<OBS_D>, OBS_MAP>>> process) {
+  return Kalman<STA_MAP, OBS_MAP, STA_D, OBS_D>(process);
 }
 
 } // namespace filter
