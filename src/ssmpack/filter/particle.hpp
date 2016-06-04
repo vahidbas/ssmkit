@@ -32,24 +32,15 @@ using distribution::Conditional;
  *              ImportanceCPDF, Resampler\>
  * for actual implementation.
  */
-template <class TProcess, class Resampler>
-class Particle;
-
-template <class MeasurementMap, class StateMap, class MeasurementCPDF,
-          class StateCPDF, class InitialPDF, class Resampler>
-class Particle<
-    Hierarchical<Markov<Conditional<StateMap, StateCPDF>, InitialPDF>,
-                 Memoryless<Conditional<MeasurementMap, MeasurementCPDF>>>,
-    Resampler>
-    : public RecursiveBayesianBase<Particle<
-          Hierarchical<
-              Markov<Conditional<StateMap, StateCPDF>, InitialPDF>,
-              Memoryless<Conditional<MeasurementMap, MeasurementCPDF>>>,
-          Resampler>> {
+template <class StateCPDF, class InitialPDF, class MeasurementCPDF,
+          class Resampler>
+class Particle
+    : public RecursiveBayesianBase<
+          Particle<StateCPDF, InitialPDF, MeasurementCPDF, Resampler>> {
  public:
   using Process =
-      Hierarchical<Markov<Conditional<StateMap, StateCPDF>, InitialPDF>,
-                   Memoryless<Conditional<MeasurementMap, MeasurementCPDF>>>;
+      Hierarchical<Markov<StateCPDF, InitialPDF>,
+                   Memoryless<MeasurementCPDF>>;
 
   /** Type of the state posterior \f$ \{\mathbf{x}^{(i)}_t,
    * \omega^{(i)}\}_{i=0}^{N-1}\f$
@@ -127,10 +118,12 @@ class Particle<
   const arma::mat &getStatesParticles(void) const { return state_par_; }
 };
 
-template <class Process, class Resampler>
-Particle<Process, Resampler> makeParticle(Process process, Resampler resampler,
-                                          unsigned long particle_num) {
-  return Particle<Process, Resampler>(process, resampler, particle_num);
+template <class StateCPDF, class InitialPDF, class MeasurementCPDF,
+          class Resampler>
+auto makeParticle(Hierarchical<Markov<StateCPDF, InitialPDF>,
+                               Memoryless<MeasurementCPDF>> process,
+                  Resampler resampler, unsigned long particle_num) {
+  return Particle<StateCPDF, InitialPDF, MeasurementCPDF, Resampler>(process, resampler, particle_num);
 }
 
 } // namespace filter
