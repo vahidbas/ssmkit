@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2.0)
+cmake_minimum_required(VERSION 2.8.0)
 project(ssmpack CXX)
 
 add_definitions(-DPROJECT_NAME=${PROJECT_NAME})
@@ -44,34 +44,34 @@ add_subdirectory(example)
 # Generate the documentation.
 find_package(Doxygen)
 if (DOXYGEN_FOUND)
-# Preprocess the Doxyfile.  This is done before 'make doc'.
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/Doxyfile
-    PRE_BUILD
-    COMMAND ${CMAKE_COMMAND} -D DESTDIR="${CMAKE_BINARY_DIR}" -P
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/GenerateDoxyfile.cmake"
-    WORKING_DIRECTORY
-    "${CMAKE_CURRENT_SOURCE_DIR}"
-    DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile"
-    COMMENT "Creating Doxyfile to generate Doxygen documentation"
-    )
-
-# other staffs related to documantation (e.g. diagrams)
-add_subdirectory(doc)
-
-# Generate documentation.
-add_custom_target(doc
-    COMMAND "${DOXYGEN_EXECUTABLE}" "${CMAKE_BINARY_DIR}/Doxyfile"
-    DEPENDS "${CMAKE_BINARY_DIR}/Doxyfile"
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-    COMMENT "Generating API documentation with Doxygen"
-    )
-
-add_dependencies(doc tikz_images)
-
-install(DIRECTORY ${CMAKE_BINARY_DIR}/doc/html
-    DESTINATION share/doc/ssmpack
-    COMPONENT doc
-    OPTIONAL
-    )
+  # Preprocess the Doxyfile.  This is done before 'make doc'.
+  add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/Doxyfile
+      PRE_BUILD
+      COMMAND ${CMAKE_COMMAND} -D DESTDIR="${CMAKE_BINARY_DIR}" -P
+      "${CMAKE_CURRENT_SOURCE_DIR}/cmake/GenerateDoxyfile.cmake"
+      WORKING_DIRECTORY
+      "${CMAKE_CURRENT_SOURCE_DIR}"
+      DEPENDS
+      "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile"
+      COMMENT "Creating Doxyfile to generate Doxygen documentation"
+      )
+  
+  # other staffs related to documantation (e.g. diagrams)
+  add_subdirectory(doc)
+  
+  # Generate documentation.
+  add_custom_target(doc
+      COMMAND "${DOXYGEN_EXECUTABLE}" "${CMAKE_BINARY_DIR}/Doxyfile"
+      DEPENDS "${CMAKE_BINARY_DIR}/Doxyfile"
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+      COMMENT "Generating API documentation with Doxygen"
+      )
+  
+  add_dependencies(doc tikz_images)
+  
+  install(DIRECTORY ${CMAKE_BINARY_DIR}/doc/html
+      DESTINATION share/doc/ssmpack
+      COMPONENT doc
+      OPTIONAL
+      )
 endif ()
