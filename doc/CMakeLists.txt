@@ -2,8 +2,6 @@
 file(GLOB LATEX_TIKZ_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/image"
 "${CMAKE_CURRENT_SOURCE_DIR}/image/*.tex")
 
-#message(STATUS "aaa:  ${CMAKE_CURRENT_SOURCE_DIR}/image ${LATEX_TIKZ_FILES}")
-
 # make image directory in the binary tree
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/doc/image")
 

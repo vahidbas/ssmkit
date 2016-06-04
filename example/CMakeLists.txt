@@ -1,5 +1,6 @@
 file(GLOB EXAMPLE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
+# each example file should be main()
 foreach( EXAMPLE_FILE ${EXAMPLE_FILES} )
   string( REPLACE ".cpp" "" EXAMPLE_NAME ${EXAMPLE_FILE} )
   add_executable( ${EXAMPLE_NAME} ${EXAMPLE_FILE})
