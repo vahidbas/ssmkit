@@ -97,7 +97,7 @@ class Kalman
 
 template <class STA_MAP, class OBS_MAP>
 Kalman<STA_MAP, OBS_MAP> makeKalman(
-    Hierarchical<Markov<Conditional<Gaussian, STA_MAP>, Gaussian>>,
+    Hierarchical<Markov<Conditional<Gaussian, STA_MAP>, Gaussian>,
                  Memoryless<Conditional<Gaussian, OBS_MAP>>> process) {
   return Kalman<STA_MAP, OBS_MAP>(process);
 }
