@@ -21,28 +21,29 @@ namespace distribution {
  * \frac{1}{(2\pi)^{D/2}\sqrt{|\Sigma|}}
  * \exp(-\frac{1}{2}\mathbf{x}^T\Sigma^{-1}\mathbf{x})\f]
  */
-template <size_t D>
 class Gaussian {
 
  public:
   //! Data type of the parameter variable \f$ \theta = \{\mu, \Sigma\} \f$.
-  using TParameterVAR = std::tuple<arma::vec::fixed<D>, arma::mat::fixed<D, D>>;
+  using TParameterVAR = std::tuple<arma::vec, arma::mat>;
 
  private:
   //! mean vector \f$\mu\f$.
-  arma::vec::fixed<D> mean_;
+  arma::vec mean_;
   //! covariance matrix \f$\Sigma\f$.
-  arma::mat::fixed<D, D> covariance_;
+  arma::mat covariance_;
   /** a normal distribution random generator \f$\mathcal{N}(0,1)\f$ */
   std::normal_distribution<double> normal_;
   //! \f$\pi\f$
   static constexpr double pi = 3.1415926535897;
   //! inverse of covariance matrix \f$\Sigma^{-1}\f$.
-  arma::mat::fixed<D, D> inv_cov_;
+  arma::mat inv_cov_;
   //! partitioning function \f$\frac{1}{(2\pi)^{D/2}\sqrt{|\Sigma|}}\f$.
   double part_;
   //! Cholesky decomposition of covariance matrix, i.e. \f$L\f$ such that  \f$LL^T=\Sigma\f$.
-  arma::mat::fixed<D, D> chol_dec_;
+  arma::mat chol_dec_;
+  //! Dimension \f$D\f$
+  int dim_;
 
  private:
   /**
@@ -50,21 +51,23 @@ class Gaussian {
    * call to likelihood().
    */
   void calcDistConstants() {
+    dim_ = mean_.n_rows;
     inv_cov_ = arma::inv(covariance_);
     // calculate partition function
     double det_cov = arma::det(covariance_);
-    double den_pi = 1 / std::sqrt(std::pow(2 * pi, D));
+    double den_pi = 1 / std::sqrt(std::pow(2 * pi, dim_));
     part_ = den_pi * (1 / std::sqrt(det_cov));
     // Cholesky decomposition
     chol_dec_ = arma::chol(covariance_, "lower");
   }
 
  public:
+  Gaussian() = delete;
   /** Default constructor.
    * Returns D dimensional Gaussian distribution with zero mean and identity
    * covariance matrix.
    */
-  Gaussian() : Gaussian(arma::zeros(D), arma::eye(D, D)) {}
+  Gaussian(int dim) : Gaussian(arma::zeros(dim), arma::eye(dim, dim)) {}
   
   /**
    * Returns D dimensional Gaussian with given mean and covariance. The
@@ -73,7 +76,7 @@ class Gaussian {
    * @param mean The mean vector.
    * @param covariance The covariance matrix.
    */
-  Gaussian(arma::vec::fixed<D> mean, arma::mat::fixed<D, D> covariance)
+  Gaussian(arma::vec mean, arma::mat covariance)
       : mean_(std::move(mean)), covariance_(std::move(covariance)) {
     calcDistConstants();
   }
@@ -82,8 +85,8 @@ class Gaussian {
    * \f[ \mathbf{x} \sim \mathcal{N}(\mu, \Sigma) \f]
    * @return The random vector \f$\mathbf{x}\f$
    */
-  arma::vec::fixed<D> random() {
-    arma::vec::fixed<D> rnd; // how much overload the vector construction has?
+  arma::vec random() {
+    arma::vec rnd(dim_); // how much overload the vector construction has?
     rnd.imbue(
         [&]() { return normal_(random::Generator::get().getGenerator()); });
     return mean_ + chol_dec_ * rnd;
@@ -116,17 +119,17 @@ class Gaussian {
    * @param covariance The covariance matrix.
    * @return Reference to the current instance.
    */
-  Gaussian &parameterize(const arma::vec::fixed<D> &mean,
-                         const arma::mat::fixed<D, D> &covariance) {
+  Gaussian &parameterize(const arma::vec &mean,
+                         const arma::mat &covariance) {
     mean_ = mean;
     covariance_ = covariance;
     calcDistConstants();
     return (*this);
   }
   //! Returns the mean vector 
-  const arma::vec::fixed<D>& getMean() const { return mean_; }
+  const arma::vec& getMean() const { return mean_; }
   //! Returns the covariance matrix
-  const arma::mat::fixed<D, D>& getCovariance() const { return covariance_; }
+  const arma::mat& getCovariance() const { return covariance_; }
 };
 
 } // namespace distribution

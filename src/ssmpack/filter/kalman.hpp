@@ -23,27 +23,27 @@ using process::Memoryless;
 using distribution::Conditional;
 using distribution::Gaussian;
 
-template <class STA_MAP, class OBS_MAP, size_t STA_D, size_t OBS_D>
+template <class STA_MAP, class OBS_MAP>
 class Kalman
-    : public RecursiveBayesianBase<Kalman<STA_MAP, OBS_MAP, STA_D, OBS_D>> {
+    : public RecursiveBayesianBase<Kalman<STA_MAP, OBS_MAP>> {
 
  public:
   using TProcess =
-      Hierarchical<Markov<Conditional<Gaussian<STA_D>, STA_MAP>, Gaussian<STA_D>>,
-                   Memoryless<Conditional<Gaussian<OBS_D>, OBS_MAP>>>;
+      Hierarchical<Markov<Conditional<Gaussian, STA_MAP>, Gaussian>,
+                   Memoryless<Conditional<Gaussian, OBS_MAP>>>;
 
   using TCompeleteState =
-      std::tuple<arma::vec::fixed<STA_D>, arma::mat::fixed<STA_D, STA_D>>;
+      std::tuple<arma::vec, arma::mat>;
  private:
   TProcess process_;
-  const arma::mat::fixed<STA_D, STA_D> &dyn_mat_;
-  const arma::mat::fixed<OBS_D, STA_D> &mes_mat_;
-  const arma::mat::fixed<STA_D, STA_D> &dyn_cov_;
-  const arma::mat::fixed<OBS_D, OBS_D> &mes_cov_;
-  arma::vec::fixed<STA_D> state_vec_;
-  arma::mat::fixed<STA_D, STA_D> state_cov_;
-  arma::vec::fixed<STA_D> p_state_vec_;
-  arma::mat::fixed<STA_D, STA_D> p_state_cov_;
+  const arma::mat &dyn_mat_;
+  const arma::mat &mes_mat_;
+  const arma::mat &dyn_cov_;
+  const arma::mat &mes_cov_;
+  arma::vec state_vec_;
+  arma::mat state_cov_;
+  arma::vec p_state_vec_;
+  arma::mat p_state_cov_;
 
  public:
   Kalman(const TProcess &process)
@@ -71,7 +71,7 @@ class Kalman
   }
 
   template <class... TArgs>
-  TCompeleteState correct(const arma::vec::fixed<OBS_D> &measurement,
+  TCompeleteState correct(const arma::vec &measurement,
                           const TArgs &... args) {
     arma::vec inovation =
         measurement -
@@ -95,11 +95,11 @@ class Kalman
   }
 };
 
-template <class STA_MAP, class OBS_MAP, size_t STA_D, size_t OBS_D>
-Kalman<STA_MAP, OBS_MAP, STA_D, OBS_D> makeKalman(
-    Hierarchical<Markov<Conditional<Gaussian<STA_D>, STA_MAP>, Gaussian<STA_D>>,
-                 Memoryless<Conditional<Gaussian<OBS_D>, OBS_MAP>>> process) {
-  return Kalman<STA_MAP, OBS_MAP, STA_D, OBS_D>(process);
+template <class STA_MAP, class OBS_MAP>
+Kalman<STA_MAP, OBS_MAP> makeKalman(
+    Hierarchical<Markov<Conditional<Gaussian, STA_MAP>, Gaussian>>,
+                 Memoryless<Conditional<Gaussian, OBS_MAP>>> process) {
+  return Kalman<STA_MAP, OBS_MAP>(process);
 }
 
 } // namespace filter

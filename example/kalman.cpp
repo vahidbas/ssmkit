@@ -15,26 +15,26 @@ int main ()
 {
 
   double delta = 0.1; // sample time
-  arma::mat::fixed<4, 4> dynamic_matrix{
+  arma::mat dynamic_matrix{
       {1, 0, delta, 0}, {0, 1, 0, delta}, {0, 0, 1, 0}, {0, 0, 0, 1}};
 
-  arma::mat::fixed<4, 4> dynamic_noise{
+  arma::mat dynamic_noise{
       {0.1, 0, 0, 0}, {0, 0.1, 0, 0}, {0, 0, 0.1, 0}, {0, 0, 0, 0.1}};
 
-  arma::mat::fixed<2, 4> measurement_matrix{{1, 0, 0, 0}, {0, 1, 0, 0}};
-  arma::mat::fixed<2, 2> measurement_noise{{0.1, 0}, {0, 0.1}};
+  arma::mat measurement_matrix{{1, 0, 0, 0}, {0, 1, 0, 0}};
+  arma::mat measurement_noise{{0.1, 0}, {0, 0.1}};
 
-  auto dynamic_model = map::makeLinearGaussian(dynamic_matrix, dynamic_noise);
+  auto dynamic_model = map::LinearGaussian(dynamic_matrix, dynamic_noise);
   auto measurement_model =
-      map::makeLinearGaussian(measurement_matrix, measurement_noise);
+      map::LinearGaussian(measurement_matrix, measurement_noise);
 
   auto dynamic_cpdf =
-      distribution::makeConditional(distribution::Gaussian<4>(), dynamic_model);
+      distribution::makeConditional(distribution::Gaussian(4), dynamic_model);
   auto measurement_cpdf = distribution::makeConditional(
-      distribution::Gaussian<2>(), measurement_model);
+      distribution::Gaussian(2), measurement_model);
 
   auto state_process =
-      process::makeMarkov(dynamic_cpdf, distribution::Gaussian<4>());
+      process::makeMarkov(dynamic_cpdf, distribution::Gaussian(4));
   auto measurement_process =
       process::makeMemoryless(measurement_cpdf);
 

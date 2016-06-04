@@ -41,17 +41,14 @@ class BaseResampler<Method<Criterion>> {
                   ->generateOrderedNumbers(w.n_rows);
 
      auto ws = arma::cumsum(w);
-     auto ind = arma::uvec(w.n_rows);
-     int cnt = 0;
-     ind.imbue([&cnt, &ws, &u]() {
-       return static_cast<arma::uvec>(arma::find(ws > u[cnt++], 1, "first"))(0);
-     });
+     auto u_it = u.begin();
 
-     auto old_pars = pars;
+     Particles old_pars = pars;
 
-     cnt = 0;
-     pars.each_col([&ind, &old_pars, &cnt](arma::vec &col) {
-       col = old_pars.col(ind[cnt++]);
+     pars.each_col([&u_it, &old_pars,
+                    &ws](arma::Col<typename Particles::elem_type> &col) {
+       col = old_pars.col(
+           static_cast<arma::uvec>(arma::find(ws > *u_it++, 1, "first"))(0));
      });
 
      w.fill(1.0 / w.n_rows);

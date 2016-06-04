@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(mc_test_random_default_pdf) {
 
   constexpr int dimension = 8;
   // 8-dimensional Gaussian distribution with zero mean identity covariance
-  distribution::Gaussian<dimension> pdf;
+  distribution::Gaussian pdf(dimension);
   
   // set random seed
   random::setRandomSeed();
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(mc_test_random_arbitary_pdf) {
   arma::vec mean{89, 16};
   arma::mat chol{{10, 1}, {0, 2}};
   arma::mat covariance = chol.t() * chol;
-  distribution::Gaussian<2> pdf(mean, covariance);
+  distribution::Gaussian pdf(mean, covariance);
   
   // set random seed
   random::setRandomSeed();
@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE(likelihood_test) {
   BOOST_REQUIRE(lnm.load(STR(SOURCE_DIR) "/test/data/gaussian/lnm.csv"));
   BOOST_REQUIRE(lnc.load(STR(SOURCE_DIR) "/test/data/gaussian/lnc.csv"));
 
-  distribution::Gaussian<3> pdf;
+  distribution::Gaussian pdf(3);
   arma::mat ln_test(size(ln));
   auto it_ln_test = ln_test.begin();
   rvs.each_col([&pdf, &it_ln_test](arma::vec &col) {

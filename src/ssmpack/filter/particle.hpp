@@ -57,10 +57,10 @@ class Particle
   // arma::mat state_par_old_;
   //! The process model
   Process process_;
-  //! Number of particles \f$N\f$.
-  unsigned long num_;
   //! Resampling algorithm
   Resampler resampler_;
+  //! Number of particles \f$N\f$.
+  unsigned long num_;
 
  private:
   void normalizeWeights(void) { w_ = w_ / arma::sum(w_); }
@@ -115,7 +115,7 @@ class Particle
   }
 
   const arma::vec &getWeights(void) const { return w_; }
-  const arma::mat &getStatesParticles(void) const { return state_par_; }
+  const arma::mat &getStateParticles(void) const { return state_par_; }
 };
 
 template <class StateCPDF, class InitialPDF, class MeasurementCPDF,

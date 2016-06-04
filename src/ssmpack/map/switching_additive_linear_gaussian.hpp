@@ -6,27 +6,22 @@
 namespace ssmpack {
 namespace map {
 
-template <arma::uword VN, arma::uword VM, arma::uword VK>
 struct SwitchingAdditiveLinearGaussian {
-  using TParameter = std::tuple<arma::vec::fixed<VN>, arma::mat::fixed<VN, VN>>;
-  using TConditionVAR = arma::vec::fixed<VM>;
+  using TParameter = std::tuple<arma::vec, arma::mat>;
+  using TConditionVAR = arma::vec;
 
-// should not be overloaded, should not be template
+  SwitchingAdditiveLinearGaussian(arma::mat trans, arma::mat cov, arma::mat b)
+      : biases{b}, transfer{trans}, covariance{cov} {}
+  // should not be overloaded, should not be template
   TParameter operator()(const TConditionVAR &x, const int &k) const {
     return std::make_tuple(transfer * x + biases.col(k), covariance);
   }
 
-  arma::mat::fixed<VM, VK> biases;
-  arma::mat::fixed<VN, VM> transfer;
-  arma::mat::fixed<VN, VN> covariance;
+  arma::mat biases;
+  arma::mat transfer;
+  arma::mat covariance;
 };
 
-template <arma::uword VN, arma::uword VM, arma::uword VK>
-SwitchingAdditiveLinearGaussian<VN, VM, VK>
-makeSwitchingAdditiveLinearGaussian(arma::mat::fixed<VN, VM> transfer,
-arma::mat::fixed<VN, VN> covariance, arma::mat::fixed<VM, VK> biases) {
-  return {biases, transfer, covariance};
-}
 
 } // namespace map
 } // namespace ssmpack

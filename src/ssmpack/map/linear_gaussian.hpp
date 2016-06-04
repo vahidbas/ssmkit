@@ -6,26 +6,20 @@
 namespace ssmpack {
 namespace map {
 
-template <arma::uword VN, arma::uword VM>
 struct LinearGaussian {
-  using TParameter = std::tuple<arma::vec::fixed<VN>, arma::mat::fixed<VN, VN>>;
-  using TConditionVAR = arma::vec::fixed<VM>;
-
+  using TParameter = std::tuple<arma::vec, arma::mat>;
+  using TConditionVAR = arma::vec;
+  
+  LinearGaussian(arma::mat trans, arma::mat cov) : transfer{trans},
+  covariance{cov} {}
 // should not be overloaded, should not be template
   TParameter operator()(const TConditionVAR &x) const {
     return std::make_tuple(transfer * x, covariance);
   }
 
-  arma::mat::fixed<VN, VM> transfer;
-  arma::mat::fixed<VN, VN> covariance;
+  arma::mat transfer;
+  arma::mat covariance;
 };
-
-template <arma::uword VN, arma::uword VM>
-LinearGaussian<VN,VM> makeLinearGaussian(arma::mat::fixed<VN,VM> transfer,
-arma::mat::fixed<VN,VN> covariance)
-{
-  return {transfer, covariance};
-}
 
 } // namespace map
 } // namespace ssmpack

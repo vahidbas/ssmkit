@@ -16,11 +16,11 @@ BOOST_AUTO_TEST_SUITE(markov_test);
 BOOST_AUTO_TEST_CASE(test1) {
   arma::arma_rng::set_seed_random();
 
-  map::LinearGaussian<2, 2> f{{{1, 1}, {0, 1}}, {{0.0001, 0}, {0, 0.01}}};
-  distribution::Gaussian<2> nu;
+  map::LinearGaussian f{{{1, 1}, {0, 1}}, {{0.0001, 0}, {0, 0.01}}};
+  distribution::Gaussian nu(2);
 
-  map::LinearGaussian<1, 2> h{{1, 0}, {0.0001}};
-  distribution::Gaussian<1> omega;
+  map::LinearGaussian h{{1, 0}, {0.0001}};
+  distribution::Gaussian omega(1);
 
   distribution::Conditional<decltype(nu), decltype(f)> dyn(nu, f);
   distribution::Conditional<decltype(omega), decltype(h)> obs(omega, h);
@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(test1) {
   process::Markov<decltype(dyn), decltype(nu)> markov(dyn, nu);
   process::Memoryless<decltype(obs)> memless(obs);
 
-  auto r = markov.random();
+  auto r = markov.initialize();
   auto r2 = memless.random(r);
   // double l = markov.likelihood(r);
 
