@@ -20,9 +20,9 @@ int main() {
       {0.8, 0.1, 0.1}, {0.1, 0.8, 0.1}, {0.1, 0.1, 0.8}};
   auto switching_model = map::TransitionMatrix(transition_matrix);
   auto switching_cpdf = distribution::makeConditional(
-      distribution::Categorical<>(), switching_model);
+      distribution::Categorical(), switching_model);
   auto switching_process = process::makeMarkov(
-      switching_cpdf, distribution::Categorical<>({0.4, 0.3, 0.3}));
+      switching_cpdf, distribution::Categorical({0.4, 0.3, 0.3}));
 
   // dynamic process
   arma::mat dynamic_matrix{{1, delta}, {0, 1}};

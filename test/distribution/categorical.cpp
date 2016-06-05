@@ -15,10 +15,10 @@ BOOST_AUTO_TEST_CASE(mc_test_random_default_pdf)
   // testing default constructor
 
   // categorical distribution with only one category = 0
-  distribution::Categorical<> pdf;
-  arma::Col<int> samples(mc_n);
+  distribution::Categorical pdf;
+  arma::Col<unsigned int> samples(mc_n);
   random::setRandomSeed();
-  samples.for_each([&pdf](int &val){val = pdf.random();});
+  samples.for_each([&pdf](auto &val){val = pdf.random();});
   // check if any sample is non zero
   BOOST_CHECK(!arma::any(samples));
 }
@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(mc_test_random_arbitary_pdf)
 {
   // testing distribution with given probabilities
   arma::vec probabilities{0.1, 0.3, 0.05, 0.0, 0.55};
-  distribution::Categorical<> pdf(probabilities);
+  distribution::Categorical pdf(probabilities);
 
   // making histogram of returned samples
   arma::vec hist{0, 0, 0, 0, 0};

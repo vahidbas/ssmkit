@@ -1,5 +1,5 @@
 /**
- * @file parametric_conditional.hpp
+ * @file conditional.hpp
  * @author Vahid Bastani
  *
  * Generic class for parametric conditional density/distribution function.
