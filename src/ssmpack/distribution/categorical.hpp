@@ -36,11 +36,11 @@ class Categorical {
  TValueType max_;
 
  public:
-  //! Default constructor \f$\mathbf{p}=[1]\f$.
+  //! Default constructor \f$\mathbf{p}=[1.0]\f$.
   Categorical() : Categorical(arma::ones<arma::vec>(1)) {}
   /** Constructor
-   * @param parameter The parameter vector \f$\mathbf{p}\f$ whose elements
-   * should sum to 1.0.
+   * @param parameter The parameter vector \f$\mathbf{p}\f$.
+   * @pre The sum of the elements of \p parameter should be 1.0.
    */
   Categorical(TParameterVar parameters)
       : param_(std::move(parameters)) {calcCDF(); calcMax();}
@@ -57,7 +57,11 @@ class Categorical {
   double likelihood(const TValueType &rv) {
     return param_(rv);
   }
-  //! Change parameters of the distribution
+
+  /** Change parameters of the distribution
+   * @param parameter The parameter vector \f$\mathbf{p}\f$.
+   * @pre The sum of the elements of \p parameter should be 1.0.
+   */
   Categorical &parameterize(const TParameterVar & param){
     param_ = param;
     calcCDF();
