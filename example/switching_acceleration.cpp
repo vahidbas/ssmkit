@@ -50,7 +50,7 @@ int main() {
       switching_process, state_process, measurement_process);
 
   // simulation
-  std::vector<typename decltype(joint_process)::TRandomVARs> v;
+  std::vector<typename decltype(joint_process)::TRandomVAR> v;
 
   random::setRandomSeed();
   joint_process.initialize();

@@ -49,7 +49,7 @@ int main() {
   pfilter.initialize();
 
   // std::cout << pfilter.getWeights();
-  std::vector<typename decltype(joint_process)::TRandomVARs> v;
+  std::vector<typename decltype(joint_process)::TRandomVAR> v;
   joint_process.initialize();
   int n = 20;
   joint_process.random_n(v, n);

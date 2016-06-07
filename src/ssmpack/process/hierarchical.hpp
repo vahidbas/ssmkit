@@ -1,120 +1,33 @@
-#pragma once
+/**
+ * @file hierarchical.hpp
+ * @author Vahid Bastani
+ *
+ * Implements class representing Hierarchical dynamic Bayesian network.
+ */
+#ifndef SSMPACK_PROCESS_HIERARCHICAL_HPP
+#define SSMPACK_PROCESS_HIERARCHICAL_HPP
 
 #include "ssmpack/process/base_process.hpp"
 #include "ssmpack/process/traits.hpp"
+#include "ssmpack/process/hierarchical_detail.hpp"
 
-#include <tao/seq/make_integer_range.hpp> //https://github.com/taocpp/sequences
-
-#include <algorithm>
 #include <utility>
-#include <vector>
 #include <tuple>
 
 namespace ssmpack {
 namespace process {
 
-namespace detail {
-//===============================
-template <size_t N, size_t NA, size_t D, class TArities>
-struct GetRandom {
-  template <class TRV, class TP, class TA, size_t... Is>
-  static void apply(std::index_sequence<Is...>, TRV &rvs, TP &prc,
-                    const TA &args) {
-    std::get<N>(rvs) =
-        std::get<N>(prc).random(std::get<N - 1>(rvs), std::get<Is>(args)...);
-    constexpr size_t arity =
-        std::tuple_element<N + 1, TArities>::type::value - 1;
-    GetRandom<N + 1, NA + arity, D, TArities>::apply(
-        tao::seq::make_index_range<NA, NA + arity>(), rvs, prc, args);
-  }
-};
-
-template <size_t NA, size_t D, class TArities>
-struct GetRandom<0, NA, D, TArities> {
-  template <class TRV, class TP, class TA, size_t... Is>
-  static void apply(std::index_sequence<Is...>, TRV &rvs, TP &prc,
-                    const TA &args) {
-    std::get<0>(rvs) = std::get<0>(prc).random(std::get<Is>(args)...);
-    constexpr size_t arity = std::tuple_element<1, TArities>::type::value - 1;
-    GetRandom<1, NA + arity, D, TArities>::apply(
-        tao::seq::make_index_range<NA, NA + arity>(), rvs, prc, args);
-  }
-};
-
-template <size_t NA, size_t D, class TArities>
-struct GetRandom<D, NA, D, TArities> {
-  template <class TRV, class TP, class TA, size_t... Is>
-  static void apply(std::index_sequence<Is...>, TRV &rvs, TP &prc,
-                    const TA &args) {
-    std::get<D>(rvs) =
-        std::get<D>(prc).random(std::get<D - 1>(rvs), std::get<Is>(args)...);
-  }
-};
-//========================================
-template <size_t N>
-struct GetInitialized {
-  template <class TRV, class TP>
-  static void apply(TRV &rvs, TP &prc) {
-    std::get<N>(rvs) = std::get<N>(prc).initialize();
-
-    GetInitialized<N - 1>::apply(rvs, prc);
-  }
-};
-
-template <>
-struct GetInitialized<0> {
-  template <class TRV, class TP>
-  static void apply(TRV &rvs, TP &prc) {
-    std::get<0>(rvs) = std::get<0>(prc).initialize();
-  }
-};
-
-//===============================================================
-template <size_t N, size_t NA, size_t D, class TArities>
-struct GetLikelihood {
-  template <class TRV, class TP, class TA, size_t... Is>
-  static void apply(std::index_sequence<Is...>, double &lik, const TRV &rvs,
-                    TP &prc, const TA &args) {
-
-    lik *= std::get<N>(prc).likelihood(std::get<N>(rvs), std::get<N - 1>(rvs),
-                                       std::get<Is>(args)...);
-
-    constexpr size_t arity =
-        std::tuple_element<N + 1, TArities>::type::value - 1;
-    GetLikelihood<N + 1, NA + arity, D, TArities>::apply(
-        tao::seq::make_index_range<NA, NA + arity>(), lik, rvs, prc, args);
-  }
-};
-
-template <size_t NA, size_t D, class TArities>
-struct GetLikelihood<0, NA, D, TArities> {
-  template <class TRV, class TP, class TA, size_t... Is>
-  static void apply(std::index_sequence<Is...>, double &lik, const TRV &rvs,
-                    TP &prc, const TA &args) {
-
-    lik *= std::get<0>(prc).likelihood(std::get<0>(rvs), std::get<Is>(args)...);
-
-    constexpr size_t arity = std::tuple_element<1, TArities>::type::value - 1;
-    GetLikelihood<1, NA + arity, D, TArities>::apply(
-        tao::seq::make_index_range<NA, NA + arity>(), lik, rvs, prc, args);
-  }
-};
-
-template <size_t NA, size_t D, class TArities>
-struct GetLikelihood<D, NA, D, TArities> {
-  template <class TRV, class TP, class TA, size_t... Is>
-  static void apply(std::index_sequence<Is...>, double &lik, const TRV &rvs,
-                    TP &prc, const TA &args) {
-
-    lik *= std::get<D>(prc).likelihood(std::get<D>(rvs), std::get<D - 1>(rvs),
-                                       std::get<Is>(args)...);
-  }
-};
-
-} // namespace detail
-
+/** A dynamic Bayesian network constructed as hierarchy of processes
+ *
+ * A hierarchical dynamic Bayesian network DBN is constructed by vertically
+ * stacking layers of stochastic processes such that in a time slice lower layer is
+ * only dependent on the immediate upper layer.
+ *
+ * @tparam Args... Type of the process levels
+ */
 template <class... Args>
 class Hierarchical : public BaseProcess<Hierarchical<Args...>> {
+  // check if all argument are process types! (is id possible using C++17 concepts) 
   static_assert(AreProcesses<Args...>::value, "");
 
  private:
@@ -125,7 +38,10 @@ class Hierarchical : public BaseProcess<Hierarchical<Args...>> {
   static constexpr size_t depth = sizeof...(Args)-1;
 
  public:
-  using TRandomVARs = std::tuple<typename ProcessTraits<Args>::TRandomVAR...>;
+  /** Type of the random variable. 
+   * This is a tuple of the random variables of every layer in top-down order
+   */
+  using TRandomVAR = std::tuple<typename ProcessTraits<Args>::TRandomVAR...>;
 
  private:
   std::tuple<Args...> processes_;
@@ -133,30 +49,30 @@ class Hierarchical : public BaseProcess<Hierarchical<Args...>> {
  public:
   Hierarchical(Args... processes) : processes_{std::move(processes)...} {}
 
-  TRandomVARs initialize() {
-    TRandomVARs rvs;
+  TRandomVAR initialize() {
+    TRandomVAR rvs;
     detail::GetInitialized<depth>::apply(rvs, processes_);
     return rvs;
   }
 
   template <class... TVARs>
-  TRandomVARs random(const TVARs &... args) {
+  TRandomVAR random(const TVARs &... args) {
     // what if args are more than what actually required?
 
     /* we make a variable and pass its reference to the GetRandom class member
      * apply which takes random variable of level 0 and recursively passes the
      * same reference to the GetRandom of other levels until reaches depth.
      */
-    TRandomVARs rvs;
+    TRandomVAR rvs;
     constexpr size_t arity = std::tuple_element<0, TArities>::type::value;
     detail::GetRandom<0, arity, depth, TArities>::apply(
-        tao::seq::make_index_range<0, arity>(), rvs, processes_,
+        std::make_index_sequence<arity>(), rvs, processes_,
         std::make_tuple(args...));
     return rvs;
   }
 
   template <class... TArgs>
-  double likelihood(const TRandomVARs &rvs, const TArgs &... args) {
+  double likelihood(const TRandomVAR &rvs, const TArgs &... args) {
     double lik;
     constexpr size_t arity = std::tuple_element<0, TArities>::type::value;
     detail::GetLikelihood<0, arity, depth, TArities>::apply(
@@ -173,6 +89,12 @@ class Hierarchical : public BaseProcess<Hierarchical<Args...>> {
   getProcess() {return std::get<II>(processes_); }
 };
 
+/** A convenient builder for Hierarchical process.
+ * use this for template argument deduction.
+ * @param args... Process layers
+ * @tparam TArgs... Type of the process layers
+ * @return Hierarchical process object build from \p args...
+ */
 template <class... TArgs>
 Hierarchical<TArgs...> makeHierarchical(TArgs... args) {
   return Hierarchical<TArgs...>(args...);
@@ -180,3 +102,5 @@ Hierarchical<TArgs...> makeHierarchical(TArgs... args) {
 
 } // namespace process
 } // namespace ssmpack
+
+#endif // SSMPACK_PROCESS_HIERARCHICAL_HPP

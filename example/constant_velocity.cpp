@@ -41,7 +41,7 @@ int main ()
       process::makeHierarchical(state_process, measurement_process);
 
 
-  std::vector<typename decltype(joint_process)::TRandomVARs> v;
+  std::vector<typename decltype(joint_process)::TRandomVAR> v;
 
   random::setRandomSeed();
   joint_process.initialize();
