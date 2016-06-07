@@ -27,6 +27,8 @@ namespace distribution {
  *
  * @tparam TPDF Type of the distribution \f$\mathcal{F}(\theta)\f$
  * @tparam TParamMap Type of the parameter map \f$g(.)\f$
+ *
+ * \image html conditional.png "Bayesian network representation of conditional distribution"
  */
 template <typename TPDF, typename TParamMap>
 class Conditional {
