@@ -7,6 +7,9 @@
 #ifndef SSMPACK_PROCESS_TRAITS_HPP
 #define SSMPACK_PROCESS_TRAITS_HPP
 
+/// @cond DEV
+//exclude all from doxygen documantation
+
 #include "ssmpack/process/markov.hpp"
 #include "ssmpack/process/memoryless.hpp"
 
@@ -79,6 +82,6 @@ struct ProcessTraits<Memoryless<distribution::Conditional<T, U>>> {
 };
 }
 }
-
+/// @endcond
 #endif
 
