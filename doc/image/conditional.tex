@@ -1,38 +1,22 @@
 \documentclass[convert={density=150,outext=.png}]{standalone}
 \usepackage{tikz}
-\usepackage{amsmath}
-\usetikzlibrary{positioning}
-\usetikzlibrary{decorations.text}
 \begin{document}
-\tikzstyle{state}=[circle,
+
+\tikzset{
+  pinstate/.style 2 args ={circle,
   thick,
   minimum  size=1.2cm,
   draw=blue!80,
-  fill=blue!20]
-%\tikzstyle{state}[circle, thick]
+  fill=blue!20,
+  pin={[pin edge={<-, thick}]130:#1},
+  pin={[pin edge={<-, thick}]170:#2},
+  label={140:.},
+  label={150:.},
+  label={160:.}
+}
+}
+
 \begin{tikzpicture}
-
-\node (x) [state] {$x$};
-\node (y0) [left= 5mm of x.west] {$y_0$};
-\node (yN) [above= 5mm of x.north] {$y_N$};
-%\node (sc)[circle,thick, radius=x.radius+2.5mm, draw] at (x.center) {};
-%\foreach \x in {100,110,135}
-%{
-%  \draw[thick,->] (sc.\x) -- (s0.\x);
-%}
-
-\draw [->] 
-  (y0) edge[thick] (x)
-  (yN) edge[thick] (x)
-  ;
-
-% centered arc, with \rr radius and \ss start angle
-% decoration "..." is added on the arc
-\def\rr{10mm}
-\def\ss{90}
-% shift is for coordinate transformation
-\draw [decoration={text along path, text={......},text align={center}},decorate]
-      ([shift=(\ss:\rr)]x.center) arc[radius=\rr, start angle=\ss, end angle =180];
-
+  \node (x) [pinstate={$y_0$}{$y_N$}] {$x$};
 \end{tikzpicture}
 \end{document}
