@@ -32,15 +32,12 @@ using distribution::Conditional;
  *              ImportanceCPDF, Resampler\>
  * for actual implementation.
  */
-template <class StateCPDF, class InitialPDF, class MeasurementCPDF,
+template <class Process,
           class Resampler>
 class Particle
     : public RecursiveBayesianBase<
-          Particle<StateCPDF, InitialPDF, MeasurementCPDF, Resampler>> {
+          Particle<Process, Resampler>> {
  public:
-  using Process =
-      Hierarchical<Markov<StateCPDF, InitialPDF>,
-                   Memoryless<MeasurementCPDF>>;
 
   /** Type of the state posterior \f$ \{\mathbf{x}^{(i)}_t,
    * \omega^{(i)}\}_{i=0}^{N-1}\f$
@@ -118,12 +115,12 @@ class Particle
   const arma::mat &getStateParticles(void) const { return state_par_; }
 };
 
-template <class StateCPDF, class InitialPDF, class MeasurementCPDF,
+template <class StatePDF, class StateParamMap, class InitialPDF, class MeasurementCPDF,
           class Resampler>
-auto makeParticle(Hierarchical<Markov<StateCPDF, InitialPDF>,
+auto makeParticle(Hierarchical<Markov<StatePDF, StateParamMap, InitialPDF>,
                                Memoryless<MeasurementCPDF>> process,
                   Resampler resampler, unsigned long particle_num) {
-  return Particle<StateCPDF, InitialPDF, MeasurementCPDF, Resampler>(process, resampler, particle_num);
+  return Particle<Hierarchical<Markov<StatePDF, StateParamMap, InitialPDF>, Memoryless<MeasurementCPDF>>, Resampler>(process, resampler, particle_num);
 }
 
 } // namespace filter

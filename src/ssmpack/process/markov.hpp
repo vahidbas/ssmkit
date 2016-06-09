@@ -18,13 +18,6 @@
 namespace ssmpack {
 namespace process {
 
-/// @cond
-// base tampltate
-template <typename TTransitionCPDF, typename TInitialPDF>
-class Markov {};
-/// @endcond
-
-
 /** A first-order Markov process.
  * Implementation of markov process defined using initial PDF
  * \f$p(\mathbf{x}_0)\f$ and state transition PDF
@@ -32,9 +25,8 @@ class Markov {};
  * \image html markov.png "Dynamic Bayesian Network model of Markov process"
  */
 template <typename TPDF, typename TParamMap, typename TInitialPDF>
-class Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>
-    : public BaseProcess<Markov<distribution::Conditional<TPDF, TParamMap>,
-    TInitialPDF>> {
+class Markov
+    : public BaseProcess<Markov<TPDF, TParamMap, TInitialPDF>> {
  public:
 
   /** Constructor
@@ -127,10 +119,10 @@ class Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>
  * @pre The type of the random variable and the first condition variable of \p cpdf should be the same. The \p cpdf should have at least one condition variable. 
  */
 template <typename TPDF, typename TParamMap, typename TInitialPDF>
-Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>
+Markov<TPDF, TParamMap, TInitialPDF>
 makeMarkov(distribution::Conditional<TPDF, TParamMap> cpdf,
            TInitialPDF init_pdf) {
-  return Markov<distribution::Conditional<TPDF, TParamMap>, TInitialPDF>(
+  return Markov<TPDF, TParamMap, TInitialPDF>(
       cpdf, init_pdf);
 }
 
