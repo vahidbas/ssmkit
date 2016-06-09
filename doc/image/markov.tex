@@ -3,13 +3,26 @@
 \usepackage{amsmath}
 
 \begin{document}
+\tikzset{
+  pinstate/.style 2 args ={circle,
+  thick,
+  minimum  size=1.2cm,
+  draw=blue!80,
+  fill=blue!20,
+  pin={[pin edge={<-, thick}]130:#1},
+  pin={[pin edge={<-, thick}]170:#2},
+  label={140:.},
+  label={150:.},
+  label={160:.}
+}
+}
 \tikzstyle{state}=[circle,
   thick,
   minimum
   size=1.2cm,
   draw=blue!80,
   fill=blue!20]
-%\tikzstyle{state}[circle, thick]
+
 \begin{tikzpicture}
 \matrix[row sep=0.3cm, column sep=0.3cm] {
   &
@@ -17,9 +30,9 @@
   &
   \node (dots1) {$\cdots$}; &
   &
-  \node (skm1) [state] {$\mathbf{x}_{k-1}$}; &  
+  \node (skm1) [pinstate={$y^1_{k-1}$}{$y^N_{k-1}$}] {$\mathbf{x}_{k-1}$}; &  
   &
-  \node (sk) [state] {$\mathbf{x}_{k}$}; &  
+  \node (sk) [pinstate={$y^1_k$}{$y^N_k$}] {$\mathbf{x}_{k}$}; &  
   &
   \node (dots2) {$\cdots$}; &
   \\
