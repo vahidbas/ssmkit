@@ -22,7 +22,7 @@ namespace distribution {
  * \f{equation}{p(x|y_0, \cdots, y_N) = \mathcal{F}(g(y_0, \cdots, y_N))\f}
  * where \f$\mathcal{F}(\theta)\f$ is a probability distribution with
  * parameter \f$\theta \in \Theta \f$ and \f$g:\{Y_0, \cdots, Y_n\} \rightarrow \Theta\f$ 
- * is a function that maps a variables \f$(y_0^*, \cdots, y_N^*)\f$ to a parameter
+ * is a function that maps a set of variables \f${y_0^*, \cdots, y_N^*}\f$ to a parameter
  * \f$\theta^*\f$, i.e. \f$\theta^* = g(y_0^*, \cdots, y_N^*)\f$.
  *
  * @tparam TPDF Type of the distribution \f$\mathcal{F}(\theta)\f$
