@@ -1,12 +1,13 @@
 # build tests
 find_package(Boost COMPONENTS unit_test_framework)
+find_package(Threads)
 if (Boost_UNIT_TEST_FRAMEWORK_FOUND)
   enable_testing()
   
   message(STATUS ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
   add_definitions(-DTEST_MODULE_NAME=ssmpack_test)
-  
-  # find all .cpp test files
+
+#find all.cpp test files
   file(GLOB_RECURSE TEST_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
   # 
   
@@ -16,7 +17,8 @@ if (Boost_UNIT_TEST_FRAMEWORK_FOUND)
   add_definitions(-DBOOST_TEST_DYN_LINK)
   # indicates the shared library variant
   #target_compile_definitions(tests PRIVATE "BOOST_TEST_DYN_LINK=1")
-  target_link_libraries(tests ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${ARMADILLO_LIBRARIES})
+  target_link_libraries(tests ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+    ${ARMADILLO_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
   
   # declare tests
   add_test(NAME alltests COMMAND tests)
