@@ -28,7 +28,7 @@ class BaseResampler<Method<Criterion>> {
   Criterion criterion_;
   
   public:
-   BaseResampler(Criterion criterion) : criterion_{criterion} {}
+   BaseResampler(Criterion criterion) : criterion_(std::move(criterion)) {}
 
    template <class Particles, class Weights>
    void operator()(Particles &pars, Weights &w) {
