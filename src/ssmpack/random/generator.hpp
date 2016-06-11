@@ -3,7 +3,6 @@
  * @author Vahid Bastani
  *
  * The random number engine.
- * @bug possibly not thread-safe
  */
 #ifndef SSMPACK_RANDOM_GENERATOR_HPP
 #define SSMPACK_RANDOM_GENERATOR_HPP
@@ -23,14 +22,22 @@ class Generator {
   //! The core STL random generator
   CoreGenerator gen_;
   /** Default constructor.
-   * this is private because there can be only one instance of this class.
+   *
+   * This is private because there can be only one instance of this class. 
+   *
+   * @note The object get initialized with random seed on construction. This is
+   * essential in multi-thread usage.
    */
-  Generator() {}
+  Generator() {
+    // random initialization on construction
+    setRandomSeed();
+  }
 
  public:
  //! Returns a reference to singleton instance
   static Generator &get() {
-    static Generator instance;
+    // this is thread local to avoid race condition on gen_
+    static thread_local Generator instance;
     return instance;
   }
   //! Returns reference to the core generator
