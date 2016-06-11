@@ -35,9 +35,9 @@ BOOST_AUTO_TEST_CASE(multithread) {
         all_of(samples.begin(), samples.end(), [&samples](const auto &sb) {
           return count_if(samples.begin(), samples.end(), [&sb](const auto &s) {
                    return s == sb;
-                 }) > 1 ? true : false;
+                 }) == 1 ? true : false;
         });
-    BOOST_CHECK(!ch);
+    BOOST_CHECK(ch);
   }
 }
 
