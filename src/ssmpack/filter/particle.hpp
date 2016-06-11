@@ -115,12 +115,12 @@ class Particle
   const arma::mat &getStateParticles(void) const { return state_par_; }
 };
 
-template <class StatePDF, class StateParamMap, class InitialPDF, class MeasurementCPDF,
+template <class StatePDF, class StateParamMap, class InitialPDF, class MeasurementPDF, class MeasurementParamMap,
           class Resampler>
 auto makeParticle(Hierarchical<Markov<StatePDF, StateParamMap, InitialPDF>,
-                               Memoryless<MeasurementCPDF>> process,
+                               Memoryless<MeasurementPDF, MeasurementParamMap>> process,
                   Resampler resampler, unsigned long particle_num) {
-  return Particle<Hierarchical<Markov<StatePDF, StateParamMap, InitialPDF>, Memoryless<MeasurementCPDF>>, Resampler>(process, resampler, particle_num);
+  return Particle<Hierarchical<Markov<StatePDF, StateParamMap, InitialPDF>, Memoryless<MeasurementPDF, MeasurementParamMap>>, Resampler>(process, resampler, particle_num);
 }
 
 } // namespace filter

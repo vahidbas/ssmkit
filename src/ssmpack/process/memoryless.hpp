@@ -19,15 +19,10 @@ namespace ssmpack {
 namespace process {
 
 /**
- * A first-order Memoryless process
+ * A Memoryless (independent/ white) random  process
  */
-template <typename TStateCPDF>
-class Memoryless {};
-
 template <typename TPDF, typename TParamMap>
-class Memoryless<distribution::Conditional<TPDF, TParamMap>>
-    : public BaseProcess<
-          Memoryless<distribution::Conditional<TPDF, TParamMap>>> {
+class Memoryless : public BaseProcess<Memoryless<TPDF, TParamMap>> {
  private:
   distribution::Conditional<TPDF, TParamMap> cpdf_;
 
@@ -59,10 +54,9 @@ class Memoryless<distribution::Conditional<TPDF, TParamMap>>
 };
 
 template <typename TPDF, typename TParamMap>
-Memoryless<distribution::Conditional<TPDF, TParamMap>>
+Memoryless<TPDF, TParamMap>
 makeMemoryless(distribution::Conditional<TPDF, TParamMap> cpdf) {
-  return Memoryless<distribution::Conditional<TPDF, TParamMap>>(
-      cpdf);
+  return Memoryless<TPDF, TParamMap>(cpdf);
 }
 
 } // namespace process

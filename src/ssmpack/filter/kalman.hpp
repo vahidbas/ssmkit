@@ -30,7 +30,7 @@ class Kalman
  public:
   using TProcess =
       Hierarchical<Markov<Gaussian, STA_MAP, Gaussian>,
-                   Memoryless<Conditional<Gaussian, OBS_MAP>>>;
+                   Memoryless<Gaussian, OBS_MAP>>;
 
   using TCompeleteState =
       std::tuple<arma::vec, arma::mat>;
@@ -98,7 +98,7 @@ class Kalman
 template <class STA_MAP, class OBS_MAP>
 Kalman<STA_MAP, OBS_MAP> makeKalman(
     Hierarchical<Markov<Gaussian, STA_MAP, Gaussian>,
-                 Memoryless<Conditional<Gaussian, OBS_MAP>>> process) {
+                 Memoryless<Gaussian, OBS_MAP>> process) {
   return Kalman<STA_MAP, OBS_MAP>(process);
 }
 
