@@ -1,0 +1,103 @@
+\documentclass[convert={density=150,outext=.png}]{standalone}
+\usepackage{tikz}
+\usepackage{amsmath}
+
+\begin{document}
+\tikzset{
+  pinstate/.style 2 args ={circle,
+  thick,
+  minimum  size=1.2cm,
+  draw=blue!80,
+  fill=blue!20,
+  pin={[pin edge={<-, thick}]130:#1},
+  pin={[pin edge={<-, thick}]170:#2},
+  label={140:.},
+  label={150:.},
+  label={160:.}
+}
+}
+\tikzstyle{state}=[circle,
+  thick,
+  minimum
+  size=1.2cm,
+  draw=blue!80,
+  fill=blue!20]
+
+\begin{tikzpicture}
+\matrix[row sep=0.3cm, column sep=0.3cm] {
+  &
+  \node (s0_0) [state] {$\mathbf{x}^0_{0}$}; &
+  &
+  \node (dots1_0) {$\cdots$}; &
+  &
+\node (skm1_0) [pinstate={$y^{0,1}_{k-1}$}{$y^{0,N^0}_{k-1}$}] {$\mathbf{x}^0_{k-1}$}; &  
+  &
+\node (sk_0) [pinstate={$y^{0,1}_k$}{$y^{0,N^0}_k$}] {$\mathbf{x}^0_{k}$}; &  
+  &
+  \node (dots2_0) {$\cdots$}; &
+  \\
+  &
+  \node (s0_1) [state] {$\mathbf{x}^1_{0}$}; &
+  &
+  \node (dots1_1) {$\cdots$}; &
+  &
+  \node (skm1_1) [pinstate={$y^{1,1}_{k-1}$}{$y^{1,N^1}_{k-1}$}] {$\mathbf{x}^1_{k-1}$}; &  
+  &
+  \node (sk_1) [pinstate={$y^{1,1}_k$}{$y^{1,N^1}_k$}] {$\mathbf{x}^1_{k}$}; &  
+  &
+  \node (dots2_1) {$\cdots$}; &
+  \\
+  &
+  \node (s0_m) {$\vdots$}; &
+  &
+  \node  {$\cdots$}; &
+  &
+  \node (skm1_m) {$\vdots$}; &  
+  &
+  \node (sk_m) {$\vdots$}; &  
+  &
+  \node  {$\cdots$}; &
+  \\
+  &
+  \node (s0_L) [state] {$\mathbf{x}^L_{0}$}; &
+  &
+  \node (dots1_L) {$\cdots$}; &
+  &
+  \node (skm1_L) [pinstate={$y^{L,1}_{k-1}$}{$y^{L,N^L}_{k-1}$}] {$\mathbf{x}^L_{k-1}$}; &  
+  &
+  \node (sk_L) [pinstate={$y^{L,1}_k$}{$y^{L,N^L}_k$}] {$\mathbf{x}^L_{k}$}; &  
+  &
+  \node (dots2_L) {$\cdots$}; &
+  \\
+};
+
+\draw [->] (skm1_0) edge[thick] (sk_0) 
+           (s0_0) edge[thick] (dots1_0)
+           (sk_0) edge[thick] (dots2_0)
+           (dots1_0) edge[thick] (skm1_0)
+           ;
+
+\draw [->] (skm1_1) edge[thick] (sk_1) 
+           (s0_1) edge[thick] (dots1_1)
+           (sk_1) edge[thick] (dots2_1)
+           (dots1_1) edge[thick] (skm1_1)
+           ;
+
+\draw [->] (skm1_L) edge[thick] (sk_L) 
+           (s0_L) edge[thick] (dots1_L)
+           (sk_L) edge[thick] (dots2_L)
+           (dots1_L) edge[thick] (skm1_L)
+           ;
+
+% vertical arrows
+\draw [->] (skm1_0) edge[thick] (skm1_1)
+           (sk_0) edge[thick] (sk_1)
+           ;
+\draw [->] (skm1_1) edge[thick] (skm1_m)
+           (sk_1) edge[thick] (sk_m)
+           ;
+\draw [->] (skm1_m) edge[thick] (skm1_L)
+           (sk_m) edge[thick] (sk_L)
+           ;
+\end{tikzpicture}
+\end{document}

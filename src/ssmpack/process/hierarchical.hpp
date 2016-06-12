@@ -19,9 +19,11 @@ namespace process {
 
 /** A dynamic Bayesian network constructed as hierarchy of processes
  *
- * A hierarchical dynamic Bayesian network DBN is constructed by vertically
- * stacking layers of stochastic processes such that in a time slice lower layer is
- * only dependent on the immediate upper layer.
+ * A hierarchical dynamic Bayesian network is constructed by vertically
+ * stacking layers of stochastic processes such that in every time-slice a layer is
+ * only dependent on its immediate upper layer.
+ *
+ * \image html hierarchical.png "Dynamic Bayesian Network model of Hierarchical process"
  *
  * @tparam Args... Type of the process levels
  */
