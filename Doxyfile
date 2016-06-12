@@ -22,6 +22,7 @@ ABBREVIATE_BRIEF       = "The $name class" \
                          a \
                          an \
                          the
+MARKDOWN_SUPPORT       = YES
 ALWAYS_DETAILED_SEC    = YES
 INLINE_INHERITED_MEMB  = NO
 FULL_PATH_NAMES        = YES
@@ -87,7 +88,8 @@ INPUT                  = ./src/ssmpack \
                          ./doc/global
 FILE_PATTERNS          = *.hpp \
                          *.cpp \
-                         *.txt
+                         *.txt \
+                         *.md
 RECURSIVE              = YES
 EXCLUDE                =
 EXCLUDE_SYMLINKS       = YES
@@ -101,7 +103,7 @@ EXCLUDE_PATTERNS       = */build/* \
                          *.cpp \
                          *.cc \
                          *_test.cc
-EXAMPLE_PATH           =
+EXAMPLE_PATH           = ./example
 EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO
 IMAGE_PATH             = ./doc/image/

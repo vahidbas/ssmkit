@@ -1,4 +1,4 @@
-`ssmpack` is scalable a C++ library of algorithms and tools for analysis and simulation of State Space Models.
+`ssmpack` is a scalable C++ library of algorithms and tools for analysis and simulation of State Space Models.
 ##### Features ######
 * a
 * b

@@ -16,6 +16,13 @@ string(REPLACE
     DOXYFILE_AUXVAR "${DOXYFILE_AUXVAR}"
     )
 
+# Modify example path
+string(REPLACE
+    "./example"
+    "${CMAKE_CURRENT_SOURCE_DIR}/example"
+    DOXYFILE_AUXVAR "${DOXYFILE_AUXVAR}"
+    )
+
 # Change the STRIP_FROM_PATH so that it works right even in the build directory;
 # otherwise, every file will have the full path in it.
 string(REGEX REPLACE
