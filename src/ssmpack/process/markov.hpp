@@ -67,7 +67,7 @@ class Markov
    *
    * Samples one random variable \f$\mathbf{x}_k\f$ from the process and stores it internally.
    *
-   * @param args... Process condition (control) variables (\f$y^1_k, \cdots, y^N_k\f$) if any.
+   * @param args ... Process condition (control) variables (\f$y^1_k, \cdots, y^N_k\f$) if any.
    * @return Random variable \f$\mathbf{x}_k\f$.
    * @par Side Effects
    * Sets the internal state to \f$\mathbf{x}_k\f$.
@@ -83,7 +83,7 @@ class Markov
    * Calculate the likelihood of one random variable \f$p(\mathbf{x}_k|\mathbf{x}_{k-1}, y^1_k, \cdots, y^N_k)\f$.
    *
    * @param rv The random variable \f$\mathbf{x}_k\f$.
-   * @param args... Process condition (control) variables (\f$y^1_k, \cdots, y^N_k\f$) if any.
+   * @param args ... Process condition (control) variables (\f$y^1_k, \cdots, y^N_k\f$) if any.
    * @return The likelihood of random variable \f$\mathbf{x}_k\f$.
    *
    */

@@ -65,7 +65,7 @@ class Memoryless : public BaseProcess<Memoryless<TPDF, TParamMap>> {
    *
    * Samples one random variable \f$\mathbf{x}_k\f$ from the process.
    *
-   * @param args... Process condition (control) variables (\f$y^0_k, \cdots, y^N_k\f$) if any.
+   * @param args ... Process condition (control) variables (\f$y^0_k, \cdots, y^N_k\f$) if any.
    * @return Random variable \f$\mathbf{x}_k\f$.
    */
   template <typename... Args>
@@ -78,7 +78,7 @@ class Memoryless : public BaseProcess<Memoryless<TPDF, TParamMap>> {
    * Calculate the likelihood of one random variable \f$p(\mathbf{x}_k| y^0_k, \cdots, y^N_k)\f$.
    *
    * @param rv The random variable \f$\mathbf{x}_k\f$.
-   * @param args... Process condition (control) variables (\f$y^0_k, \cdots, y^N_k\f$) if any.
+   * @param args ... Process condition (control) variables (\f$y^0_k, \cdots, y^N_k\f$) if any.
    * @return The likelihood of random variable \f$\mathbf{x}_k\f$.
    *
    */
