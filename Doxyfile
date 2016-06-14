@@ -84,8 +84,8 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = ./src/ssmpack \
-                         ./doc/global
+INPUT                  = _/src/ssmpack \
+                         _/doc/global
 FILE_PATTERNS          = *.hpp \
                          *.cpp \
                          *.txt \
@@ -103,7 +103,7 @@ EXCLUDE_PATTERNS       = */build/* \
                          *.cpp \
                          *.cc \
                          *_test.cc
-EXAMPLE_PATH           = ./example
+EXAMPLE_PATH           = _/example
 EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO
 IMAGE_PATH             = ./doc/image/
@@ -133,9 +133,9 @@ IGNORE_PREFIX          =
 GENERATE_HTML          = YES
 HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
-HTML_HEADER            =
-HTML_FOOTER            =
-HTML_STYLESHEET        =
+HTML_HEADER            = _/doc/style/header.html
+HTML_FOOTER            = _/doc/style/footer.html
+HTML_EXTRA_STYLESHEET  = _/doc/style/extra.css
 #HTML_ALIGN_MEMBERS     = YES
 GENERATE_HTMLHELP      = NO
 CHM_FILE               =

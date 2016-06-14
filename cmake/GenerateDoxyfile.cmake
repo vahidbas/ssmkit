@@ -5,20 +5,20 @@ file(READ "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile" DOXYFILE_CONTENTS)
 
 # Modify all the input path
 string(REPLACE
-    "./src/ssmpack"
+    "_/src/ssmpack"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/ssmpack"
     DOXYFILE_AUXVAR "${DOXYFILE_CONTENTS}"
     )
 # Modify documentation global path
 string(REPLACE
-    "./doc/global"
-    "${CMAKE_CURRENT_SOURCE_DIR}/doc/global"
+    "_/doc/"
+    "${CMAKE_CURRENT_SOURCE_DIR}/doc/"
     DOXYFILE_AUXVAR "${DOXYFILE_AUXVAR}"
     )
 
 # Modify example path
 string(REPLACE
-    "./example"
+    "_/example"
     "${CMAKE_CURRENT_SOURCE_DIR}/example"
     DOXYFILE_AUXVAR "${DOXYFILE_AUXVAR}"
     )
