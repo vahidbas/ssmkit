@@ -1,0 +1,46 @@
+
+\documentclass[convert={density=150,outext=.png}]{standalone}
+\usepackage{tikz}
+\usepackage{amsmath}
+
+\begin{document}
+\tikzstyle{state}=[circle,
+  thick,
+  minimum
+  size=1.2cm,
+  draw=blue!80,
+  fill=blue!20]
+
+\begin{tikzpicture}
+\matrix[row sep=0.3cm, column sep=0.3cm] {
+  &
+  \node (s0) [state] {$\mathbf{x}_{0}$}; &
+  &
+  \node (skm1) [state] {$\mathbf{x}_{1}$}; &  
+  &
+  \node (sk) [state] {$\mathbf{x}_{2}$}; &  
+  &
+  \node (dots2) {$\cdots$}; &
+  \\
+  &
+  &
+  &
+  \node (mkm1) [state] {$\mathbf{z}_{1}$}; &  
+  &
+  \node (mk) [state] {$\mathbf{z}_{2}$}; &  
+  &
+  \node {$\cdots$}; &
+  \\
+};
+
+\draw [->] (skm1) edge[thick] (sk) 
+           (s0) edge[thick] (skm1)
+           (sk) edge[thick] (dots2)
+           ;
+\draw [->] (skm1) edge[thick] (mkm1) 
+           (sk) edge[thick] (mk)
+           ;
+
+
+\end{tikzpicture}
+\end{document}
