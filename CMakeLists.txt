@@ -68,7 +68,7 @@ if (DOXYGEN_FOUND)
       COMMENT "Generating API documentation with Doxygen"
       )
   
-  add_dependencies(doc tikz_images)
+  add_dependencies(doc doc_images)
   
   install(DIRECTORY ${CMAKE_BINARY_DIR}/doc/html
       DESTINATION share/doc/ssmpack

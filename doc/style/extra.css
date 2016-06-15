@@ -91,4 +91,6 @@ body {
   background-repeat:repeat;
 }
 
-
+#projectlogo img {
+  height: 30%;
+}
