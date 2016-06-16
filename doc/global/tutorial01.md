@@ -76,14 +76,25 @@ of this form
 
 ![two-layer hierarchical DBN](kalman.png "two-layer")
 
-The process construction
+The first layer of this process is first-order Markov process where the state at
+each time instance is only dependent on the state at previous time instant. The
+second layer in an independent or memoryless process where the values of the
+process at previous time instances do not have any effect on the value of next
+time instances.
+
+Construction probability distribution functions
 ------------------------
 `ssmpack` coding style is almost the same formal mathematical construction of
 dynamic Bayesian networks. We start by defining the parametric PDFs then
 building CPDFs based on them. These CPDFs are used to define simple stochastic
 processes which are later combined to make more complex stochastic processes.
 
+We start by defining the parameters of the system:
 ~~~{.cpp}
+// state dimensions
+int state_dim = 4;
+// measurement dimensions
+int meas_dim = 2;
 // sample time
 double delta = 0.1;
 // state transition matrix
@@ -104,33 +115,58 @@ arma::mat R{{1, 0},
             {0, 1}};
 // initial state pdf mean vector
 arma::vec x0{0, 0, 0, 0};
-// initial stae pdf covariance matrix
+// initial state pdf covariance matrix
 arma::mat P0{{1, 0, 0, 0},
              {0, 1, 0, 0},
              {0, 0, 1, 0},
              {0, 0, 0, 1}};
 ~~~
-
-In the previous section we mathematically constructed our state space model.
-
-The class ssmpack::distribution::Gaussian provides multivariate Gaussian. As
-first step We make a 4-dimensional Gaussian and 2-dimensional Gaussian  state and
-measurement processes respectively.
-
+`arma::mat` and `arma::vec` are matrix and vector data-types from `armadillo` library. Then we define initial state
+PDF \f$p(\mathbf{x}_0)\f$ using ssmpack::distribution::Gaussian class:
+~~~{.cpp}
+// initial state pdf
+ssmpack::distribution::Gaussian initial_pdf(x0, P0);
 ~~~
+the class `ssmpack::distribution::Gaussian` implements a multivariate Gaussian
+distribution and can be used for sampling and calculating likelihood of random
+variables. Note that we passed mean vector and covariance matrix we defined
+above to its constructor.
 
-dyn_pdf = ssmpack::distribution::Gaussian(4);  // dynamic PDF
-mea_pdf = ssmpack::distribution::Gaussian(2);  // measurement PDF
+We now turn to definition the state transition CPDF and the measurement CPDF.
+Before that it is important to understand how CPDFs are treated.
+In `ssmpack` CPDFs are defined as a combination of a parametric PDF and a
+parameter map. In other words \f$p(x|y) = \mathcal{F}(g(y))\f$ where
+\f$\mathcal{F}(\theta)\f$ is parametric distribution (e.g. Gaussian) with
+parameter Set \f$\theta\f$ and \f$g(y) = \theta\f$ maps the condition variable \f$y\f$
+to a parameter \f$\theta\f$. The parameter set of Gaussian
+is a tuple \f$(\mu, \Sigma)\f$ of mean vector and covariance matrix.
+Thus, for our purpose the function \f$g\f$ should receive a
+state variable and return \f$(\mathbf{F}\mathbf{x}, \mathbf{Q})\f$
+for transition CPDF and \f$(\mathbf{H}\mathbf{x}, \mathbf{R})\f$ 
+for measurement CPDF. This special kind of parameter map is implemented in class
+`ssmpack::map::LinearGaussian(trans, cov)` which constructed using a linear transformation
+matrix `trans` and a covariance matrix `cov`. Note that it always return the
+same covariance matrix which constructed with. 
 
+The class `ssmpack::distribution::Conditional` provides a generic class
+that constructs a conditional distribution form a parametric distribution and a
+parameter map. We can make any kind of CPDF with this class.
+
+Now we can construct our CPDFs:
+~~~{.cpp}
+// state cpdf
+auto state_cpdf = ssmpack::distribution::makeConditional(
+    ssmpack::distribution::Gaussian(state_dim),
+    ssmpack::map::LinearGaussian(F, Q));
+// measurement cpdf
+auto meas_cpdf = ssmpack::distribution::makeConditional(
+    ssmpack::distribution::Gaussian(meas_dim),
+    ssmpack::map::LinearGaussian(H, R));
 ~~~
-`ssmpack` construct CPDFs from parametric parametric PDFs and special kind of
-functors called parameter maps.
-\f$p(\mathbf{x}_k|\mathbf{x}_{k-1})=\mathcal{N}(g(\mathbf{x}_{k-1}))\f$
-where 
-\f$g(\mathbf{x}_{k-1})\f$ is the parameter map that receives an state variable
-and returns corresponding parameter set for Gaussian distribution
-\f$(\mathbf{H}\mathbf{x}_{k}, \mathbf{R})\f$. the class
-ssmpack::map::LinearGaussian provides the requried parameter map for our case
-
-
-by default the Gaussian have zero mean vector and identity covariance matrix. 
+we used `ssmpack::distribution::makeConditional` function for constructing CPDFs. This
+is a convenient interface to class constructor. If we used the constructor
+directly, we would have to specify template argument for that.
+`ssmpack::distribution::Gaussian(dim)` is another constructor for Gaussian PDF
+object with dimensions `dim`. Note that we pass the PDF object to `Conditional`
+in order to let it know what type of distribution we need and the parameters of
+distribution will come from the parameter map object.

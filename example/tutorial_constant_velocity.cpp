@@ -11,6 +11,10 @@ using namespace ssmpack;
 
 int main ()
 {
+  // state dimensions
+  int state_dim = 4;
+  // measurement dimensions
+  int meas_dim = 2;
   // sample time
   double delta = 0.1;
   // state transition matrix
@@ -36,5 +40,16 @@ int main ()
                {0, 1, 0, 0},
                {0, 0, 1, 0},
                {0, 0, 0, 1}};
+  // initial state pdf
+  ssmpack::distribution::Gaussian initial_pdf(x0, P0);
+  // state cpdf
+  auto state_cpdf = ssmpack::distribution::makeConditional(
+      ssmpack::distribution::Gaussian(state_dim),
+      ssmpack::map::LinearGaussian(F, Q));
+  // measurement cpdf
+  auto meas_cpdf = ssmpack::distribution::makeConditional(
+      ssmpack::distribution::Gaussian(meas_dim),
+      ssmpack::map::LinearGaussian(H, R));
+
 
 }
