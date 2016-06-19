@@ -4,7 +4,7 @@ find_package(Threads)
 if (Boost_UNIT_TEST_FRAMEWORK_FOUND)
   enable_testing()
   
-  message(STATUS ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+  #  message(STATUS ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
   add_definitions(-DTEST_MODULE_NAME=ssmpack_test)
 
 #find all.cpp test files

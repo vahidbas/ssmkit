@@ -40,7 +40,7 @@ file(GLOB IMAGE_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/image"
 "${CMAKE_CURRENT_SOURCE_DIR}/image/*.png"
 "${CMAKE_CURRENT_SOURCE_DIR}/image/*.svg")
 
-message(STATUS ${IMAGE_FILES})
+# message(STATUS ${IMAGE_FILES})
 # copy regular images
 foreach(_file ${IMAGE_FILES})
   add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/doc/image/${_file}

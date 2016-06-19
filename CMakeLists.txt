@@ -41,6 +41,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(example)
+add_subdirectory(benchmark)
 
 # Generate the documentation.
 find_package(Doxygen)

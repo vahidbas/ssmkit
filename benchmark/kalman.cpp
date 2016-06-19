@@ -1,6 +1,5 @@
 #include <benchmark/benchmark.h>
 
-#include "opencv2/video/tracking.hpp"
 
 #include "ssmpack/map/linear_gaussian.hpp"
 #include "ssmpack/distribution/gaussian.hpp"
@@ -11,7 +10,6 @@
 #include "ssmpack/filter/kalman.hpp"
 
 using namespace ssmpack;
-using namespace cv;
 
 auto make(){
   double delta = 0.1; // sample time
@@ -46,15 +44,10 @@ auto make(){
   return kalman;
 }
 
-auto make_opencv(){
-  return KalmanFilter(4, 2, 0);
-}
 
 auto kalman = make();
-auto kalman_cv = make_opencv();
 
 arma::vec meas {0, 0};
-Mat_<float> meas_cv(2,1);
 
 static void ssmpack_kalman_predict(benchmark::State& state) {
   while (state.KeepRunning())
@@ -70,6 +63,16 @@ static void ssmpack_kalman_correct(benchmark::State& state) {
 }
 BENCHMARK(ssmpack_kalman_correct);
 
+#ifdef WITH_OPENCV
+
+#include "opencv2/video/tracking.hpp"
+using namespace cv;
+auto make_opencv(){
+  return KalmanFilter(4, 2, 0);
+}
+auto kalman_cv = make_opencv();
+Mat_<float> meas_cv(2,1);
+
 static void opencv_kalman_predict(benchmark::State& state) {
   while (state.KeepRunning())
     kalman_cv.predict();
@@ -83,5 +86,7 @@ static void opencv_kalman_correct(benchmark::State& state) {
     kalman_cv.correct(meas_cv);
 }
 BENCHMARK(opencv_kalman_correct);
+
+#endif
 
 BENCHMARK_MAIN();
