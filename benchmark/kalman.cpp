@@ -63,7 +63,7 @@ static void ssmpack_kalman_correct(benchmark::State& state) {
 }
 BENCHMARK(ssmpack_kalman_correct);
 
-#ifdef WITH_OPENCV
+#ifdef WITH_OpenCV
 
 #include "opencv2/video/tracking.hpp"
 using namespace cv;

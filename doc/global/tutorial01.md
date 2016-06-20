@@ -82,13 +82,13 @@ second layer in an independent or memoryless process where the values of the
 process at previous time instances do not have any effect on the value of next
 time instances.
 
-Construction probability distribution functions
-------------------------
 `ssmpack` coding style is almost the same formal mathematical construction of
 dynamic Bayesian networks. We start by defining the parametric PDFs then
 building CPDFs based on them. These CPDFs are used to define simple stochastic
 processes which are later combined to make more complex stochastic processes.
 
+Defining constant parameters
+-----------------------------
 We start by defining the parameters of the system:
 ~~~{.cpp}
 // state dimensions
@@ -121,7 +121,12 @@ arma::mat P0{{1, 0, 0, 0},
              {0, 0, 1, 0},
              {0, 0, 0, 1}};
 ~~~
-`arma::mat` and `arma::vec` are matrix and vector data-types from `armadillo` library. Then we define initial state
+`arma::mat` and `arma::vec` are matrix and vector data-types from `armadillo` library.
+
+
+Construction probability distribution functions
+------------------------
+we define initial state
 PDF \f$p(\mathbf{x}_0)\f$ using ssmpack::distribution::Gaussian class:
 ~~~{.cpp}
 // initial state pdf
@@ -170,3 +175,37 @@ directly, we would have to specify template argument for that.
 object with dimensions `dim`. Note that we pass the PDF object to `Conditional`
 in order to let it know what type of distribution we need and the parameters of
 distribution will come from the parameter map object.
+
+Construction the state space model
+------------------------
+Now that we have the CPDFs we start constructing the hierarchical process.
+First, let build each layer separately:
+~~~{.cpp}
+// state process
+auto state_proc = ssmpack::process::makeMarkov(state_cpdf, initial_pdf);
+// measurement process
+auto meas_proc = ssmpack::process::makeMemoryless(meas_cpdf);
+~~~
+
+The function `ssmpack::process::makeMarkov()` receives an initial PDF and a CPDFs
+and construct a Markovian random process of class `ssmpack::process::Markov`
+from them.
+The function `ssmpack::process::makeMemoryless()` takes a CPDFs
+and returns a memoryless or independent random process of class `ssmpack::process::Memoryless`.
+
+Finally, we can use the class `ssmpack::process::Hierarchical` to construct SSM
+process.
+~~~{.cpp}
+// the hirerachical state space model
+auto ssm_proc = ssmpack::process::makeHierarchical(state_proc, meas_proc);
+~~~
+The function `ssmpack::process::makeHierarchical()` takes an arbitrary number of processes
+and construct a process of class `ssmpack::process::Hierarchical`. Hierarchical processes
+are built by stacking other processes. The `Hierarchical` class connects the random variable of a process to the condition variable of the process in the lower level.
+
+Data simulation
+----------------
+
+
+State estimation
+-----------------

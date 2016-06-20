@@ -50,6 +50,12 @@ int main ()
   auto meas_cpdf = ssmpack::distribution::makeConditional(
       ssmpack::distribution::Gaussian(meas_dim),
       ssmpack::map::LinearGaussian(H, R));
+  
+  // state process
+  auto state_proc = ssmpack::process::makeMarkov(state_cpdf, initial_pdf);
+  // measurement process
+  auto meas_proc = ssmpack::process::makeMemoryless(meas_cpdf);
 
-
+  // the hirerachical state space model
+  auto ssm_proc = ssmpack::process::makeHierarchical(state_proc, meas_proc);
 }
