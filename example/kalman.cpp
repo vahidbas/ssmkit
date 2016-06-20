@@ -43,11 +43,11 @@ int main ()
 
   auto kalman = filter::makeKalman(joint_process);
 
-  std::vector<typename decltype(joint_process)::TRandomVAR> v;
+  // std::vector<typename decltype(joint_process)::TRandomVAR> v;
 
   random::setRandomSeed();
   joint_process.initialize();
-  joint_process.random_n(v, 100);
+  auto v = joint_process.random_n(100);
 
   std::vector<typename std::tuple_element<1,decltype(v)::value_type>::type> m(100);
   int count=0;
