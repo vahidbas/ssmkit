@@ -203,9 +203,24 @@ The function `ssmpack::process::makeHierarchical()` takes an arbitrary number of
 and construct a process of class `ssmpack::process::Hierarchical`. Hierarchical processes
 are built by stacking other processes. The `Hierarchical` class connects the random variable of a process to the condition variable of the process in the lower level.
 
+putting all in one line:
+~~~{.cpp}
+// all in one line!
+auto ssm_proc =
+  makeHierarchical(
+    makeMarkov(
+      makeConditional(Gaussian(state_dim), LinearGaussian(F, Q)), Gaussian(x0, P0)),
+    makeMemoryless(
+        makeConditional(Gaussian(meas_dim), LinearGaussian(H, R))));
+~~~
 Data simulation
 ----------------
-
+~~~{.cpp}
+// initialize the process
+ssm_proc.initialize();
+// simulate data
+auto data = ssm_proc.random_n(100);
+~~~
 
 State estimation
 -----------------

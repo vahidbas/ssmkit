@@ -56,6 +56,18 @@ int main ()
   // measurement process
   auto meas_proc = ssmpack::process::makeMemoryless(meas_cpdf);
 
-  // the hirerachical state space model
+  // the hierarchical state space model
   auto ssm_proc = ssmpack::process::makeHierarchical(state_proc, meas_proc);
+//  // all in one line!
+//  auto ssm_proc =
+//    makeHierarchical(
+//      makeMarkov(
+//        makeConditional(Gaussian(state_dim), LinearGaussian(F, Q)),
+//        Gaussian(x0, P0)),
+//      makeMemoryless(
+//          makeConditional(Gaussian(meas_dim), LinearGaussian(H, R))));
+  // initialize the process
+  ssm_proc.initialize();
+  // simulate data
+  auto data = ssm_proc.random_n(100);
 }
