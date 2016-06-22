@@ -4,8 +4,12 @@
 #include "ssmpack/process/markov.hpp"
 #include "ssmpack/process/memoryless.hpp"
 #include "ssmpack/process/hierarchical.hpp"
+#include "ssmpack/filter/kalman.hpp"
 
+#include <algorithm>
+#include <numeric>
 #include <iostream>
+
 
 using namespace ssmpack;
 
@@ -58,7 +62,8 @@ int main ()
 
   // the hierarchical state space model
   auto ssm_proc = ssmpack::process::makeHierarchical(state_proc, meas_proc);
-//  // all in one line!
+
+  // all in one statement!
 //  auto ssm_proc =
 //    makeHierarchical(
 //      makeMarkov(
@@ -66,8 +71,37 @@ int main ()
 //        Gaussian(x0, P0)),
 //      makeMemoryless(
 //          makeConditional(Gaussian(meas_dim), LinearGaussian(H, R))));
+
   // initialize the process
   ssm_proc.initialize();
   // simulate data
-  auto data = ssm_proc.random_n(100);
+  size_t n = 100;
+  auto data = ssm_proc.random_n(n);
+
+  // seperate state (x) and measurement (z) sequences
+  std::vector<typename std::tuple_element<0,decltype(data)::value_type>::type> x_seq(n);
+  std::vector<typename std::tuple_element<1,decltype(data)::value_type>::type> z_seq(n);
+  std::transform(data.begin(), data.end(), x_seq.begin(),
+                 [](const auto &v) { return std::get<0>(v); });
+  std::transform(data.begin(), data.end(), z_seq.begin(),
+                 [](const auto &v) { return std::get<1>(v); });
+
+
+  // make kalman filter
+  auto kalman = ssmpack::filter::makeKalman(ssm_proc);
+  // apply Kalman filter on the simulated measurement to estimate x sequence
+  auto x_seq_est_kalman = kalman.filter(z_seq);
+  
+  // calculate mean squared error of the estimation
+  auto mse = std::inner_product(
+      x_seq.begin(), x_seq.end(), x_seq_est_kalman.begin() + 1,
+      static_cast<arma::vec>(arma::zeros<arma::vec>(state_dim)),
+      std::plus<arma::vec>(), [n](const auto &a, const auto &b) {
+        return static_cast<arma::vec>(arma::square(a - std::get<0>(b)) / n);
+      });
+
+  std::cout << "Kalman MSE = \n" << mse << std::endl;
 }
+
+
+

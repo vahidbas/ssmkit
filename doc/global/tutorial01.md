@@ -5,7 +5,7 @@ Introduction
 --------------------
 In this tutorial we show how `ssmpack` can be used for simulating and tracking a
 constant velocity inertial model. The code for this tutorial can be
-found in `/example/tutorial.cpp`. 
+found in `/example/tutorial_constant_velocity.cpp`. 
 
 The State Space Model
 ---------------------
@@ -203,9 +203,10 @@ The function `ssmpack::process::makeHierarchical()` takes an arbitrary number of
 and construct a process of class `ssmpack::process::Hierarchical`. Hierarchical processes
 are built by stacking other processes. The `Hierarchical` class connects the random variable of a process to the condition variable of the process in the lower level.
 
-putting all in one line:
+It may seems a little too long but all of that could be written in one
+statement:
 ~~~{.cpp}
-// all in one line!
+// all in one statement!
 auto ssm_proc =
   makeHierarchical(
     makeMarkov(
@@ -215,12 +216,70 @@ auto ssm_proc =
 ~~~
 Data simulation
 ----------------
+The objects of process class provide three basic methods `initialize`, `random`
+and `likelihood`. As the name suggests, The `initialize` method initializes the
+internal state of the process. This specially important for processes with
+memory, e.g. Markov. `random` and `likelihood` have the same functionality as in
+PDF and CPDF objects which respectively are sampling one random variable and
+calculating the likelihood of one random variable. This similarity is not surprising as
+processes also are models of probability distribution for sequences.
+
+Simulating
+data from a SSM model is equivalent to sampling from the associated
+stochastic process. One may sequentially use 'random' method of the process object to
+simulate sequenceof data. However, all process objects in `ssmpack` provide a
+`random_n(n)` method that returns a sequence of `n` samples from the process: 
 ~~~{.cpp}
 // initialize the process
 ssm_proc.initialize();
 // simulate data
-auto data = ssm_proc.random_n(100);
+size_t n = 100;
+auto data = ssm_proc.random_n(n);
 ~~~
+As our `ssm_proc` is of class Hierarchical, its random variable type
+`Hierarchical::TrandomVAR` which is the output of `random` method is a `std::tuple` of the random variables of each
+layer. The method `random_n(n)` returns a `std::vector` of length `n` that
+contains the sequence of samples. If you like, you can copy the \f$\mathbf{x}_1, \cdots \mathbf{x}_{100}\f$ and 
+\f$\mathbf{z}_1, \cdots \mathbf{z}_{100}\f$ to separate vectors using some
+pure standard C++:
+~~~{.cpp}
+// seperate state (x) and measurement (z) sequences
+std::vector<typename std::tuple_element<0,decltype(data)::value_type>::type> x_seq(n);
+std::vector<typename std::tuple_element<1,decltype(data)::value_type>::type> z_seq(n);
+std::transform(data.begin(), data.end(), x_seq.begin(),
+               [](const auto &v) { return std::get<0>(v); });
+std::transform(data.begin(), data.end(), z_seq.begin(),
+               [](const auto &v) { return std::get<1>(v); });
+~~~
+Note all the statement `<typename std::tuple_element<0,decltype(data)::value_type>::type>` is to
+tell the compiler what is the type of state variable. We know it is `ama::vec`
+because we've constructed the process. But the above code is generic and can be used
+always even when you don't know what is the type of variables in the process!
 
 State estimation
 -----------------
+There are a number of state estimation tools are under the namespace of `ssmpack::filter`.
+In practice state estimation filters are model-based which means that they are build having in mind particular SSM. 
+Using this fact in 'ssmpack' process objects are used to define also filters.
+Each `filter` may particularly be useful for some specific type of process models. 
+This is statically checked and your code will not compile if you try to make a filter object with wrong SSM model.
+
+The constant velocity model we defined in this tutorial is a case of famous
+linear Gaussian model that classical Kalman filter has been designed for. We can
+make a Kalman filter easily for our model:
+~~~{.cpp}
+// make kalman filter
+auto kalman = ssmpack::filter::makeKalman(ssm_proc);
+~~~
+This makes an object of class `ssmpack::filter::Kalman`. All the parameters of
+Kalman filter are read from provided process argument. `ssmpack::filter::Kalman`
+is a special case of recursive Bayesian filter where for each measurement two
+step of prediction on correction are applied. 
+
+Let apply Kalman filter on our simulated data. Although `ssmpack::filter::Kalman` provides all the low level `predict()` and `correct()` methods, it is easier to use just the `filter()` method for us now:
+~~~{.cpp}
+// apply Kalman filter on the simulated measurement to estimate x sequence
+auto x_seq_est = kalman.filter(z_seq); 
+~~~
+The output `x_seq_est` is a vector with same length as `z_seq`. Each vector element is a tuple containing mean and
+covariance of the estimated state.
