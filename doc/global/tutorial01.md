@@ -1,10 +1,13 @@
 Constant velocity dynamic model {#tutorial_constant_velocity}
 ====================
-
+<center>Vahid Bastani</center>
 Introduction
 --------------------
-In this tutorial we show how `ssmpack` can be used for simulating and tracking a
-constant velocity inertial model. The code for this tutorial can be
+In this tutorial we show how `ssmpack` can be used for simulating and state
+estimation (tracking) of a constant velocity inertial model. This is a classical
+application in the theory of state space models. The tutorial is written for
+basic and advanced users.
+The code for this tutorial can be
 found in `/example/tutorial_constant_velocity.cpp`. 
 
 The State Space Model
@@ -243,7 +246,7 @@ contains the sequence of samples. If you like, you can copy the \f$\mathbf{x}_1,
 \f$\mathbf{z}_1, \cdots \mathbf{z}_{100}\f$ to separate vectors using some
 pure standard C++:
 ~~~{.cpp}
-// seperate state (x) and measurement (z) sequences
+// separate state (x) and measurement (z) sequences
 std::vector<typename std::tuple_element<0,decltype(data)::value_type>::type> x_seq(n);
 std::vector<typename std::tuple_element<1,decltype(data)::value_type>::type> z_seq(n);
 std::transform(data.begin(), data.end(), x_seq.begin(),
@@ -268,7 +271,7 @@ The constant velocity model we defined in this tutorial is a case of famous
 linear Gaussian model that classical Kalman filter has been designed for. We can
 make a Kalman filter easily for our model:
 ~~~{.cpp}
-// make kalman filter
+// make Kalman filter
 auto kalman = ssmpack::filter::makeKalman(ssm_proc);
 ~~~
 This makes an object of class `ssmpack::filter::Kalman`. All the parameters of
@@ -281,5 +284,20 @@ Let apply Kalman filter on our simulated data. Although `ssmpack::filter::Kalman
 // apply Kalman filter on the simulated measurement to estimate x sequence
 auto x_seq_est = kalman.filter(z_seq); 
 ~~~
-The output `x_seq_est` is a vector with same length as `z_seq`. Each vector element is a tuple containing mean and
-covariance of the estimated state.
+The output `x_seq_est` is a vector whose length is `z_seq.size()+1` because `filter()` method also returns the estimate of initial state.
+Each element of `x_seq_est` is a tuple containing mean and covariance of the estimated state. 
+
+Finally, one may like to calculate the Mean Squared Error of the Kalman filter
+output with respect to original state sequence. For now lets do it using standard C++:
+~~~{.cpp}
+// calculate mean squared error of the estimation
+auto mse = std::inner_product(
+    x_seq.begin(), x_seq.end(), x_seq_est.begin() + 1,
+    static_cast<arma::vec>(arma::zeros<arma::vec>(state_dim)),
+    std::plus<arma::vec>(), [n](const auto &a, const auto &b) {
+      return static_cast<arma::vec>(arma::square(a - std::get<0>(b)) / n);
+    });
+
+std::cout << "Kalman MSE = \n" << mse << std::endl;
+~~~
+

@@ -78,7 +78,7 @@ int main ()
   size_t n = 100;
   auto data = ssm_proc.random_n(n);
 
-  // seperate state (x) and measurement (z) sequences
+  // separate  state (x) and measurement (z) sequences
   std::vector<typename std::tuple_element<0,decltype(data)::value_type>::type> x_seq(n);
   std::vector<typename std::tuple_element<1,decltype(data)::value_type>::type> z_seq(n);
   std::transform(data.begin(), data.end(), x_seq.begin(),
@@ -87,14 +87,14 @@ int main ()
                  [](const auto &v) { return std::get<1>(v); });
 
 
-  // make kalman filter
+  // make Kalman filter
   auto kalman = ssmpack::filter::makeKalman(ssm_proc);
   // apply Kalman filter on the simulated measurement to estimate x sequence
-  auto x_seq_est_kalman = kalman.filter(z_seq);
+  auto x_seq_est = kalman.filter(z_seq);
   
   // calculate mean squared error of the estimation
   auto mse = std::inner_product(
-      x_seq.begin(), x_seq.end(), x_seq_est_kalman.begin() + 1,
+      x_seq.begin(), x_seq.end(), x_seq_est.begin() + 1,
       static_cast<arma::vec>(arma::zeros<arma::vec>(state_dim)),
       std::plus<arma::vec>(), [n](const auto &a, const auto &b) {
         return static_cast<arma::vec>(arma::square(a - std::get<0>(b)) / n);
@@ -102,6 +102,3 @@ int main ()
 
   std::cout << "Kalman MSE = \n" << mse << std::endl;
 }
-
-
-
