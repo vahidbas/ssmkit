@@ -30,7 +30,11 @@ if(CLANG)
 endif(CLANG)
 
 
-find_package(Armadillo REQUIRED)
+find_package(Armadillo)
+if (NOT ARMADILLO_FOUND)
+  message(STATUS "Armadillo not found: dependent targets will not be included")
+endif ()
+
 
 # target directory
 #set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})

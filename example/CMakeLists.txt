@@ -1,5 +1,8 @@
 file(GLOB EXAMPLE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
+# only if armadillo found build examples targets
+if (ARMADILLO_FOUND)
+
 # each example file should be main()
 foreach( EXAMPLE_FILE ${EXAMPLE_FILES} )
   string( REPLACE ".cpp" "" EXAMPLE_NAME ${EXAMPLE_FILE} )
@@ -10,3 +13,5 @@ endforeach(EXAMPLE_FILE ${EXAMPLE_FILES})
 
 add_custom_target(examples)
 add_dependencies(examples ${EXAMPLES})
+
+endif()

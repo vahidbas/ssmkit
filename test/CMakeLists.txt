@@ -1,8 +1,8 @@
 # build tests
 find_package(Boost COMPONENTS unit_test_framework)
 find_package(Threads)
-if (Boost_UNIT_TEST_FRAMEWORK_FOUND)
-  enable_testing()
+if (Boost_UNIT_TEST_FRAMEWORK_FOUND AND ARMADILLO_FOUND)
+  enable_testing() 
   
   #  message(STATUS ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
   add_definitions(-DTEST_MODULE_NAME=ssmpack_test)
