@@ -5,10 +5,10 @@ file(GLOB LATEX_TIKZ_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/image"
 # make image directory in the binary tree
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/doc/image")
 
-find_package(LATEX COMPONENTS PDFLATEX)
+find_package(LATEX)
 find_package(ImageMagick COMPONENTS convert)
 
-if (LATEX_FOUND AND ImageMagick_FOUND)
+if (PDFLATEX_COMPILER AND ImageMagick_FOUND)
 # we still need to check for tikz, how?
   foreach(_file ${LATEX_TIKZ_FILES})
     string(REPLACE ".tex" ".png" _file_o ${_file})
