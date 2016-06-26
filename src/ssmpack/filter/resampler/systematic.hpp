@@ -22,10 +22,12 @@ namespace resampler {
  */
 template <class Criterion>
 class Systematic : public BaseResampler<Systematic<Criterion>> {
+  friend class BaseResampler<Systematic<Criterion>>;
+
  private:
   std::uniform_real_distribution<double> uniform_;
 
- public:
+ protected:
   arma::vec generateOrderedNumbers(const int &num_par) {
     double u0 = uniform_(random::Generator::get().getGenerator());
     arma::vec u(num_par);
