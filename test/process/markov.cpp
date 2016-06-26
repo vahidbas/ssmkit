@@ -43,9 +43,9 @@ BOOST_AUTO_TEST_CASE(test1) {
 
   //std::cout << std::get<0>(r3) << std::get<1>(r3) << std::endl;
 
-    std::vector<decltype(markov.random())> v;
+   // std::vector<decltype(markov.random())> v;
   
-    markov.random_n(v, 10);
+    auto v = markov.random_n(10);
 
    // std::for_each(v.begin(), v.end(), [](decltype(markov.random()) &p) {
    //   std::cout << p << std::endl;
