@@ -5,19 +5,17 @@ Introduction
 --------------------
 In this tutorial we show how `ssmpack` can be used for simulating and state
 estimation (tracking) of a constant velocity inertial model. This is a classical
-application in the theory of state space models. The tutorial is written for
-basic and advanced users.
-The code for this tutorial can be
-found in `/example/tutorial_constant_velocity.cpp`. 
+application in the state space models. The tutorial is written for basic and advanced users.
+The code for this tutorial can be found in `/example/tutorial_constant_velocity.cpp`. 
 
 The State Space Model
 ---------------------
 Let
 \f$\mathbf{x}_k = [x_1(k), x_2(k), \dot{x}_1(k), \dot{x}_2(k)]^T \f$
-be the state of an object moving in a 2D space at time \f$k\f$, where 
+be the state of an object at time \f$k\f$ moving in a 2D space, where 
 \f$x_1(k)\f$ and \f$\dot{x}_1(k)\f$
-are position and velocity in the first dimension and
-\f$x_1(k)\f$ and \f$\dot{x}_1(k)\f$
+are the position and velocity in the first dimension and
+\f$x_2(k)\f$ and \f$\dot{x}_2(k)\f$
 are position and velocity in the second dimension.
 The dynamic of this state vector can be formulated as
 \f[\mathbf{x}_k = \mathbf{F}\mathbf{x}_{k-1} + \boldsymbol\omega_k \f]
@@ -34,7 +32,7 @@ as
 for sampling rate of \f$\delta\f$ second. \f$\boldsymbol\omega\f$ is a zero-mean
 white Gaussian random process with covariance matrix \f$\mathbf{Q}\f$.
 
-> The \f$\boldsymbol\omega\f$ is meant to model our uncertainty about the
+> The \f$\boldsymbol\omega\f$ is introduced to model our uncertainty about the
 > deterministic dynamic model \f$\mathbf{F}\f$.
 
 In real application often access to the object's state is only available through a
@@ -44,15 +42,15 @@ noisy measurement process:
 \f}
 
 wher \f$\mathbf{z}_k\f$ is measurement vector at time \f$k\f$. \f$\boldsymbol\nu\f$ is a zero-mean white Gaussian random process with
-covariance matrix \f$\mathbf{R}\f$. \f$\mathbf{H}\f$ is called measurement 
-matrix which for our purpose is defined as:
+covariance matrix \f$\mathbf{R}\f$ and \f$\mathbf{H}\f$ is called measurement 
+matrix whichi, for our purpose, is defined as:
 \f[ \mathbf{H} = 
 \begin{bmatrix}
 1 & 0 & 0 & 0      \\
 0 & 1 & 0 & 0
 \end{bmatrix}
 \f]
-which simply mean that the measurment vector is of the positin
+Our measurement process simply mean that the measurment vector is the position
 of the object plus a Gaussian noise.
 
 
@@ -67,6 +65,7 @@ p(\mathbf{x}_k|\mathbf{x}_{k-1}) = \mathcal{N}(\mathbf{F}\mathbf{x}_{k-1}, \math
 \f[
 p(\mathbf{z}_k|\mathbf{x}_{k}) = \mathcal{N}(\mathbf{H}\mathbf{x}_{k}, \mathbf{R})
 \f]
+where \f$\mathcal{N}(\mu,\Sigma)\f$ is a Gaussian distribution with mean \f$\mu\f$ and covariance \f$\Sigma\f$.
 Let also assume that the initial state probability distribution function is a
 Gaussian:
 \f[
@@ -79,16 +78,18 @@ of this form
 
 ![two-layer hierarchical DBN](kalman.png "two-layer")
 
-The first layer of this process is first-order Markov process where the state at
+The first layer of this process is a first-order Markov process where the state at
 each time instance is only dependent on the state at previous time instant. The
 second layer in an independent or memoryless process where the values of the
 process at previous time instances do not have any effect on the value of next
 time instances.
 
-`ssmpack` coding style is almost the same formal mathematical construction of
-dynamic Bayesian networks. We start by defining the parametric PDFs then
-building CPDFs based on them. These CPDFs are used to define simple stochastic
-processes which are later combined to make more complex stochastic processes.
+The same intuition used in mathematical construction of the stochastic processes is used in `ssmpack` for constructing process objects.
+In `ssmpack` process objects are realizations of stochastic processes which are
+representable as DBN. A DBN is a graphical model that shows statistical
+dependencies betveen random variables represented as CPDF. In the next sections
+We will see how we can define CPDFs in `ssmpack` and use them to construct
+simple processes which are later combined to make more complex processes.
 
 Defining constant parameters
 -----------------------------
@@ -124,7 +125,7 @@ arma::mat P0{{1, 0, 0, 0},
              {0, 0, 1, 0},
              {0, 0, 0, 1}};
 ~~~
-`arma::mat` and `arma::vec` are matrix and vector data-types from `armadillo` library.
+`arma::mat` and `arma::vec` are matrix and vector data-types from `armadillo` library. This is the core linear algebra library used by `ssmpack`.
 
 
 Construction probability distribution functions
@@ -140,27 +141,27 @@ distribution and can be used for sampling and calculating likelihood of random
 variables. Note that we passed mean vector and covariance matrix we defined
 above to its constructor.
 
-We now turn to definition the state transition CPDF and the measurement CPDF.
-Before that it is important to understand how CPDFs are treated.
-In `ssmpack` CPDFs are defined as a combination of a parametric PDF and a
+We now turn to the definition of the state transition CPDF and the measurement CPDF.
+Before that it is important to understand how CPDFs are treated in `ssmpack`.
+CPDFs are defined as a combination of a parametric PDF and a
 parameter map. In other words \f$p(x|y) = \mathcal{F}(g(y))\f$ where
 \f$\mathcal{F}(\theta)\f$ is parametric distribution (e.g. Gaussian) with
 parameter Set \f$\theta\f$ and \f$g(y) = \theta\f$ maps the condition variable \f$y\f$
 to a parameter \f$\theta\f$. The parameter set of Gaussian
 is a tuple \f$(\mu, \Sigma)\f$ of mean vector and covariance matrix.
 Thus, for our purpose the function \f$g\f$ should receive a
-state variable and return \f$(\mathbf{F}\mathbf{x}, \mathbf{Q})\f$
+state variable \f$\mathbf{x}\f$ and return \f$(\mathbf{F}\mathbf{x}, \mathbf{Q})\f$
 for transition CPDF and \f$(\mathbf{H}\mathbf{x}, \mathbf{R})\f$ 
 for measurement CPDF. This special kind of parameter map is implemented in class
-`ssmpack::map::LinearGaussian(trans, cov)` which constructed using a linear transformation
+`ssmpack::map::LinearGaussian(trans, cov)` which is constructed using a linear transformation
 matrix `trans` and a covariance matrix `cov`. Note that it always return the
-same covariance matrix which constructed with. 
+same covariance matrix which is constructed with. 
 
 The class `ssmpack::distribution::Conditional` provides a generic class
 that constructs a conditional distribution form a parametric distribution and a
 parameter map. We can make any kind of CPDF with this class.
 
-Now we can construct our CPDFs:
+The two CPDFs are constructed by:
 ~~~{.cpp}
 // state cpdf
 auto state_cpdf = ssmpack::distribution::makeConditional(
@@ -172,12 +173,13 @@ auto meas_cpdf = ssmpack::distribution::makeConditional(
     ssmpack::map::LinearGaussian(H, R));
 ~~~
 we used `ssmpack::distribution::makeConditional` function for constructing CPDFs. This
-is a convenient interface to class constructor. If we used the constructor
-directly, we would have to specify template argument for that.
+is a convenient interface to the class constructor that does not require ugly
+template arguments.
 `ssmpack::distribution::Gaussian(dim)` is another constructor for Gaussian PDF
 object with dimensions `dim`. Note that we pass the PDF object to `Conditional`
-in order to let it know what type of distribution we need and the parameters of
-distribution will come from the parameter map object.
+in order to let it know what type of distribution we need. Internal to CPDF
+object, the parameters of
+distribution are actually come from the parameter map object.
 
 Construction the state space model
 ------------------------
@@ -191,8 +193,7 @@ auto meas_proc = ssmpack::process::makeMemoryless(meas_cpdf);
 ~~~
 
 The function `ssmpack::process::makeMarkov()` receives an initial PDF and a CPDFs
-and construct a Markovian random process of class `ssmpack::process::Markov`
-from them.
+and construct a Markovian random process of class `ssmpack::process::Markov`.
 The function `ssmpack::process::makeMemoryless()` takes a CPDFs
 and returns a memoryless or independent random process of class `ssmpack::process::Memoryless`.
 
@@ -204,10 +205,10 @@ auto ssm_proc = ssmpack::process::makeHierarchical(state_proc, meas_proc);
 ~~~
 The function `ssmpack::process::makeHierarchical()` takes an arbitrary number of processes
 and construct a process of class `ssmpack::process::Hierarchical`. Hierarchical processes
-are built by stacking other processes. The `Hierarchical` class connects the random variable of a process to the condition variable of the process in the lower level.
+are built by stacking other processes on top of each other.
+The `Hierarchical` class connects the random variable of a process to the condition variable of the process in the lower level.
 
-It may seems a little too long but all of that could be written in one
-statement:
+No we have our process object. If it looks too long you may write all in one statement:
 ~~~{.cpp}
 // all in one statement!
 auto ssm_proc =
@@ -219,18 +220,18 @@ auto ssm_proc =
 ~~~
 Data simulation
 ----------------
-The objects of process class provide three basic methods `initialize`, `random`
+The objects of process class provide three basic methods: `initialize`, `random`
 and `likelihood`. As the name suggests, The `initialize` method initializes the
 internal state of the process. This specially important for processes with
 memory, e.g. Markov. `random` and `likelihood` have the same functionality as in
 PDF and CPDF objects which respectively are sampling one random variable and
 calculating the likelihood of one random variable. This similarity is not surprising as
-processes also are models of probability distribution for sequences.
+processes are also models of probability distribution but for sequences.
 
 Simulating
 data from a SSM model is equivalent to sampling from the associated
-stochastic process. One may sequentially use 'random' method of the process object to
-simulate sequenceof data. However, all process objects in `ssmpack` provide a
+stochastic process. One may sequentially use `random` method of the process object to
+simulate sequence of data. However, all process objects in `ssmpack` provide a
 `random_n(n)` method that returns a sequence of `n` samples from the process: 
 ~~~{.cpp}
 // initialize the process
@@ -242,7 +243,8 @@ auto data = ssm_proc.random_n(n);
 As our `ssm_proc` is of class Hierarchical, its random variable type
 `Hierarchical::TrandomVAR` which is the output of `random` method is a `std::tuple` of the random variables of each
 layer. The method `random_n(n)` returns a `std::vector` of length `n` that
-contains the sequence of samples. If you like, you can copy the \f$\mathbf{x}_1, \cdots \mathbf{x}_{100}\f$ and 
+contains the sequence of samples, i.e. \f$(\mathbf{x}_1, \mathbf{z}_1), \cdots\f$.
+If you like, you can copy the \f$\mathbf{x}_1, \cdots \mathbf{x}_{100}\f$ and 
 \f$\mathbf{z}_1, \cdots \mathbf{z}_{100}\f$ to separate vectors using some
 pure standard C++:
 ~~~{.cpp}
@@ -254,16 +256,16 @@ std::transform(data.begin(), data.end(), x_seq.begin(),
 std::transform(data.begin(), data.end(), z_seq.begin(),
                [](const auto &v) { return std::get<1>(v); });
 ~~~
-Note all the statement `<typename std::tuple_element<0,decltype(data)::value_type>::type>` is to
+Note that all the statement `<typename std::tuple_element<0,decltype(data)::value_type>::type>` is to
 tell the compiler what is the type of state variable. We know it is `ama::vec`
-because we've constructed the process. But the above code is generic and can be used
+because we have constructed the process. But the above code is generic and can be used
 always even when you don't know what is the type of variables in the process!
 
 State estimation
 -----------------
 There are a number of state estimation tools are under the namespace of `ssmpack::filter`.
-In practice state estimation filters are model-based which means that they are build having in mind particular SSM. 
-Using this fact in 'ssmpack' process objects are used to define also filters.
+In practice state estimation filters are model-based. That means they are build having in mind particular type of SSM. 
+Using this fact in 'ssmpack' process objects are used to define filters.
 Each `filter` may particularly be useful for some specific type of process models. 
 This is statically checked and your code will not compile if you try to make a filter object with wrong SSM model.
 
@@ -279,7 +281,10 @@ Kalman filter are read from provided process argument. `ssmpack::filter::Kalman`
 is a special case of recursive Bayesian filter where for each measurement two
 step of prediction on correction are applied. 
 
-Let apply Kalman filter on our simulated data. Although `ssmpack::filter::Kalman` provides all the low level `predict()` and `correct()` methods, it is easier to use just the `filter()` method for us now:
+Let apply Kalman filter on our simulated data. 
+Although `ssmpack::filter::Kalman` provides all the low level `predict()` and `correct()` methods,
+it is easier to use just the `filter()` method for that apply the filtering on a
+sequence and return the result:
 ~~~{.cpp}
 // apply Kalman filter on the simulated measurement to estimate x sequence
 auto x_seq_est = kalman.filter(z_seq); 
@@ -287,7 +292,7 @@ auto x_seq_est = kalman.filter(z_seq);
 The output `x_seq_est` is a vector whose length is `z_seq.size()+1` because `filter()` method also returns the estimate of initial state.
 Each element of `x_seq_est` is a tuple containing mean and covariance of the estimated state. 
 
-Finally, one may like to calculate the Mean Squared Error of the Kalman filter
+Finally, one may like to calculate the Mean Squared Error (MSE) of the Kalman filter
 output with respect to original state sequence. For now lets do it using standard C++:
 ~~~{.cpp}
 // calculate mean squared error of the estimation
