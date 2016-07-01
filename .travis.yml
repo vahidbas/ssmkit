@@ -1,0 +1,15 @@
+sudo: required
+
+language: generic # don't install any environment
+
+service:
+  - docker
+
+script:
+  - docker run -e "encrypted_${ENCRYPTION_LABEL}_key" -e "encrypted_${ENCRYPTION_LABEL}_iv" -e TRAVIS_PULL_REQUEST -e TRAVIS_BRANCH -e ENCRYPTION_LABEL -e COMMIT_AUTHOR_EMAIL $(pwd):/home/temp/ vahidbas/ssmpack_doc_builder bash -c "cd /home/temp; config/ci/deploy_doc.sh"
+    #  - bash config/ci/deploy_doc.sh
+
+env:
+  global:
+    - ENCRYPTION_LABEL: "c2b11fe6566c"
+    - COMMIT_AUTHOR_EMAIL: "bastani.vahid@gmail.com"
