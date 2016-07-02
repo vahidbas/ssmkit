@@ -1,13 +1,10 @@
-language: generic # don't install any environment
-
+language: generic
 script:
-  - ls
-
+- ls
 env:
   global:
-  - ENCRYPTION_LABEL: "c2b11fe6566c"
-  - COMMIT_AUTHOR_EMAIL: "bastani.vahid@gmail.com"
-
+  - ENCRYPTION_LABEL: c2b11fe6566c
+  - COMMIT_AUTHOR_EMAIL: bastani.vahid@gmail.com
 deploy:
   provider: script
   script: config/ci/doc/deploy.sh
