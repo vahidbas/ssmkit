@@ -3,8 +3,6 @@
 
 set -e # Exit with nonzero exit code if anything fails
 
-git clone https://gitlab.com/vahid-bastani/ssmpack.git build/ssmpack
-cp config/ci/doc/.gitlab-ci.yml .
 
 # Get the deploy key by using Travis's stored variables to decrypt deploy_key.enc
 cd config/ci/doc/
@@ -17,6 +15,9 @@ chmod 600 deploy_key
 eval `ssh-agent -s`
 ssh-add deploy_key
 cd ../../..
+
+git clone https://gitlab.com/vahid-bastani/ssmpack.git build/ssmpack
+cp config/ci/doc/.gitlab-ci.yml .
 
 cd build/ssmpack
 
