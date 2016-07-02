@@ -19,6 +19,7 @@ cd ../../..
 
 echo -e "Host gitlab.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 git clone git@gitlab.com:vahid-bastani/ssmpack.git build/ssmpack
+cp -a ./!(build) build/ssmpack/
 cp config/ci/doc/.gitlab-ci.yml build/ssmpack/.gitlab-ci.yml
 
 cd build/ssmpack
