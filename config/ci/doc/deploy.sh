@@ -15,10 +15,9 @@ chmod 600 deploy_key
 # eval `ssh-agent -s`
 # ssh-add deploy_key
 cp deploy_key ~/.ssh/id_rsa
-cat ~/.ssh/id_rsa
 cd ../../..
 
-git clone https://gitlab.com/vahid-bastani/ssmpack.git build/ssmpack
+git clone git@gitlab.com:vahid-bastani/ssmpack.git
 cp config/ci/doc/.gitlab-ci.yml .
 
 cd build/ssmpack
