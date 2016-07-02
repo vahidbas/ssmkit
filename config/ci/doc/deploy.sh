@@ -23,6 +23,9 @@ cp config/ci/doc/.gitlab-ci.yml build/ssmpack/.gitlab-ci.yml
 
 cd build/ssmpack
 
+git config user.name "Travis CI"
+git config user.email "$COMMIT_AUTHOR_EMAIL"
+
 git add .
 git commit -m "Deploy: ${SHA}"
 git push
