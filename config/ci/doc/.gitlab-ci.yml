@@ -1,0 +1,12 @@
+image: vahidbas/ssmpack_doc_builder
+
+pages:
+  script:
+  - config/ci/doc/compile.sh
+  - mkdir public
+  - cp -a build/doc/html/. public/
+  artifacts:
+    paths:
+    - public/
+  only:
+  - master
