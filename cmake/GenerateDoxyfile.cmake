@@ -30,23 +30,23 @@ string(REGEX REPLACE
     "\\1 ${CMAKE_CURRENT_SOURCE_DIR}/"
     DOXYFILE_AUXVAR ${DOXYFILE_AUXVAR})
 
-# get HEAD information from git
-execute_process(
-  COMMAND git rev-parse --short HEAD
-  OUTPUT_VARIABLE GIT_COMMIT
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-execute_process(
-  COMMAND git rev-parse --abbrev-ref HEAD
-  OUTPUT_VARIABLE GIT_BRANCH
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-# change project number 
-string(REPLACE
-    "master"
-    "${GIT_BRANCH}(${GIT_COMMIT})"
-    DOXYFILE_AUXVAR "${DOXYFILE_AUXVAR}"
-    )
+  ## get HEAD information from git
+  #execute_process(
+  #  COMMAND git rev-parse --short HEAD
+  #  OUTPUT_VARIABLE GIT_COMMIT
+  #  OUTPUT_STRIP_TRAILING_WHITESPACE
+  #)
+  #execute_process(
+  #  COMMAND git rev-parse --abbrev-ref HEAD
+  #  OUTPUT_VARIABLE GIT_BRANCH
+  #  OUTPUT_STRIP_TRAILING_WHITESPACE
+  #)
+  ## change project number 
+  #string(REPLACE
+  #    "master"
+  #    "${GIT_BRANCH}(${GIT_COMMIT})"
+  #    DOXYFILE_AUXVAR "${DOXYFILE_AUXVAR}"
+  #    )
 
 # Save the Doxyfile to its new location.
 file(WRITE "${DESTDIR}/Doxyfile" "${DOXYFILE_AUXVAR}")
