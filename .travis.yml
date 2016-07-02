@@ -3,7 +3,7 @@ script:
 - ls
 env:
   global:
-  - ENCRYPTION_LABEL: c2b11fe6566c
+  - ENCRYPTION_LABEL: c0be4061fc5e
   - COMMIT_AUTHOR_EMAIL: bastani.vahid@gmail.com
 deploy:
   provider: script
