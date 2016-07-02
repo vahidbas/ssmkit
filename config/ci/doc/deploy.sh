@@ -18,11 +18,15 @@ cp deploy_key ~/.ssh/id_rsa
 cd ../../..
 
 echo -e "Host gitlab.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-git clone git@gitlab.com:vahid-bastani/ssmpack.git build/ssmpack
-cp -a ./!(build) build/ssmpack/
-cp config/ci/doc/.gitlab-ci.yml build/ssmpack/.gitlab-ci.yml
+git clone git@gitlab.com:vahid-bastani/ssmpack.git ../ssmpackgitlab
+mv ../ssmpackgitlab/.git ../ssmpackgitlab/.git_backup
+cp -a . ../ssmpackgitlab
+rm -rf ../ssmpackgitlab/.git
+mv ../ssmpackgitlab/.git_backup ../ssmpackgitlab/.git
 
-cd build/ssmpack
+cp config/ci/doc/.gitlab-ci.yml ../ssmpackgitlab/.gitlab-ci.yml
+
+cd ../ssmpackgitlab
 
 git config user.name "Travis CI"
 git config user.email "$COMMIT_AUTHOR_EMAIL"
