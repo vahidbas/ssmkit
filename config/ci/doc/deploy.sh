@@ -17,6 +17,7 @@ chmod 600 deploy_key
 cp deploy_key ~/.ssh/id_rsa
 cd ../../..
 
+echo -e "Host gitlab.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 git clone git@gitlab.com:vahid-bastani/ssmpack.git
 cp config/ci/doc/.gitlab-ci.yml .
 
