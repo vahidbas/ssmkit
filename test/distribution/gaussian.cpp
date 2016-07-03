@@ -1,12 +1,12 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-#include "ssmpack/distribution/gaussian.hpp"
+#include "ssmkit/distribution/gaussian.hpp"
 
 #define STR_EXPAND(tok) #tok
 #define STR(tok) STR_EXPAND(tok)
 
-using namespace ssmpack;
+using namespace ssmkit;
 
 BOOST_AUTO_TEST_SUITE(distribution_gausian);
 

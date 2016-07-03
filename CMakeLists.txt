@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.0)
 # the reason for adding C is without that find_package(Threads) will fail
-project(ssmpack C CXX)
+project(ssmkit C CXX)
 
 add_definitions(-DPROJECT_NAME=${PROJECT_NAME})
 add_definitions(-DSOURCE_DIR=${CMAKE_SOURCE_DIR})
@@ -76,7 +76,7 @@ if (DOXYGEN_FOUND)
   add_dependencies(doc doc_images)
   
   install(DIRECTORY ${CMAKE_BINARY_DIR}/doc/html
-      DESTINATION share/doc/ssmpack
+      DESTINATION share/doc/ssmkit
       COMPONENT doc
       OPTIONAL
       )

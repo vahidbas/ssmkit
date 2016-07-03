@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <vector>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace process {
 
 template <typename TProcess>
@@ -21,4 +21,4 @@ class BaseProcess {
 };
 
 } // namespace process
-} // namespace ssmpack
+} // namespace ssmkit

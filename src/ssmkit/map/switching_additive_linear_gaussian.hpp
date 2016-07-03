@@ -3,7 +3,7 @@
 
 #include <armadillo>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace map {
 
 struct SwitchingAdditiveLinearGaussian {
@@ -24,6 +24,6 @@ struct SwitchingAdditiveLinearGaussian {
 
 
 } // namespace map
-} // namespace ssmpack
+} // namespace ssmkit
 
 #endif // SSMPACK_MODEL_SWITCHING_ADDITIVE_LINEAR_GAUSSIAN_HPP

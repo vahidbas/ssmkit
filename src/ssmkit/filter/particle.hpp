@@ -7,16 +7,16 @@
 #ifndef SSMPACK_FILTER_PARTICLE_HPP
 #define SSMPACK_FILTER_PARTICLE_HPP
 
-#include "ssmpack/distribution/conditional.hpp"
-#include "ssmpack/filter/recursive_bayesian_base.hpp"
-#include "ssmpack/process/hierarchical.hpp"
-#include "ssmpack/process/markov.hpp"
-#include "ssmpack/process/memoryless.hpp"
+#include "ssmkit/distribution/conditional.hpp"
+#include "ssmkit/filter/recursive_bayesian_base.hpp"
+#include "ssmkit/process/hierarchical.hpp"
+#include "ssmkit/process/markov.hpp"
+#include "ssmkit/process/memoryless.hpp"
 #include <armadillo>
 
 #include <tuple>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace filter {
 
 using process::Hierarchical;
@@ -149,6 +149,6 @@ auto makeParticle(
 }
 
 } // namespace filter
-} // namespace ssmpack
+} // namespace ssmkit
 
 #endif // SSMPACK_FILTER_PARTICLE_HPP

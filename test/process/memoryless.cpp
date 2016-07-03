@@ -1,11 +1,11 @@
 //#include <boost/test/unit_test.hpp>
 //#include <iostream>
 //
-//#include "ssmpack/model/linear_gaussian.hpp"
-//#include "ssmpack/distribution/gaussian.hpp"
-//#include "ssmpack/distribution/conditional_distribution.hpp"
-//#include "ssmpack/process/markov.hpp"
-//#include "ssmpack/process/measurement.hpp"
+//#include "ssmkit/model/linear_gaussian.hpp"
+//#include "ssmkit/distribution/gaussian.hpp"
+//#include "ssmkit/distribution/conditional_distribution.hpp"
+//#include "ssmkit/process/markov.hpp"
+//#include "ssmkit/process/measurement.hpp"
 //
 //using namespace PROJECT_NAME;
 //

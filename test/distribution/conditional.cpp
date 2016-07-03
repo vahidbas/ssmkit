@@ -1,9 +1,9 @@
 //#include <boost/test/unit_test.hpp>
 //#include <iostream>
 //
-//#include "ssmpack/model/linear_gaussian.hpp"
-//#include "ssmpack/distribution/gaussian.hpp"
-//#include "ssmpack/distribution/conditional_distribution.hpp"
+//#include "ssmkit/model/linear_gaussian.hpp"
+//#include "ssmkit/distribution/gaussian.hpp"
+//#include "ssmkit/distribution/conditional_distribution.hpp"
 //
 //using namespace PROJECT_NAME;
 //

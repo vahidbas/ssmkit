@@ -1,20 +1,20 @@
 Installation {#install}
 ======================
 
-`ssmpack` uses `cmake >= 2.8.8` build system.
-`ssmpack` is a header-only library. It can be installed without build:
+`ssmkit` uses `cmake >= 2.8.8` build system.
+`ssmkit` is a header-only library. It can be installed without build:
 
-    $ cd ssmpack
+    $ cd ssmkit
     $ mkdir build
     $ cd build
     $ cmake ..
     $ make install
 
-For using `ssmpack` following packages should also be installed:
+For using `ssmkit` following packages should also be installed:
 1. `armadillo >= 7`
 2. `sequences` [link](https://github.com/taocpp/sequences)
 
-`ssmpack` uses `C++11/14` features that requires following compiler versions:
+`ssmkit` uses `C++11/14` features that requires following compiler versions:
 * `gcc >= 4.9`
 * `clang >= 3.4`
 
@@ -30,7 +30,7 @@ Additional dependencies:
 3. `imagemagick` optional for generating diagrams
 
 
-    $ cd ssmpack
+    $ cd ssmkit
     $ mkdir build
     $ cd build
     $ cmake ..
@@ -47,7 +47,7 @@ Additional dependencies:
 1. `libboost-test-dev >= 1.53`
 
 
-    $ cd ssmpack
+    $ cd ssmkit
     $ mkdir build
     $ cd build
     $ cmake ..
@@ -60,7 +60,7 @@ Additional dependencies:
 Build Examples
 --------------
 
-    $ cd ssmpack
+    $ cd ssmkit
     $ mkdir build
     $ cd build
     $ cmake ..
@@ -80,7 +80,7 @@ Additional dependencies:
 2. `OpenCV` optional for speed comparison
 
 
-    $ cd ssmpack
+    $ cd ssmkit
     $ mkdir build
     $ cd build
     $ cmake ..

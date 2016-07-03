@@ -7,14 +7,14 @@
 #ifndef SSMPACK_PROCESS_HIERARCHICAL_HPP
 #define SSMPACK_PROCESS_HIERARCHICAL_HPP
 
-#include "ssmpack/process/base_process.hpp"
-#include "ssmpack/process/traits.hpp"
-#include "ssmpack/process/hierarchical_detail.hpp"
+#include "ssmkit/process/base_process.hpp"
+#include "ssmkit/process/traits.hpp"
+#include "ssmkit/process/hierarchical_detail.hpp"
 
 #include <utility>
 #include <tuple>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace process {
 
 /** A stochastic process constructed as hierarchy of stochastic processes
@@ -153,6 +153,6 @@ Hierarchical<TArgs...> makeHierarchical(TArgs... args) {
 }
 
 } // namespace process
-} // namespace ssmpack
+} // namespace ssmkit
 
 #endif // SSMPACK_PROCESS_HIERARCHICAL_HPP

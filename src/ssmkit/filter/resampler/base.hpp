@@ -13,7 +13,7 @@
 
 #include <armadillo>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace filter {
 namespace resampler {
 
@@ -57,5 +57,5 @@ class BaseResampler<Method<Criterion>> {
 
 } // namespace resampler
 } // namespace filter
-} // namespace ssmpack
+} // namespace ssmkit
 #endif //SSMPACK_FILTER_RESAMPLER_IDENTITY

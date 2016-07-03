@@ -7,11 +7,11 @@
 #ifndef SSMPACK_DISTRIBUTION_CATEGORICAL_HPP
 #define SSMPACK_DISTRIBUTION_CATEGORICAL_HPP
 
-#include "ssmpack/random/generator.hpp"
+#include "ssmkit/random/generator.hpp"
 
 #include <armadillo>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace distribution {
 
 /** Categorical (multinomial) distribution
@@ -74,7 +74,7 @@ class Categorical {
    void calcMax() { max_ = param_.n_rows; }
 };
 
-} // namespace ssmpack
+} // namespace ssmkit
 } // namespace distribution
 
 #endif //SSMPACK_DISTRIBUTION_CATEGORICAL_HPP

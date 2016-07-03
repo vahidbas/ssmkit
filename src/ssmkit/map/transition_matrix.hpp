@@ -3,7 +3,7 @@
 
 #include <armadillo>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace map {
 
 struct TransitionMatrix {
@@ -21,6 +21,6 @@ struct TransitionMatrix {
 
 
 } // namespace map
-} // namespace ssmpack
+} // namespace ssmkit
 
 #endif // SSMPACK_MODEL_TRANSITION_MATRIX_HPP

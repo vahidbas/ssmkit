@@ -16,25 +16,27 @@ cd ../../..
 # turn off interactive host key check
 echo -e "Host gitlab.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 # clone gitlab repo 
-git clone git@gitlab.com:vahid-bastani/ssmpack.git ../ssmpackgitlab
+git clone git@gitlab.com:vahid-bastani/ssmkit.git ../ssmkitgitlab
 # backup .git directory
-mv ../ssmpackgitlab/.git ../ssmpackgitlab/.git_backup
+mv ../ssmkitgitlab/.git ../git_backup
+# remove all files
+rm -rf ../ssmkitgitlab/*
 # copy content of this repo to gitlab repo
-cp -a . ../ssmpackgitlab
+cp -a . ../ssmkitgitlab
 # restore .git directory
-rm -rf ../ssmpackgitlab/.git
-mv ../ssmpackgitlab/.git_backup ../ssmpackgitlab/.git
+rm -rf ../ssmkitgitlab/.git
+mv ../git_backup ../ssmkitgitlab/.git
 
 # substitute project number in doxyfile
 SHA=`git rev-parse --short HEAD`
 sed -e \
   s/master/${TRAVIS_BRANCH}-${SHA}/g \
-  Doxyfile > ../ssmpackgitlab/Doxyfile
+  Doxyfile > ../ssmkitgitlab/Doxyfile
 
 # copy .gitlab-ci.yml to root of the gitlab repo
-cp config/ci/doc/.gitlab-ci.yml ../ssmpackgitlab/.gitlab-ci.yml
+cp config/ci/doc/.gitlab-ci.yml ../ssmkitgitlab/.gitlab-ci.yml
 
-cd ../ssmpackgitlab
+cd ../ssmkitgitlab
 
 # push changes to the gitlab repo
 git config user.name "Travis CI"

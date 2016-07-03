@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <tuple>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace filter {
 
 template <class TFilter>
@@ -40,4 +40,4 @@ class RecursiveBayesianBase {
 };
 
 } // namespace filter
-} // namespace ssmpack
+} // namespace ssmkit

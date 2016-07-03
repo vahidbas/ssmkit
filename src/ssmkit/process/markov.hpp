@@ -7,15 +7,15 @@
 #ifndef SSMPACK_PROCESS_MARKOV_HPP
 #define SSMPACK_PROCESS_MARKOV_HPP
 
-#include "ssmpack/distribution/conditional.hpp"
-#include "ssmpack/process/base_process.hpp"
+#include "ssmkit/distribution/conditional.hpp"
+#include "ssmkit/process/base_process.hpp"
 
 #include <algorithm>
 #include <cmath>
 #include <type_traits>
 #include <vector>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace process {
 
 /** A first-order Markov process.
@@ -127,6 +127,6 @@ makeMarkov(distribution::Conditional<TPDF, TParamMap> cpdf,
 }
 
 } // namespace process
-} // namespace ssmpack
+} // namespace ssmkit
 
 #endif // SSMPACK_PROCESS_MARKOV_HPP

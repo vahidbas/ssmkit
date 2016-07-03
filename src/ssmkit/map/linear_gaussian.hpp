@@ -3,7 +3,7 @@
 
 #include <armadillo>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace map {
 
 struct LinearGaussian {
@@ -22,6 +22,6 @@ struct LinearGaussian {
 };
 
 } // namespace map
-} // namespace ssmpack
+} // namespace ssmkit
 
 #endif //SSMPACK_MODEL_LINEAR_GAUSSIAN_HPP

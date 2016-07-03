@@ -3,7 +3,7 @@ Constant velocity dynamic model {#tutorial_constant_velocity}
 <center>Vahid Bastani</center>
 Introduction
 --------------------
-In this tutorial we show how `ssmpack` can be used for simulating and state
+In this tutorial we show how `ssmkit` can be used for simulating and state
 estimation (tracking) of a constant velocity inertial model. This is a classical
 application in the state space models. The tutorial is written for basic and advanced users.
 The code for this tutorial can be found in `/example/tutorial_constant_velocity.cpp`. 
@@ -84,11 +84,11 @@ second layer in an independent or memoryless process where the values of the
 process at previous time instances do not have any effect on the value of next
 time instances.
 
-The same intuition used in mathematical construction of the stochastic processes is used in `ssmpack` for constructing process objects.
-In `ssmpack` process objects are realizations of stochastic processes which are
+The same intuition used in mathematical construction of the stochastic processes is used in `ssmkit` for constructing process objects.
+In `ssmkit` process objects are realizations of stochastic processes which are
 representable as DBN. A DBN is a graphical model that shows statistical
 dependencies betveen random variables represented as CPDF. In the next sections
-We will see how we can define CPDFs in `ssmpack` and use them to construct
+We will see how we can define CPDFs in `ssmkit` and use them to construct
 simple processes which are later combined to make more complex processes.
 
 Defining constant parameters
@@ -125,24 +125,24 @@ arma::mat P0{{1, 0, 0, 0},
              {0, 0, 1, 0},
              {0, 0, 0, 1}};
 ~~~
-`arma::mat` and `arma::vec` are matrix and vector data-types from `armadillo` library. This is the core linear algebra library used by `ssmpack`.
+`arma::mat` and `arma::vec` are matrix and vector data-types from `armadillo` library. This is the core linear algebra library used by `ssmkit`.
 
 
 Construction probability distribution functions
 ------------------------
 we define initial state
-PDF \f$p(\mathbf{x}_0)\f$ using ssmpack::distribution::Gaussian class:
+PDF \f$p(\mathbf{x}_0)\f$ using ssmkit::distribution::Gaussian class:
 ~~~{.cpp}
 // initial state pdf
-ssmpack::distribution::Gaussian initial_pdf(x0, P0);
+ssmkit::distribution::Gaussian initial_pdf(x0, P0);
 ~~~
-the class `ssmpack::distribution::Gaussian` implements a multivariate Gaussian
+the class `ssmkit::distribution::Gaussian` implements a multivariate Gaussian
 distribution and can be used for sampling and calculating likelihood of random
 variables. Note that we passed mean vector and covariance matrix we defined
 above to its constructor.
 
 We now turn to the definition of the state transition CPDF and the measurement CPDF.
-Before that it is important to understand how CPDFs are treated in `ssmpack`.
+Before that it is important to understand how CPDFs are treated in `ssmkit`.
 CPDFs are defined as a combination of a parametric PDF and a
 parameter map. In other words \f$p(x|y) = \mathcal{F}(g(y))\f$ where
 \f$\mathcal{F}(\theta)\f$ is parametric distribution (e.g. Gaussian) with
@@ -153,29 +153,29 @@ Thus, for our purpose the function \f$g\f$ should receive a
 state variable \f$\mathbf{x}\f$ and return \f$(\mathbf{F}\mathbf{x}, \mathbf{Q})\f$
 for transition CPDF and \f$(\mathbf{H}\mathbf{x}, \mathbf{R})\f$ 
 for measurement CPDF. This special kind of parameter map is implemented in class
-`ssmpack::map::LinearGaussian(trans, cov)` which is constructed using a linear transformation
+`ssmkit::map::LinearGaussian(trans, cov)` which is constructed using a linear transformation
 matrix `trans` and a covariance matrix `cov`. Note that it always return the
 same covariance matrix which is constructed with. 
 
-The class `ssmpack::distribution::Conditional` provides a generic class
+The class `ssmkit::distribution::Conditional` provides a generic class
 that constructs a conditional distribution form a parametric distribution and a
 parameter map. We can make any kind of CPDF with this class.
 
 The two CPDFs are constructed by:
 ~~~{.cpp}
 // state cpdf
-auto state_cpdf = ssmpack::distribution::makeConditional(
-    ssmpack::distribution::Gaussian(state_dim),
-    ssmpack::map::LinearGaussian(F, Q));
+auto state_cpdf = ssmkit::distribution::makeConditional(
+    ssmkit::distribution::Gaussian(state_dim),
+    ssmkit::map::LinearGaussian(F, Q));
 // measurement cpdf
-auto meas_cpdf = ssmpack::distribution::makeConditional(
-    ssmpack::distribution::Gaussian(meas_dim),
-    ssmpack::map::LinearGaussian(H, R));
+auto meas_cpdf = ssmkit::distribution::makeConditional(
+    ssmkit::distribution::Gaussian(meas_dim),
+    ssmkit::map::LinearGaussian(H, R));
 ~~~
-we used `ssmpack::distribution::makeConditional` function for constructing CPDFs. This
+we used `ssmkit::distribution::makeConditional` function for constructing CPDFs. This
 is a convenient interface to the class constructor that does not require ugly
 template arguments.
-`ssmpack::distribution::Gaussian(dim)` is another constructor for Gaussian PDF
+`ssmkit::distribution::Gaussian(dim)` is another constructor for Gaussian PDF
 object with dimensions `dim`. Note that we pass the PDF object to `Conditional`
 in order to let it know what type of distribution we need. Internal to CPDF
 object, the parameters of
@@ -187,24 +187,24 @@ Now that we have the CPDFs we start constructing the hierarchical process.
 First, let build each layer separately:
 ~~~{.cpp}
 // state process
-auto state_proc = ssmpack::process::makeMarkov(state_cpdf, initial_pdf);
+auto state_proc = ssmkit::process::makeMarkov(state_cpdf, initial_pdf);
 // measurement process
-auto meas_proc = ssmpack::process::makeMemoryless(meas_cpdf);
+auto meas_proc = ssmkit::process::makeMemoryless(meas_cpdf);
 ~~~
 
-The function `ssmpack::process::makeMarkov()` receives an initial PDF and a CPDFs
-and construct a Markovian random process of class `ssmpack::process::Markov`.
-The function `ssmpack::process::makeMemoryless()` takes a CPDFs
-and returns a memoryless or independent random process of class `ssmpack::process::Memoryless`.
+The function `ssmkit::process::makeMarkov()` receives an initial PDF and a CPDFs
+and construct a Markovian random process of class `ssmkit::process::Markov`.
+The function `ssmkit::process::makeMemoryless()` takes a CPDFs
+and returns a memoryless or independent random process of class `ssmkit::process::Memoryless`.
 
-Finally, we can use the class `ssmpack::process::Hierarchical` to construct SSM
+Finally, we can use the class `ssmkit::process::Hierarchical` to construct SSM
 process.
 ~~~{.cpp}
 // the hirerachical state space model
-auto ssm_proc = ssmpack::process::makeHierarchical(state_proc, meas_proc);
+auto ssm_proc = ssmkit::process::makeHierarchical(state_proc, meas_proc);
 ~~~
-The function `ssmpack::process::makeHierarchical()` takes an arbitrary number of processes
-and construct a process of class `ssmpack::process::Hierarchical`. Hierarchical processes
+The function `ssmkit::process::makeHierarchical()` takes an arbitrary number of processes
+and construct a process of class `ssmkit::process::Hierarchical`. Hierarchical processes
 are built by stacking other processes on top of each other.
 The `Hierarchical` class connects the random variable of a process to the condition variable of the process in the lower level.
 
@@ -231,7 +231,7 @@ processes are also models of probability distribution but for sequences.
 Simulating
 data from a SSM model is equivalent to sampling from the associated
 stochastic process. One may sequentially use `random` method of the process object to
-simulate sequence of data. However, all process objects in `ssmpack` provide a
+simulate sequence of data. However, all process objects in `ssmkit` provide a
 `random_n(n)` method that returns a sequence of `n` samples from the process: 
 ~~~{.cpp}
 // initialize the process
@@ -263,9 +263,9 @@ always even when you don't know what is the type of variables in the process!
 
 State estimation
 -----------------
-There are a number of state estimation tools are under the namespace of `ssmpack::filter`.
+There are a number of state estimation tools are under the namespace of `ssmkit::filter`.
 In practice state estimation filters are model-based. That means they are build having in mind particular type of SSM. 
-Using this fact in 'ssmpack' process objects are used to define filters.
+Using this fact in 'ssmkit' process objects are used to define filters.
 Each `filter` may particularly be useful for some specific type of process models. 
 This is statically checked and your code will not compile if you try to make a filter object with wrong SSM model.
 
@@ -274,15 +274,15 @@ linear Gaussian model that classical Kalman filter has been designed for. We can
 make a Kalman filter easily for our model:
 ~~~{.cpp}
 // make Kalman filter
-auto kalman = ssmpack::filter::makeKalman(ssm_proc);
+auto kalman = ssmkit::filter::makeKalman(ssm_proc);
 ~~~
-This makes an object of class `ssmpack::filter::Kalman`. All the parameters of
-Kalman filter are read from provided process argument. `ssmpack::filter::Kalman`
+This makes an object of class `ssmkit::filter::Kalman`. All the parameters of
+Kalman filter are read from provided process argument. `ssmkit::filter::Kalman`
 is a special case of recursive Bayesian filter where for each measurement two
 step of prediction on correction are applied. 
 
 Let apply Kalman filter on our simulated data. 
-Although `ssmpack::filter::Kalman` provides all the low level `predict()` and `correct()` methods,
+Although `ssmkit::filter::Kalman` provides all the low level `predict()` and `correct()` methods,
 it is easier to use just the `filter()` method for that apply the filtering on a
 sequence and return the result:
 ~~~{.cpp}

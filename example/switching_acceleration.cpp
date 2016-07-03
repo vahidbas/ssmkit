@@ -1,16 +1,16 @@
-#include "ssmpack/map/linear_gaussian.hpp"
-#include "ssmpack/map/switching_additive_linear_gaussian.hpp"
-#include "ssmpack/map/transition_matrix.hpp"
-#include "ssmpack/distribution/gaussian.hpp"
-#include "ssmpack/distribution/categorical.hpp"
-#include "ssmpack/distribution/conditional.hpp"
-#include "ssmpack/process/markov.hpp"
-#include "ssmpack/process/memoryless.hpp"
-#include "ssmpack/process/hierarchical.hpp"
+#include "ssmkit/map/linear_gaussian.hpp"
+#include "ssmkit/map/switching_additive_linear_gaussian.hpp"
+#include "ssmkit/map/transition_matrix.hpp"
+#include "ssmkit/distribution/gaussian.hpp"
+#include "ssmkit/distribution/categorical.hpp"
+#include "ssmkit/distribution/conditional.hpp"
+#include "ssmkit/process/markov.hpp"
+#include "ssmkit/process/memoryless.hpp"
+#include "ssmkit/process/hierarchical.hpp"
 
 #include <iostream>
 
-using namespace ssmpack;
+using namespace ssmkit;
 
 int main() {
   double delta = 1; // sample time
@@ -50,11 +50,8 @@ int main() {
       switching_process, state_process, measurement_process);
 
   // simulation
-  std::vector<typename decltype(joint_process)::TRandomVAR> v;
-
-  random::setRandomSeed();
   joint_process.initialize();
-  joint_process.random_n(v, 100);
+  auto v = joint_process.random_n(100);
 
   std::for_each(v.begin(), v.end(), [](auto &p) {
     std::cout << std::get<0>(p) << std::endl

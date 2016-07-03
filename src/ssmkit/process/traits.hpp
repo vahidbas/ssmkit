@@ -10,12 +10,12 @@
 /// @cond DEV
 //exclude all from doxygen documantation
 
-#include "ssmpack/process/markov.hpp"
-#include "ssmpack/process/memoryless.hpp"
+#include "ssmkit/process/markov.hpp"
+#include "ssmkit/process/memoryless.hpp"
 
 #include <type_traits>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace process {
 
 template <typename T>

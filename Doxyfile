@@ -3,7 +3,7 @@
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------
-PROJECT_NAME           = ssmpack
+PROJECT_NAME           = ssmkit
 PROJECT_NUMBER         = master
 PROJECT_LOGO           = _/doc/image/logo.svg
 OUTPUT_DIRECTORY       = ./doc/
@@ -85,7 +85,7 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = _/src/ssmpack \
+INPUT                  = _/src/ssmkit \
                          _/doc/global
 FILE_PATTERNS          = *.hpp \
                          *.cpp \

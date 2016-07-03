@@ -7,15 +7,15 @@
 #ifndef SSMPACK_FILTER_KALMAN_HPP
 #define SSMPACK_FILTER_KALMAN_HPP
 
-#include "ssmpack/distribution/gaussian.hpp"
-#include "ssmpack/distribution/conditional.hpp"
-#include "ssmpack/process/markov.hpp"
-#include "ssmpack/process/memoryless.hpp"
-#include "ssmpack/process/hierarchical.hpp"
-#include "ssmpack/filter/recursive_bayesian_base.hpp"
+#include "ssmkit/distribution/gaussian.hpp"
+#include "ssmkit/distribution/conditional.hpp"
+#include "ssmkit/process/markov.hpp"
+#include "ssmkit/process/memoryless.hpp"
+#include "ssmkit/process/hierarchical.hpp"
+#include "ssmkit/filter/recursive_bayesian_base.hpp"
 #include <armadillo>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace filter {
 
 using process::Hierarchical;
@@ -150,6 +150,6 @@ Kalman<STA_MAP, OBS_MAP> makeKalman(
 }
 
 } // namespace filter
-} // namespace ssmpack
+} // namespace ssmkit
 
 #endif // SSMPACK_FILTER_KALMAN_HPP

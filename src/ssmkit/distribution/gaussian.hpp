@@ -7,13 +7,13 @@
 #ifndef SSMPACK_DISTRIBUTION_GAUSSIAN_HPP
 #define SSMPACK_DISTRIBUTION_GAUSSIAN_HPP
 
-#include "ssmpack/random/generator.hpp"
+#include "ssmkit/random/generator.hpp"
 
 #include <armadillo>
 
 #include <cmath>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace distribution {
 
 /** A D-dimensional multivariate Gaussian distribution.
@@ -133,6 +133,6 @@ class Gaussian {
 };
 
 } // namespace distribution
-} // namespace ssmpack
+} // namespace ssmkit
 
 #endif // SSMPACK_DISTRIBUTION_GAUSSIAN_HPP

@@ -1,12 +1,12 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-#include "ssmpack/filter/resampler/base.hpp"
-#include "ssmpack/filter/resampler/systematic.hpp"
+#include "ssmkit/filter/resampler/base.hpp"
+#include "ssmkit/filter/resampler/systematic.hpp"
 
 #include <armadillo>
 
-using namespace ssmpack;
+using namespace ssmkit;
 
 BOOST_AUTO_TEST_SUITE(filter_resampler_base);
 

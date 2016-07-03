@@ -5,7 +5,7 @@ if (Boost_UNIT_TEST_FRAMEWORK_FOUND AND ARMADILLO_FOUND)
   enable_testing() 
   
   #  message(STATUS ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-  add_definitions(-DTEST_MODULE_NAME=ssmpack_test)
+  add_definitions(-DTEST_MODULE_NAME=ssmkit_test)
 
 #find all.cpp test files
   file(GLOB_RECURSE TEST_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)

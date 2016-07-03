@@ -1,16 +1,16 @@
-#include "ssmpack/filter/particle.hpp"
-#include "ssmpack/filter/resampler/systematic.hpp"
-#include "ssmpack/filter/resampler/criterion/ess.hpp"
-#include "ssmpack/map/linear_gaussian.hpp"
-#include "ssmpack/distribution/gaussian.hpp"
-#include "ssmpack/distribution/conditional.hpp"
-#include "ssmpack/process/markov.hpp"
-#include "ssmpack/process/memoryless.hpp"
-#include "ssmpack/process/hierarchical.hpp"
+#include "ssmkit/filter/particle.hpp"
+#include "ssmkit/filter/resampler/systematic.hpp"
+#include "ssmkit/filter/resampler/criterion/ess.hpp"
+#include "ssmkit/map/linear_gaussian.hpp"
+#include "ssmkit/distribution/gaussian.hpp"
+#include "ssmkit/distribution/conditional.hpp"
+#include "ssmkit/process/markov.hpp"
+#include "ssmkit/process/memoryless.hpp"
+#include "ssmkit/process/hierarchical.hpp"
 
 #include <iostream>
 
-using namespace ssmpack;
+using namespace ssmkit;
 
 int main() {
   double delta = 0.1; // sample time
@@ -49,10 +49,10 @@ int main() {
   pfilter.initialize();
 
   // std::cout << pfilter.getWeights();
-  std::vector<typename decltype(joint_process)::TRandomVAR> v;
+  // std::vector<typename decltype(joint_process)::TRandomVAR> v;
   joint_process.initialize();
   int n = 20;
-  joint_process.random_n(v, n);
+  auto v = joint_process.random_n(n);
   std::vector<typename std::tuple_element<1, decltype(v)::value_type>::type> m(
       n);
   int count = 0;

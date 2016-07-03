@@ -5,7 +5,7 @@
  * Description of namespaces
  */
 
-namespace ssmpack /** Root namespace */ {
+namespace ssmkit /** Root namespace */ {
 namespace distribution /** Probability distribution functions */ {}
 namespace filter /** State estimation filters */ {
 namespace resampler /** Resampling algorithms for particle filter */ {

@@ -1,15 +1,15 @@
 #include <benchmark/benchmark.h>
 
 
-#include "ssmpack/map/linear_gaussian.hpp"
-#include "ssmpack/distribution/gaussian.hpp"
-#include "ssmpack/distribution/conditional.hpp"
-#include "ssmpack/process/markov.hpp"
-#include "ssmpack/process/memoryless.hpp"
-#include "ssmpack/process/hierarchical.hpp"
-#include "ssmpack/filter/kalman.hpp"
+#include "ssmkit/map/linear_gaussian.hpp"
+#include "ssmkit/distribution/gaussian.hpp"
+#include "ssmkit/distribution/conditional.hpp"
+#include "ssmkit/process/markov.hpp"
+#include "ssmkit/process/memoryless.hpp"
+#include "ssmkit/process/hierarchical.hpp"
+#include "ssmkit/filter/kalman.hpp"
 
-using namespace ssmpack;
+using namespace ssmkit;
 
 auto make(){
   double delta = 0.1; // sample time
@@ -49,19 +49,19 @@ auto kalman = make();
 
 arma::vec meas {0, 0};
 
-static void ssmpack_kalman_predict(benchmark::State& state) {
+static void ssmkit_kalman_predict(benchmark::State& state) {
   while (state.KeepRunning())
     kalman.predict();
 }
 //Register the function as a benchmark
-BENCHMARK(ssmpack_kalman_predict);
+BENCHMARK(ssmkit_kalman_predict);
 
 // Define another benchmark
-static void ssmpack_kalman_correct(benchmark::State& state) {
+static void ssmkit_kalman_correct(benchmark::State& state) {
   while (state.KeepRunning())
     kalman.correct(meas);
 }
-BENCHMARK(ssmpack_kalman_correct);
+BENCHMARK(ssmkit_kalman_correct);
 
 #ifdef WITH_OpenCV
 

@@ -9,7 +9,7 @@
 
 #include <armadillo>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace filter {
 namespace resampler {
 namespace criterion {
@@ -33,5 +33,5 @@ struct ESS{
 } // namespace criterion
 } // namespace resampler
 } // namespace filter
-} // namespace ssmpack
+} // namespace ssmkit
 #endif // SSMPACK_FILTER_RESAMPLER_CRITERION_ESS

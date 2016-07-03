@@ -1,13 +1,13 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-#include "ssmpack/map/linear_gaussian.hpp"
-#include "ssmpack/distribution/gaussian.hpp"
-#include "ssmpack/distribution/conditional.hpp"
-#include "ssmpack/process/markov.hpp"
-#include "ssmpack/process/memoryless.hpp"
+#include "ssmkit/map/linear_gaussian.hpp"
+#include "ssmkit/distribution/gaussian.hpp"
+#include "ssmkit/distribution/conditional.hpp"
+#include "ssmkit/process/markov.hpp"
+#include "ssmkit/process/memoryless.hpp"
 
-#include "ssmpack/process/hierarchical.hpp"
+#include "ssmkit/process/hierarchical.hpp"
 
 using namespace PROJECT_NAME;
 

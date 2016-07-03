@@ -1,13 +1,13 @@
 #include <boost/test/unit_test.hpp>
 
-#include "ssmpack/random/generator.hpp"
+#include "ssmkit/random/generator.hpp"
 
 #include <thread>
 #include <array>
 #include <random>
 #include <algorithm>
 
-using namespace ssmpack;
+using namespace ssmkit;
 using namespace std;
 
 BOOST_AUTO_TEST_SUITE(generator_test);
@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_SUITE(generator_test);
 // thread task
 void sample(double *r){
   uniform_real_distribution<double> dist;
-  *r = dist(ssmpack::random::Generator::get().getGenerator());
+  *r = dist(ssmkit::random::Generator::get().getGenerator());
 }
 
 BOOST_AUTO_TEST_CASE(multithread) {

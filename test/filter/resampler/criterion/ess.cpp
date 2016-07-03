@@ -1,9 +1,9 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-#include "ssmpack/filter/resampler/criterion/ess.hpp"
+#include "ssmkit/filter/resampler/criterion/ess.hpp"
 
-using namespace ssmpack;
+using namespace ssmkit;
 
 BOOST_AUTO_TEST_SUITE(filter_resampler_criterion_ess);
 

@@ -5,7 +5,7 @@
 
 #include <tao/seq/make_integer_range.hpp> //https://github.com/taocpp/sequences
 
-namespace ssmpack {
+namespace ssmkit {
 namespace process {
 
 namespace detail {
@@ -108,6 +108,6 @@ struct GetLikelihood<D, NA, D, TArities> {
 
 } // namespace detail
 } // namespace process
-} // namespace ssmpack
+} // namespace ssmkit
 
 /// @endcond

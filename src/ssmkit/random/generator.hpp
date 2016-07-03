@@ -9,7 +9,7 @@
 
 #include <random>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace random {
 
 typedef std::mt19937 CoreGenerator;
@@ -68,7 +68,7 @@ void setSeed(TSeed seed)
 }
 
 } // namespace random
-} // namespace ssmpack
+} // namespace ssmkit
 
 
 #endif //SSMPACK_RANDOM_GENERATOR_HPP

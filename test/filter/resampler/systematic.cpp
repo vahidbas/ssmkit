@@ -4,9 +4,9 @@
 #include <armadillo>
 
 #define protected public  // for testing protected member
-#include "ssmpack/filter/resampler/systematic.hpp"
+#include "ssmkit/filter/resampler/systematic.hpp"
 
-using namespace ssmpack;
+using namespace ssmkit;
 
 BOOST_AUTO_TEST_SUITE(filter_resampler_systematic);
 

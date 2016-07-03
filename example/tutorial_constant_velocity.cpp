@@ -1,17 +1,17 @@
-#include "ssmpack/map/linear_gaussian.hpp"
-#include "ssmpack/distribution/gaussian.hpp"
-#include "ssmpack/distribution/conditional.hpp"
-#include "ssmpack/process/markov.hpp"
-#include "ssmpack/process/memoryless.hpp"
-#include "ssmpack/process/hierarchical.hpp"
-#include "ssmpack/filter/kalman.hpp"
+#include "ssmkit/map/linear_gaussian.hpp"
+#include "ssmkit/distribution/gaussian.hpp"
+#include "ssmkit/distribution/conditional.hpp"
+#include "ssmkit/process/markov.hpp"
+#include "ssmkit/process/memoryless.hpp"
+#include "ssmkit/process/hierarchical.hpp"
+#include "ssmkit/filter/kalman.hpp"
 
 #include <algorithm>
 #include <numeric>
 #include <iostream>
 
 
-using namespace ssmpack;
+using namespace ssmkit;
 
 int main ()
 {
@@ -45,23 +45,23 @@ int main ()
                {0, 0, 1, 0},
                {0, 0, 0, 1}};
   // initial state pdf
-  ssmpack::distribution::Gaussian initial_pdf(x0, P0);
+  ssmkit::distribution::Gaussian initial_pdf(x0, P0);
   // state cpdf
-  auto state_cpdf = ssmpack::distribution::makeConditional(
-      ssmpack::distribution::Gaussian(state_dim),
-      ssmpack::map::LinearGaussian(F, Q));
+  auto state_cpdf = ssmkit::distribution::makeConditional(
+      ssmkit::distribution::Gaussian(state_dim),
+      ssmkit::map::LinearGaussian(F, Q));
   // measurement cpdf
-  auto meas_cpdf = ssmpack::distribution::makeConditional(
-      ssmpack::distribution::Gaussian(meas_dim),
-      ssmpack::map::LinearGaussian(H, R));
+  auto meas_cpdf = ssmkit::distribution::makeConditional(
+      ssmkit::distribution::Gaussian(meas_dim),
+      ssmkit::map::LinearGaussian(H, R));
   
   // state process
-  auto state_proc = ssmpack::process::makeMarkov(state_cpdf, initial_pdf);
+  auto state_proc = ssmkit::process::makeMarkov(state_cpdf, initial_pdf);
   // measurement process
-  auto meas_proc = ssmpack::process::makeMemoryless(meas_cpdf);
+  auto meas_proc = ssmkit::process::makeMemoryless(meas_cpdf);
 
   // the hierarchical state space model
-  auto ssm_proc = ssmpack::process::makeHierarchical(state_proc, meas_proc);
+  auto ssm_proc = ssmkit::process::makeHierarchical(state_proc, meas_proc);
 
   // all in one statement!
 //  auto ssm_proc =
@@ -88,7 +88,7 @@ int main ()
 
 
   // make Kalman filter
-  auto kalman = ssmpack::filter::makeKalman(ssm_proc);
+  auto kalman = ssmkit::filter::makeKalman(ssm_proc);
   // apply Kalman filter on the simulated measurement to estimate x sequence
   auto x_seq_est = kalman.filter(z_seq);
   

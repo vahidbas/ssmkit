@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace distribution {
 
 /** Conditional distribution function
@@ -95,6 +95,6 @@ Conditional<TPDF, TParamMap> makeConditional(TPDF pdf, TParamMap map) {
 }
 
 } // namespace distribution
-} // namespace ssmpack
+} // namespace ssmkit
 
 #endif // SSMPACK_DISTRIBUTION_PARAMETRIC_CONDITIONAL_HPP

@@ -7,14 +7,14 @@
 #ifndef SSMPACK_FILTER_RESAMPLER_SYSTEMATIC
 #define SSMPACK_FILTER_RESAMPLER_SYSTEMATIC
 
-#include "ssmpack/filter/resampler/base.hpp"
-#include "ssmpack/random/generator.hpp"
+#include "ssmkit/filter/resampler/base.hpp"
+#include "ssmkit/random/generator.hpp"
 
 #include <armadillo>
 
 #include <random>
 
-namespace ssmpack {
+namespace ssmkit {
 namespace filter {
 namespace resampler {
 
@@ -48,5 +48,5 @@ Systematic<Criterion> makeSystematic(Criterion criterion){
 
 } // namespace resampler
 } // namespace filter
-} // namespace ssmpack
+} // namespace ssmkit
 #endif // SSMPACK_FILTER_RESAMPLER_SYSTEMATIC

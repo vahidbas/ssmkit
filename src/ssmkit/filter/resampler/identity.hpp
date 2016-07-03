@@ -7,7 +7,7 @@
 #ifndef SSMPACK_FILTER_RESAMPLER_IDENTITY
 #define SSMPACK_FILTER_RESAMPLER_IDENTITY
 
-namespace ssmpack {
+namespace ssmkit {
 namespace filter {
 namespace resampler {
 
@@ -20,5 +20,5 @@ struct Identity {
 
 } // namespace resampler
 } // namespace filter
-} // namespace ssmpack
+} // namespace ssmkit
 #endif //SSMPACK_FILTER_RESAMPLER_IDENTITY
