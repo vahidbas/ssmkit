@@ -17,7 +17,7 @@ matrix:
             - g++-5
       env: COMPILER=g++-5
 
-    - complier: clang
+    - compiler: clang
       addson:
         apt:
           sources:
