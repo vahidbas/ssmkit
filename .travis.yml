@@ -27,7 +27,7 @@ matrix:
           env: COMPILER=clang++-3.7
 
 before_install:
-  - config/ci/build_deps.sh
+  - sudo config/ci/build_deps.sh
 
 script:
   - mkdir build
