@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 # Installs build dependencies
 apt-get update -qq -y
 mkdir ../external_deps
@@ -16,3 +17,6 @@ cd ..
 # 2: sequences
 git clone https://github.com/taocpp/sequences.git
 cp -r sequences/include/tao /usr/local/include
+
+# 3: boost
+apt-get install -y libboost-test-dev
