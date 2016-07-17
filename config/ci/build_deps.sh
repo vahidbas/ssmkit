@@ -10,7 +10,7 @@ cd ../external_deps
 wget http://sourceforge.net/projects/arma/files/armadillo-7.200.2.tar.xz
 tar xf armadillo-7.200.2.tar.xz
 cd armadillo-7.200.2
-configure
+sh ./configure
 make install
 cd ..
 
