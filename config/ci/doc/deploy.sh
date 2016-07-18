@@ -2,6 +2,11 @@
 
 set -e # Exit with nonzero exit code if anything fails
 
+# (travis hot fix) only deploy for one build matrix
+if [ "$COMPILER" != "clang++-3.7" ]; then
+  exit 0
+fi
+
 # Get the deploy key by using Travis's stored variables to decrypt deploy_key.enc
 cd config/ci/doc/
 ENCRYPTED_KEY_VAR="encrypted_${ENCRYPTION_LABEL}_key"
