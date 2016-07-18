@@ -22,7 +22,8 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-3.7
+            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.7 main'
+              key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
           packages:
             - clang-3.7
       env: COMPILER=clang++-3.7
