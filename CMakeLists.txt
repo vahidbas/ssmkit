@@ -9,7 +9,15 @@ add_definitions(-DSOURCE_DIR=${CMAKE_SOURCE_DIR})
 # Include modules in the CMake directory.
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0")
+# compiler flags
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  # using Clang
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  # using GCC
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0")
+endif()
+
 # Compilation options
   option(DEBUG "Compile with debugging information")
 if(DEBUG)
@@ -25,7 +33,7 @@ endif()
   option(CLANG "build application with clang")
 if(CLANG)
   SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
-  set(CMAKE_CXX_FLAGS "-Wall -stdlib=libstdc++ -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0")
+  set(CMAKE_CXX_FLAGS "-Wall -stdlib=libc++ -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0")
   message(STATUS "Clang compiler will be used")
 endif(CLANG)
 
